@@ -2,6 +2,7 @@ var _arrFold = require('./internal/_arrFold');
 var _isArray = require('./internal/_isArray');
 var _isFunction = require('./internal/_isFunction');
 var _curry = require('./internal/_curry');
+var _is = require('./internal/_is');
 
 var sumType = require('./sumType');
 var Enum = require('./Enum');
@@ -53,6 +54,7 @@ var enumeratedType = function(name, definition) {
         return Enumeration[definition[maxValue]];
     };
 
+    Enumeration.is = _is;
     return Enumeration;
 };
 

@@ -44,9 +44,9 @@ Enum.prev = function(value) {
         throw new TypeError('Enum#pred requires a defined, non-null value');
     }
 
-    if (Bounded.isBounded(value) && Bounded.isMin(value)) {
-        throw new RangeError('Value out of enum in Enum#prev');
-    }
+    //if (Bounded.isBounded(value) && Bounded.isMin(value)) {
+    //    throw new RangeError('Value out of enum in Enum#prev');
+    //}
 
     return fromInt(_moduleFor(value), Enum.toInt(value) - 1);
 };
@@ -56,9 +56,9 @@ Enum.next = function(value) {
         throw new TypeError('Enum#pred requires a defined, non-null value');
     }
 
-    if (Bounded.isBounded(value) && Bounded.isMax(value)) {
-        throw new RangeError('Value out of enum in Enum#next');
-    }
+    //if (Bounded.isBounded(value) && Bounded.isMax(value)) {
+    //    throw new RangeError('Value out of enum in Enum#next');
+    //}
 
     return fromInt(_moduleFor(value), Enum.toInt(value) + 1);
 };

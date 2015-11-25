@@ -21,4 +21,41 @@ Num.toInt = function(value) {
 
 Num.fromInt = _identity;
 
+// Implementation for numeric
+Num.add = _curry(function(a, b) {
+    return a + b;
+});
+
+Num.sub = _curry(function(a, b) {
+    return a - b;
+});
+
+Num.mul = _curry(function(a, b) {
+    return a * b;
+});
+
+Num.div = _curry(function(a, b) {
+    return a / b;
+});
+
+Num.mod = _curry(function(a, b) {
+    return a % b;
+});
+
+Num.abs = Math.abs;
+
+Num.neg = function(a) {
+    return -a;
+};
+
+Num.reciprocal = function(a) {
+    return 1 / a;
+};
+
+Num.sign = function(a) {
+    return a === 0 ? 0 : a < 0 ? -1 : 1;
+};
+
+Num.pow = _curry(Math.pow);
+
 module.exports = Num;
