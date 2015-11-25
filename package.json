@@ -1,0 +1,17 @@
+{
+  "name": "funkit",
+  "version": "0.4.0",
+  "description": "A functional toolkit for javascript",
+  "main": "src/funkit.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/"
+  },
+  "keywords": [
+    "Functional"
+  ],
+  "author": "Mark Wardle <mwwardle@gmail.com>",
+  "license": "MIT"
+}
