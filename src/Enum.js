@@ -9,34 +9,34 @@ var Bounded = require('./Bounded');
 var Enum = module.exports;
 
 
-var fromInt = _curry(function fromInt(M, value){
+var fromInteger = _curry(function fromInteger(M, value){
 
-    if (M !== Int && !_isFunction(M.fromInt)) {
+    if (M !== Int && !_isFunction(M.fromInteger)) {
         throw new TypeError('Type can not be converted from Int');
     }
 
-    return M.fromInt(value);
+    return M.fromInteger(value);
 });
 
-Enum.toInt = function toInt(value) {
+Enum.toInteger = function toInteger(value) {
     if (value == null) {
-        throw new TypeError('Enum#toInt requires a defined, non-null value');
+        throw new TypeError('Enum#toInteger requires a defined, non-null value');
     }
 
     if (_isInteger(value)) {
         return value;
     }
 
-    if (_isFunction(value.toInt)) {
-        return value.toInt();
+    if (_isFunction(value.toInteger)) {
+        return value.toInteger();
     }
 
     var M = _moduleFor(value);
-    if (_isFunction(M.toInt)) {
-        return M.toInt(value);
+    if (_isFunction(M.toInteger)) {
+        return M.toInteger(value);
     }
 
-    throw new TypeError('Enum#toInt called on a value that does not implement Enum');
+    throw new TypeError('Enum#toInteger called on a value that does not implement Enum');
 };
 
 Enum.prev = function(value) {
@@ -48,7 +48,7 @@ Enum.prev = function(value) {
     //    throw new RangeError('Value out of enum in Enum#prev');
     //}
 
-    return fromInt(_moduleFor(value), Enum.toInt(value) - 1);
+    return fromInteger(_moduleFor(value), Enum.toInteger(value) - 1);
 };
 
 Enum.next = function(value) {
@@ -60,13 +60,13 @@ Enum.next = function(value) {
     //    throw new RangeError('Value out of enum in Enum#next');
     //}
 
-    return fromInt(_moduleFor(value), Enum.toInt(value) + 1);
+    return fromInteger(_moduleFor(value), Enum.toInteger(value) + 1);
 };
 
 var _makeEnum = function(withLast, M, step, fromVal, toVal) {
     var res = [];
 
-    var _fromInt = fromInt(M);
+    var _fromInt = fromInteger(M);
 
     while(fromVal != toVal) {
         res.push(_fromInt(fromVal));
@@ -80,8 +80,8 @@ var _makeEnum = function(withLast, M, step, fromVal, toVal) {
 };
 
 var _enum = _curry(function(withLast, from, to) {
-    var fromVal = Enum.toInt(from);
-    var toVal = Enum.toInt(to);
+    var fromVal = Enum.toInteger(from);
+    var toVal = Enum.toInteger(to);
 
     var step = toVal < fromVal ? Int.add(-1)  : Int.add(1);
 
@@ -89,10 +89,10 @@ var _enum = _curry(function(withLast, from, to) {
 });
 
 //var _enumBy = _curry(function(withLast, span, from, to) {
-//    var fromVal = Enum.toInt(from);
-//    var toVal = Enum.toInt(to);
+//    var fromVal = Enum.toInteger(from);
+//    var toVal = Enum.toInteger(to);
 //
-//    span = Math.abs(Enum.toInt(span));
+//    span = Math.abs(Enum.toInteger(span));
 //    if (span === 0) {
 //        throw new EnumError('Enum#' + (withLast ? 'enumToBy' : 'enumUntilBy') + ' can not have a span of 0');
 //    }
@@ -111,7 +111,7 @@ Enum.enumFrom = _curry(function(count, from) {
         throw new TypeError('Enum#enumFrom must have an integer for the count parameter');
     }
 
-    var fromVal = Enum.toInt(from);
+    var fromVal = Enum.toInteger(from);
     var toVal = fromVal + count;
 
     var step = toVal < fromVal ? Int.add(-1)  : Int.add(1);

@@ -22,8 +22,8 @@ var DAYS = enumeratedType("DAYS", [
 describe('enumeratedType', function(){
 
     it('should create a sum type that is convertible to and from an integer value', function(){
-        assert.equal(DAYS.toInt(DAYS.TUESDAY), 2);
-        assert.equal(DAYS.fromInt(5), DAYS.FRIDAY);
+        assert.equal(DAYS.toInteger(DAYS.TUESDAY), 2);
+        assert.equal(DAYS.fromInteger(5), DAYS.FRIDAY);
     });
 
     it('should create a sum type that implements Eq', function() {

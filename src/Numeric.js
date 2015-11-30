@@ -11,7 +11,7 @@ var Enum = require('./Enum');
 var Numeric = module.exports;
 
 Numeric.equal = Eq.equal;
-Numeric.toInt = Enum.toInt;
+Numeric.toInteger = Enum.toInteger;
 
 
 var _binOp = _curry(function(op, fail, a, b) {
@@ -71,7 +71,7 @@ Numeric.modBy = _flip(Numeric.mod);
 
 Numeric.toNum = _unaryOp('toNum', _fail('toNum'));
 Numeric.abs = _unaryOp('abs', function(a, M) {
-    if (_isFunction(M.fromInt) && _isFunction(M.mul) && _isFunction(M.sign)) {
+    if (_isFunction(M.fromInteger) && _isFunction(M.mul) && _isFunction(M.sign)) {
         var sign = M.sign(a);
         return M.mul(a, sign);
     }
@@ -80,8 +80,8 @@ Numeric.abs = _unaryOp('abs', function(a, M) {
 });
 
 Numeric.sign = _unaryOp('sign', function(a, M) {
-    if (_isFunction(M.toNum) && _isFunction(M.fromInt)) {
-        return M.fromInt(Numeric.sign(M.toNum(a)));
+    if (_isFunction(M.toNum) && _isFunction(M.fromInteger)) {
+        return M.fromInteger(Numeric.sign(M.toNum(a)));
     }
 
     _fail('sign')();
@@ -90,8 +90,8 @@ Numeric.sign = _unaryOp('sign', function(a, M) {
 Numeric.negate = _unaryOp('negate', function(a, M) {
 
     // derived
-    if (_isFunction(M.fromInt) && _isFunction(M.mul)) {
-        var negOne = M.fromInt(-1);
+    if (_isFunction(M.fromInteger) && _isFunction(M.mul)) {
+        var negOne = M.fromInteger(-1);
         return M.mul(a, negOne);
     }
 
