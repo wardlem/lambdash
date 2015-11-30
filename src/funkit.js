@@ -15,7 +15,7 @@ var Ord = require('./Ord');
 var Numeric = require('./Numeric');
 var Functor = require('./Functor');
 var Monad = require('./Monad');
-var Show = require('./Show');
+var Stringable = require('./Stringable');
 
 // Auxiliary types
 var Ordering = require('./Ordering');
@@ -46,5 +46,5 @@ funkit.Ord = Ord;
 funkit.Numeric = Numeric;
 funkit.Functor = Functor;
 funkit.Monad = Monad;
-funkit.Show = Show;
+funkit.Stringable = Stringable;
 

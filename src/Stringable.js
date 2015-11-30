@@ -1,9 +1,9 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
 
-var Show = module.exports;
+var Stringable = module.exports;
 
-Show.toString = function(value) {
+Stringable.toString = function(value) {
     if (value != null) {
         if (_isFunction(value.toString)) {
             return value.toString();
