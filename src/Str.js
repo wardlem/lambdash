@@ -27,4 +27,43 @@ Str.toInt = function(value) {
 
 Str.fromInt = String.fromCharCode;
 
+// Implementation for Functor
+Str.map = _curry(function(fn, str) {
+    return str.split('').map(fn).join('');
+});
+
+// Implementation for Monoid
+Str.empty = function() {
+    return '';
+};
+
+Str.concat = _curry(function(left, right) {
+    return String(left) + String(right);
+});
+
+// Implementation for foldable
+Str.fold = _curry(function(fn, init, string) {
+    return string.split('').reduce(fn, init).join('');
+});
+
+Str.foldRight = _curry(function(fn, init, string) {
+    return string.split('').reduceRight(fn, init).join('');
+});
+
+// String functions
+Str.split = _curry(function(delim, string) {
+    return string.split(delim);
+});
+
+Str.join = _curry(function(delim, arr) {
+    return arr.join(delim);
+});
+
+
+
+Str.lines = Str.split('\n');
+Str.words = Str.split(/\s/);
+Str.unlines = Str.join('\n');
+Str.unwords = Str.join(' ');
+
 module.exports = Str;

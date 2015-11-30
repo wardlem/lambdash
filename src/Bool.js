@@ -32,5 +32,18 @@ Bool.maxBound = function() {
     return true;
 };
 
+Bool.and = _curry(function(left, right) {
+    return left && right;
+});
+
+Bool.or = _curry(function(left, right) {
+    return left || right;
+});
+
+Bool.not = function(bool) {
+    return !bool;
+};
+
+
 module.exports = Bool;
 

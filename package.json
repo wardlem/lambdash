@@ -6,6 +6,7 @@
   "directories": {
     "test": "test"
   },
+  "repository": "https://github.com/mwardle/funkit.git",
   "scripts": {
     "test": "mocha test/"
   },
