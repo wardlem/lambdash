@@ -4,22 +4,26 @@ var _isFunction = require('./internal/_isFunction');
 
 var Bounded = module.exports;
 
-Bounded.isMax = function(value) {
-    if (_isFunction(value.isMax)) {
-        return value.isMax();
-    }
-    var M = _moduleFor(value);
-
-    return _equal(value, M.maxBound());
-};
 
 Bounded.isMin = function(value) {
-    if (_isFunction(value.isMin)) {
-        return value.isMin();
-    }
+    return _equal(value, Bounded.minBound(value));
+};
+
+Bounded.isMax = function(value) {
+    return _equal(value, Bounded.maxBound(value));
+};
+
+
+Bounded.minBound = function(value) {
     var M = _moduleFor(value);
 
-    return _equal(value, M.minBound());
+    return M.minBound();
+};
+
+Bounded.maxBound = function(value) {
+    var M = _moduleFor(value);
+
+    return M.maxBound();
 };
 
 Bounded.isBounded = function(value) {

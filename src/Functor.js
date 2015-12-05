@@ -9,14 +9,14 @@ Functor.map = _curry(function(fn, functor) {
         throw new TypeError('Functor#map can not operate on null values');
     }
 
-    if(_isFunction(functor.map)) {
-        return functor.map(fn);
-    }
-
     var M = _moduleFor(functor);
 
     if (_isFunction(M.map)) {
         return M.map(fn, functor);
+    }
+
+    if(_isFunction(functor.map)) {
+        return functor.map(fn);
     }
 
     console.log(functor);

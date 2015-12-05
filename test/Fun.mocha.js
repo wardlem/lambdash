@@ -1,6 +1,7 @@
 var assert = require('assert');
 
 var Fun = require('../src/Fun');
+var Arr = require('../src/Arr');
 
 describe('Fun', function(){
 
@@ -114,6 +115,66 @@ describe('Fun', function(){
             assert.equal(Test.name, name);
             assert.equal(Test.length, test.length);
             assert.equal(Test(1,5,2), 3);
+        });
+    });
+
+    describe('#liftN', function(){
+        it('should lift a regular function into an applicative one', function() {
+            var fn = function(a, b) {
+                return a + b;
+            };
+
+            var one = [1];
+            var two = [2];
+
+            var lifted = Fun.liftN(2, fn);
+
+            var result = lifted(one, two);
+
+            assert.equal(Array.isArray(result), true);
+            assert.equal(result.length, 1);
+            assert.equal(result[0], 3);
+
+            var first = [1,2];
+            var second = [4,6];
+            result = lifted(first, second);
+
+            assert.equal(Array.isArray(result), true);
+            assert.equal(result.length, 4);
+            assert.equal(result[0], 5);
+            assert.equal(result[1], 7);
+            assert.equal(result[2], 6);
+            assert.equal(result[3], 8);
+        });
+    });
+
+    describe('#lift', function(){
+        it('should lift a regular function into an applicative one', function() {
+            var fn = function(a, b) {
+                return a + b;
+            };
+
+            var one = [1];
+            var two = [2];
+
+            var lifted = Fun.lift(fn);
+
+            var result = lifted(one, two);
+
+            assert.equal(Array.isArray(result), true);
+            assert.equal(result.length, 1);
+            assert.equal(result[0], 3);
+
+            var first = [1,2];
+            var second = [4,6];
+            result = lifted(first, second);
+
+            assert.equal(Array.isArray(result), true);
+            assert.equal(result.length, 4);
+            assert.equal(result[0], 5);
+            assert.equal(result[1], 7);
+            assert.equal(result[2], 6);
+            assert.equal(result[3], 8);
         });
     });
 });

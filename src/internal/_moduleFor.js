@@ -27,6 +27,10 @@ function moduleFor(value) {
             return _primitives.Arr;
         case Function:
             return _primitives.Fun;
+        case RegExp:
+            return _primitives.Regex;
+        case Date:
+            return _primitives.DT;
         default:
             return _primitives.Obj;
     }

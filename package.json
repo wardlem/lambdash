@@ -1,7 +1,7 @@
 {
-  "name": "funkit",
+  "name": "lambdash",
   "version": "0.4.0",
-  "description": "A functional toolkit for javascript",
+  "description": "Generic functional programming for javascript",
   "main": "src/funkit.js",
   "directories": {
     "test": "test"

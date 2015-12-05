@@ -39,20 +39,38 @@ Arr.compare = _curry(function(left, right) {
 
 // Implementation for Functor
 Arr.map = _curry(function(fn, arr) {
-    return arr.map(fn);
+    var res = [];
+    var ind = 0;
+    while(ind < arr.length) {
+        res.push(fn(arr[ind]));
+        ind += 1;
+    }
+    return res;
 });
 
 // Implementation for Foldable
-Arr.fold = _curry(function(fn, init, arr) {
+Arr.foldl = _curry(function(fn, init, arr) {
     return arr.reduce(fn, init);
 });
 
-Arr.foldRight = _curry(function(fn, init, arr) {
+Arr.foldr = _curry(function(fn, init, arr) {
     return arr.reduceRight(fn, init);
 });
 
 Arr.concat = _curry(function(left, right){
     return left.concat(right);
+});
+
+// Implementation for Applicative
+Arr.ap = _curry(function(applicative, arr){
+    var result = [];
+    var ind = 0;
+    while (ind < applicative.length) {
+        result = result.concat(Arr.map(applicative[ind], arr));
+        ind += 1;
+    }
+
+    return result;
 });
 
 // Implementation for Monad
@@ -64,7 +82,12 @@ Arr.empty = function empty() {
     return [];
 };
 
-Arr.flatten = Arr.fold(Arr.concat, []);
+Arr.flatten = Arr.foldl(Arr.concat, []);
+
+// Other array functions
+Arr.applyTo = _curry(function(arr, fn) {
+    fn.apply(this, arr);
+});
 
 module.exports = Arr;
 

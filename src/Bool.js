@@ -1,6 +1,8 @@
 var _curry = require('./internal/_curry');
+var _always = require('./internal/_always');
 
 var Ordering = require('./Ordering');
+var Stringable = require('./Stringable');
 
 var Bool = require('./internal/_primitives').Bool;
 
@@ -43,6 +45,9 @@ Bool.or = _curry(function(left, right) {
 Bool.not = function(bool) {
     return !bool;
 };
+
+Bool.T = _always(true);
+Bool.F = _always(false);
 
 
 module.exports = Bool;

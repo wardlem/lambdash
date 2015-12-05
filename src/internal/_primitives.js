@@ -8,6 +8,8 @@ var _isString = require('./_isString');
 var _isArray = require('./_isArray');
 var _isObject = require('./_isObject');
 var _isFunction = require('./_isFunction');
+var _isRegExp = require('./_isRegExp');
+var _isDate = require('./_isDate');
 var _isDefined = require('./_isDefined');
 var _curry = require('./_curry');
 
@@ -91,16 +93,32 @@ function Obj(value){
 
 Obj.valid = _isObject;
 Obj.assert = _assert(_isObject, "Invalid value for Obj");
-
 _primitives.Obj = Obj;
+
 
 function Fun(value) {
     return Fun.assert(value);
 }
 
 Fun.valid = _isFunction;
-
 Fun.assert = _assert(_isFunction, "Invalid value for Fun");
-
 _primitives.Fun = Fun;
+
+
+function Regex(value) {
+    return Fun.assert(value);
+}
+
+Regex.valid = _isRegExp;
+Regex.assert = _assert(_isRegExp, "Invalid value for Regex");
+_primitives.Regex = Regex;
+
+
+function DT(value) {
+    return DT.assert(value);
+}
+
+DT.valid = _isDate;
+DT.assert = _assert(_isDate, "Invalid value for DT");
+_primitives.DT = DT;
 

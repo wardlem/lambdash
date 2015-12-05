@@ -1,8 +1,8 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _curryN = require('./internal/_curryN');
-var _flip = require('./internal/_flip');
 var _isFunction = require('./internal/_isFunction');
 var _slice = require('./internal/_slice');
+var _equal = require('./internal/_equal');
 
 var Monoid = module.exports;
 
@@ -11,27 +11,28 @@ Monoid.empty = function(value) {
     return M.empty();
 };
 
-Monoid.concat = function() {
+Monoid.isEmpty = function(value) {
+    return _equal(value, Monoid.empty(value));
+};
+
+Monoid.concat = _curry(function(a, b) {
+    var M = _moduleFor(a);
+    return M.concat(a, b);
+});
+
+Monoid.concatAll = function() {
     if (arguments.length === 0) {
-        throw new TypeError('Monoid#concat can not be called without any arguments');
+        throw new TypeError('Monoid#concatAll can not be called with no arguments');
     }
 
     var start = arguments[0];
-    var rest = _slice(arguments, 1);
+    var argsInd = 1;
 
-    if (_isFunction(start.concat)) {
-        return start.concat.apply(start, rest);
+    while(argsInd < arguments.length) {
+        start = Monoid.concat(start, arguments[argsInd]);
+        argsInd += 1;
     }
 
-    var M = _moduleFor(start);
-    if (_isFunction(M.concat)) {
-        return M.concat.apply(M, arguments);
-    }
-
-    throw new TypeError('Monoid#concat called with arguments that do not implement Monoid');
+    return start;
 };
-
-Monoid.append = _curryN(2, Monoid.concat);
-
-Monoid.prepend = _flip(Monoid.append);
 
