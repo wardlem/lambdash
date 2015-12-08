@@ -5,4 +5,6 @@ module.exports = function(parent, child) {
         enumerable: false,
         value: parent
     });
+
+    return child;
 };

@@ -246,7 +246,9 @@ A functor should conform to the following law:
 
 #### Example
 
-
+```javascript
+_.map(x => x + 1, [1,2,3]);   // [2,3,4]
+```
 
 ### Applicative
 
@@ -254,14 +256,25 @@ A type that implements applicative may have values which may be applied to other
 
 A value that implements Applicative must first implement Functor.
 
+The following should be true:
+
+    A.of(f).ap(A.of(a)) is equal to A.map(f, A.of(a))
+
 #### Minimal Implementation
 
 1. `ap`: `Applicative p => p (a -> b) -> p a -> p b`
 2. `of`: `Applicative p => a -> p a`
 
+#### Examples
+
+```javascript
+    _.ap(_.Arr.of(x => x + 1), [1,2,3]);      // [2,3,4]
+    _.ap([x => x + 1, x => x * 2], [1,2,3]);  // [2,3,4,2,4,6]
+```
+
 ### Monad
 
-A monad is a chainable, applicative type.
+A monad is a chainable container type.
 
 A type that implements Monad must first implement Applicative
 
@@ -273,5 +286,65 @@ A type that implements Monad must first implement Applicative
 
 1. `chain`: `Monad m => (a -> m b) -> m a -> m b`
 
-Additionally, functions that operate on monads may be composed or piped using the `_.mcompose` and `_.mpipe` functions.
+Additionally, functions that operate on monads may be composed or piped using the `_.composeM` and `_.pipeM` functions.
 These functions behave in a similar manner to `_.compose` and `_.pipe` except that the functions are joined with the `_.chain` function.
+
+#### Examples
+
+```javascript
+
+    var Maybe = require('lambdash.maybe'),
+        Just = Maybe.Just,
+        None = Maybe.None;
+    
+    _.flatten(Just(Just(1)));       // Just 1
+    _.flatten(Just(None);           // None
+    _.flatten(None);                // None
+    
+    _.flatten([[1,2],[3,4],[5,6]]);        // [1,2,3,4,5,6]
+    
+    _.chain(n => [n, n * 2], [1,2,3]);     // [1,2,2,4,3,6]
+    
+    var composed = _.composeM(_.add(1), _.mul(2), _.sub(2));
+    composed([3,4,5]);                     // [3,5,7]
+    
+    var piped = _.pipeM(_.add(1), _.mul(2), _.sub(2));
+    piped([3,4,5]);                        // [6,8,10]
+
+```
+
+### Foldable
+
+The foldable interface is for container types that can be folded into a value.
+
+#### Minimum Implementation
+
+1. `fold`: `Foldable f => (b -> a -> b) -> b -> f a -> b`
+2. `foldl`: `Foldable f => (b -> a -> b) -> b -> f a -> b`
+3. `foldr`: `Foldable f => (b -> a -> b) -> b -> f a -> b`
+
+Most likely, fold will be equivalent to either foldl or foldr, whichever is more efficient for the type.
+
+#### Derived Functions
+
+1. `foldMap`: `(Foldable f, Monoid m) => (a -> m) -> f a -> m`
+2. `foldMap2`: `(Foldable f, Monoid m) => (a -> m) -> m -> f a -> m`
+3. `join`: `(Foldable f, Monoid m) => f m -> m`
+4. `join2`: `(Foldable f, Monoid m) => m -> f m -> m`
+5. `toArray`: `Foldable f => f a -> Array a`
+6. `length`: `Foldable f => f a -> Integer`
+7. `isEmpty`: `Foldable f => f a -> Boolean`
+8. `isNotEmpty`: `Foldable f => f a -> Boolean`
+9. `contains`: `(Foldable f, Eq a) => a -> f a -> Boolean`
+10. `notContains`: `(Foldable f, Eq a) => a -> f a -> Boolean`
+11. `any`: `Foldable f => (a -> Boolean) -> f a -> Boolean`
+12. `all`: `Foldable f => (a -> Boolean) -> f a -> Boolean`
+13. `fold1`: `Foldable f => (b -> a -> b) -> f a -> b`
+14. `foldl1`: `Foldable f => (b -> a -> b) -> f a -> b`
+15. `foldr1`: `Foldable f => (b -> a -> b) -> f a -> b`
+16. `maximum`: `(Foldable f, Ord a) => f a -> a`
+17. `minimum`: `(Foldable f, Ord a) => f a -> a`
+18. `sum`: `(Foldable f, Numeric a) => f a -> a`
+19. `prodouct`: `(Foldable f, Numeric a) => f a -> a`
+
+

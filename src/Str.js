@@ -42,12 +42,12 @@ Str.concat = _curry(function(left, right) {
 });
 
 // Implementation for foldable
-Str.fold = _curry(function(fn, init, string) {
-    return string.split('').reduce(fn, init).join('');
+Str.fold = Str.foldl = _curry(function(fn, init, string) {
+    return string.split('').reduce(fn, init);
 });
 
-Str.foldRight = _curry(function(fn, init, string) {
-    return string.split('').reduceRight(fn, init).join('');
+Str.foldr = _curry(function(fn, init, string) {
+    return string.split('').reduceRight(fn, init);
 });
 
 // String functions

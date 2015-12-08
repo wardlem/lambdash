@@ -57,6 +57,8 @@ Arr.foldr = _curry(function(fn, init, arr) {
     return arr.reduceRight(fn, init);
 });
 
+Arr.fold = Arr.foldl;
+
 Arr.concat = _curry(function(left, right){
     return left.concat(right);
 });

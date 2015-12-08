@@ -13,8 +13,8 @@ function sumType(name, definition) {
 
     var names = Object.keys(definition);
 
-    name = _isFunction(name) ? name.name : name;
     var Sum = _isFunction(name) ? name : _makeFunction(name, function(){});
+    name = Sum.name;
 
     Sum.valid = function valid(value) {
         return value instanceof Sum;
@@ -35,12 +35,15 @@ function sumType(name, definition) {
         }
 
         var Product = productType(name, def);
+
         Product.prototype = Object.create(Sum.prototype);
         Product.prototype.constructor = Product;
 
         require('./internal/_subModule')(Sum, Product);
 
+
         Sum[name] = Object.keys(def).length ? Product : Product();
+
     });
 
     Sum.case = _curry(function(cases, value) {
