@@ -15,11 +15,11 @@ Num.compare = _curry(function(left, right) {
 });
 
 // Implementation for Enum
-Num.toInteger = function(value) {
+Num.toInt = function(value) {
     return value << 0;
 };
 
-Num.fromInteger = _identity;
+Num.fromInt = _identity;
 
 // Implementation for numeric
 Num.add = _curry(function(a, b) {

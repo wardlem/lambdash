@@ -14,11 +14,11 @@ Ratio.toNum = function(ratio) {
     return ratio.numerator / ratio.denominator;
 };
 
-Ratio.toInteger = function(ratio) {
+Ratio.toInt = function(ratio) {
     return Ratio.toNum(ratio) << 0;
 };
 
-Ratio.fromInteger = function(value) {
+Ratio.fromInt = function(value) {
     return Ratio(value, 1);
 };
 
@@ -58,7 +58,7 @@ Ratio.div = _curry(function(a, b) {
 
 Ratio.mod = _curry(function(a, b) {
     // there must be a better way...
-    var div = Ratio.fromInteger(Ratio.toInteger(Ratio.div(a, b)));
+    var div = Ratio.fromInt(Ratio.toInt(Ratio.div(a, b)));
     return Ratio.sub(a, Ratio.mul(div, b));
 });
 
@@ -68,7 +68,7 @@ Ratio.reciprocal = function(a) {
 };
 
 Ratio.sign = function(a) {
-    return Ratio.fromInteger(Numeric.sign(a.numerator) * Numeric.sign(a.denominator));
+    return Ratio.fromInt(Numeric.sign(a.numerator) * Numeric.sign(a.denominator));
 };
 
 describe('Numeric', function() {

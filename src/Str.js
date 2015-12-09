@@ -17,7 +17,7 @@ Str.compare = _curry(function(left, right) {
 });
 
 // Implementation for Enum
-Str.toInteger = function(value) {
+Str.toInt = function(value) {
     if (value.length === 0) {
         throw new TypeError('Can not convert empty string to integer');
     }
@@ -25,7 +25,7 @@ Str.toInteger = function(value) {
     return value.charCodeAt(0);
 };
 
-Str.fromInteger = String.fromCharCode;
+Str.fromInt = String.fromCharCode;
 
 // Implementation for Functor
 Str.map = _curry(function(fn, str) {

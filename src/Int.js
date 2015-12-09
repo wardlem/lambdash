@@ -11,12 +11,12 @@ Int.equal = _is;
 
 // Implementation for Ord
 Int.compare = _curry(function(left, right) {
-    return Ordering.fromInteger(left - right);
+    return Ordering.fromInt(left - right);
 });
 
 // Implementation for Enum
-Int.toInteger = _identity;
-Int.fromInteger = _identity;
+Int.toInt = _identity;
+Int.fromInt = _identity;
 
 // Implementation for Bounded
 Int.minBound = function(){

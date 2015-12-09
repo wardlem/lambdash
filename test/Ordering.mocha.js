@@ -39,11 +39,11 @@ describe('Ordering', function() {
         });
     });
 
-    describe('#toInteger', function() {
+    describe('#toInt', function() {
         it('should return the correct integer', function() {
-            assert.equal(Ordering.toInteger(Ordering.LT), -1);
-            assert.equal(Ordering.toInteger(Ordering.EQ), 0);
-            assert.equal(Ordering.toInteger(Ordering.GT), 1);
+            assert.equal(Ordering.toInt(Ordering.LT), -1);
+            assert.equal(Ordering.toInt(Ordering.EQ), 0);
+            assert.equal(Ordering.toInt(Ordering.GT), 1);
         });
     });
 

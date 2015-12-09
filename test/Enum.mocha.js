@@ -14,24 +14,24 @@ var Enum = require('../src/Enum');
 var _arrEqual = require('../src/internal/_arrayEqual');
 
 var Test = productType('Test', {val: Int});
-Test.toInteger = function(value) {
+Test.toInt = function(value) {
     return value.val + 1;
 };
-Test.fromInteger = function(int) {
+Test.fromInt = function(int) {
     return Test(int - 1);
 };
 
 describe('Enum', function() {
-    describe('#toInteger', function(){
+    describe('#toInt', function(){
         it('should return the integral value for implementing values', function(){
-            assert.equal(Enum.toInteger(435), 435);
-            assert.equal(Enum.toInteger(43.67), 43);
-            assert.equal(Enum.toInteger(-78.65), -78);
-            assert.equal(Enum.toInteger('a'), 97);
-            assert.equal(Enum.toInteger('apple'), 97);
-            assert.equal(Enum.toInteger(false), 0);
-            assert.equal(Enum.toInteger(true), 1);
-            assert.equal(Enum.toInteger(Test(1)), 2);
+            assert.equal(Enum.toInt(435), 435);
+            assert.equal(Enum.toInt(43.67), 43);
+            assert.equal(Enum.toInt(-78.65), -78);
+            assert.equal(Enum.toInt('a'), 97);
+            assert.equal(Enum.toInt('apple'), 97);
+            assert.equal(Enum.toInt(false), 0);
+            assert.equal(Enum.toInt(true), 1);
+            assert.equal(Enum.toInt(Test(1)), 2);
         });
     });
 

@@ -32,15 +32,15 @@ var enumeratedType = function(name, definition) {
 
     var Enumeration = sumType(Constructor, sumDef);
 
-    Enumeration.toInteger = Enumeration.case(intValues);
+    Enumeration.toInt = Enumeration.case(intValues);
 
     Enumeration.compare = _curry(function(left, right) {
-        return Ordering.fromInteger(Enumeration.toInteger(left) - Enumeration.toInteger(right));
+        return Ordering.fromInt(Enumeration.toInt(left) - Enumeration.toInt(right));
     });
 
-    Enumeration.fromInteger = function(e) {
+    Enumeration.fromInt = function(e) {
         if (e < 0 || e > maxValue) {
-            throw new RangeError(name + "#fromInteger called with value out of range");
+            throw new RangeError(name + "#fromInt called with value out of range");
         }
 
         return Enumeration[definition[e]];

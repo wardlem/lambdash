@@ -13,15 +13,15 @@ Bool.equal = function(left, right) {
 
 // Implementation for Ord
 Bool.compare = _curry(function(left, right) {
-    return Ordering.fromInteger(left - right);
+    return Ordering.fromInt(left - right);
 });
 
 // Implementation for Enum
-Bool.toInteger = function(value) {
+Bool.toInt = function(value) {
     return +value;
 };
 
-Bool.fromInteger = function(value) {
+Bool.fromInt = function(value) {
     return value !== 0;
 };
 
