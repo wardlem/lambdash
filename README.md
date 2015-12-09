@@ -51,7 +51,7 @@ To facilitate ordering, Lambdash provides an algebraic data type for ordering ca
     _.Ordering.GT === _.GT
     
     // represents an "equal to result"
-    _.Ordering.EQ === _.EQ
+    _.Ordering.EQ === _.EQ 
     
 Types that implement Ord must also implement Eq.
     
@@ -258,7 +258,7 @@ A value that implements Applicative must first implement Functor.
 
 The following should be true:
 
-    A.of(f).ap(A.of(a)) is equal to A.map(f, A.of(a))
+    A.ap(A.of(f),A.of(a)) is equal to A.map(f, A.of(a))
 
 #### Minimal Implementation
 
@@ -298,7 +298,7 @@ These functions behave in a similar manner to `_.compose` and `_.pipe` except th
         None = Maybe.None;
     
     _.flatten(Just(Just(1)));       // Just 1
-    _.flatten(Just(None);           // None
+    _.flatten(Just(None));          // None
     _.flatten(None);                // None
     
     _.flatten([[1,2],[3,4],[5,6]]);        // [1,2,3,4,5,6]

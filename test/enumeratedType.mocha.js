@@ -6,6 +6,7 @@ var Eq = require('../src/Eq');
 var Bounded = require('../src/Bounded');
 var Enum = require('../src/Enum');
 var Ord = require('../src/Ord');
+var Ordering = require('../src/Ordering');
 
 var enumeratedType = require('../src/enumeratedType');
 
@@ -41,9 +42,9 @@ describe('enumeratedType', function(){
     });
 
     it('should create a sum type that implements Ord', function() {
-        assert(Ord.compare(DAYS.SUNDAY, DAYS.SUNDAY).isEqual());
-        assert(Ord.compare(DAYS.SUNDAY, DAYS.WEDNESDAY).isLessThan());
-        assert(Ord.compare(DAYS.FRIDAY, DAYS.SUNDAY).isGreaterThan());
+        assert(Ordering.isEQ(Ord.compare(DAYS.SUNDAY, DAYS.SUNDAY)));
+        assert(Ordering.isLT(Ord.compare(DAYS.SUNDAY, DAYS.WEDNESDAY)));
+        assert(Ordering.isGT(Ord.compare(DAYS.FRIDAY, DAYS.SUNDAY)));
     });
 
     it('should create a sum type that implements Enum', function() {

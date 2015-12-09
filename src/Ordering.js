@@ -23,12 +23,12 @@ Ordering.toInteger = Ordering.case({
     "EQ": 0
 });
 
-Ordering.isLessThan = _is(Ordering.LT);
-Ordering.isGreaterThan = _is(Ordering.GT);
-Ordering.isEqual = _is(Ordering.EQ);
+Ordering.isLT = _is(Ordering.LT);
+Ordering.isGT = _is(Ordering.GT);
+Ordering.isEQ = _is(Ordering.EQ);
 
-Ordering.prototype.isLessThan = _thisify(Ordering.isLessThan);
-Ordering.prototype.isGreaterThan = _thisify(Ordering.isGreaterThan);
-Ordering.prototype.isEqual = _thisify(Ordering.isEqual);
+//Ordering.prototype.isLessThan = _thisify(Ordering.isLessThan);
+//Ordering.prototype.isGreaterThan = _thisify(Ordering.isGreaterThan);
+//Ordering.prototype.isEqual = _thisify(Ordering.isEqual);
 
 module.exports = Ordering;

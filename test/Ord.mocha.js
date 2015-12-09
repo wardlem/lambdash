@@ -52,51 +52,51 @@ describe('Ord', function() {
         });
     });
 
-    describe('#isGreaterThan', function(){
+    describe('#gt', function(){
         it('should return whether or not the first value is greater than the second', function(){
-            assert.equal(Ord.isGreaterThan(1,1), false);
-            assert.equal(Ord.isGreaterThan(1,2), false);
-            assert.equal(Ord.isGreaterThan(2,1), true);
+            assert.equal(Ord.gt(1,1), false);
+            assert.equal(Ord.gt(1,2), false);
+            assert.equal(Ord.gt(2,1), true);
 
-            assert.equal(Ord.isGreaterThan('a','a'), false);
-            assert.equal(Ord.isGreaterThan('a','b'), false);
-            assert.equal(Ord.isGreaterThan('b','a'), true);
+            assert.equal(Ord.gt('a','a'), false);
+            assert.equal(Ord.gt('a','b'), false);
+            assert.equal(Ord.gt('b','a'), true);
         });
     });
 
-    describe('#isLessThan', function(){
+    describe('#lt', function(){
         it('should return whether or not the first value is greater than the second', function(){
-            assert.equal(Ord.isLessThan(1,1), false);
-            assert.equal(Ord.isLessThan(1,2), true);
-            assert.equal(Ord.isLessThan(2,1), false);
+            assert.equal(Ord.lt(1,1), false);
+            assert.equal(Ord.lt(1,2), true);
+            assert.equal(Ord.lt(2,1), false);
 
-            assert.equal(Ord.isLessThan('a','a'), false);
-            assert.equal(Ord.isLessThan('a','b'), true);
-            assert.equal(Ord.isLessThan('b','a'), false);
+            assert.equal(Ord.lt('a','a'), false);
+            assert.equal(Ord.lt('a','b'), true);
+            assert.equal(Ord.lt('b','a'), false);
         });
     });
 
-    describe('#isGreaterThanOrEqual', function(){
+    describe('#gte', function(){
         it('should return whether or not the first value is greater than the second', function(){
-            assert.equal(Ord.isGreaterThanOrEqual(1,1), true);
-            assert.equal(Ord.isGreaterThanOrEqual(1,2), false);
-            assert.equal(Ord.isGreaterThanOrEqual(2,1), true);
+            assert.equal(Ord.gte(1,1), true);
+            assert.equal(Ord.gte(1,2), false);
+            assert.equal(Ord.gte(2,1), true);
 
-            assert.equal(Ord.isGreaterThanOrEqual('a','a'), true);
-            assert.equal(Ord.isGreaterThanOrEqual('a','b'), false);
-            assert.equal(Ord.isGreaterThanOrEqual('b','a'), true);
+            assert.equal(Ord.gte('a','a'), true);
+            assert.equal(Ord.gte('a','b'), false);
+            assert.equal(Ord.gte('b','a'), true);
         });
     });
 
-    describe('#isLessThanOrEqual', function(){
+    describe('#lte', function(){
         it('should return whether or not the first value is greater than the second', function(){
-            assert.equal(Ord.isLessThanOrEqual(1,1), true);
-            assert.equal(Ord.isLessThanOrEqual(1,2), true);
-            assert.equal(Ord.isLessThanOrEqual(2,1), false);
+            assert.equal(Ord.lte(1,1), true);
+            assert.equal(Ord.lte(1,2), true);
+            assert.equal(Ord.lte(2,1), false);
 
-            assert.equal(Ord.isLessThanOrEqual('a','a'), true);
-            assert.equal(Ord.isLessThanOrEqual('a','b'), true);
-            assert.equal(Ord.isLessThanOrEqual('b','a'), false);
+            assert.equal(Ord.lte('a','a'), true);
+            assert.equal(Ord.lte('a','b'), true);
+            assert.equal(Ord.lte('b','a'), false);
         });
     });
 

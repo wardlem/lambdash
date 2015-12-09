@@ -24,7 +24,7 @@ Arr.compare = _curry(function(left, right) {
     var ind = 0;
     while(ind < len) {
         var ordering = Ord.compare(left[ind], right[ind]);
-        if (!ordering.isEqual()) {
+        if (!Ordering.isEQ(ordering)) {
             return ordering;
         }
 
