@@ -7,10 +7,6 @@ module.exports = _curry(function(left, right) {
         return left === right;
     }
 
-    if (_isFunction(left.equal)) {
-        return left.equal(right);
-    }
-
     var M = _moduleFor(left);
     if (_isFunction(M.equal)) {
         return M.equal(left, right);

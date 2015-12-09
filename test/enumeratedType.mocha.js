@@ -28,8 +28,8 @@ describe('enumeratedType', function(){
     });
 
     it('should create a sum type that implements Eq', function() {
-        assert.equal(Eq.equal(DAYS.SUNDAY, DAYS.SUNDAY), true);
-        assert.equal(Eq.equal(DAYS.SUNDAY, DAYS.MONDAY), false);
+        assert.equal(Eq.eq(DAYS.SUNDAY, DAYS.SUNDAY), true);
+        assert.equal(Eq.eq(DAYS.SUNDAY, DAYS.MONDAY), false);
     });
 
     it('should create a sum type that implements Bounded', function() {

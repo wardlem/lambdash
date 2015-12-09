@@ -7,9 +7,10 @@ var _moduleFor = require('./internal/_moduleFor');
 var Eq = require('./Eq');
 var Ordering = require('./Ordering');
 
+
 var Ord = module.exports;
 
-Ord.equal = Eq.equal;
+Ord.eq = Eq.eq;
 
 /**
  * Compares two values of the same type.
