@@ -21,6 +21,7 @@ Ord.equal = Eq.equal;
  * _.GT if the left value is greater than the right, or _.EQ if the values are structurally equal.
  *
  * @sig Ord a => a -> a -> Ordering
+ * @since 0.4.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the second value being compared
  * @return {Ordering} the result of the comparison between the values
@@ -54,6 +55,7 @@ Ord.compare = _curry(function(left, right) {
  * Returns true if the left value is greater than the right value
  *
  * @sig Ord a => a -> a -> Boolean
+ * @since 0.5.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the second value being compared
  * @return {Boolean} True if left is greater than the right
@@ -69,6 +71,7 @@ Ord.gt = _compose(Ordering.isGT, Ord.compare);
  * Returns true if the left value is less than the right value
  *
  * @sig Ord a => a -> a -> Boolean
+ * @since 0.5.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the second value being compared
  * @return {Boolean} True if left is less than the right
@@ -86,6 +89,7 @@ Ord.lt = _compose(Ordering.isLT, Ord.compare);
  * It is the inverse of Ord.lt
  *
  * @sig Ord a => a -> a -> Boolean
+ * @since 0.5.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the second value being compared
  * @return {Boolean} True if left is not less than the right
@@ -103,6 +107,7 @@ Ord.gte = _not(Ord.lt);
  * It is the inverse of Ord.gt
  *
  * @sig Ord a => a -> a -> Boolean
+ * @since 0.5.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the second value being compared
  * @return {Boolean} True if left is not greater than the right
@@ -120,6 +125,7 @@ Ord.lte = _not(Ord.gt);
  * If the values are equal, the left value is returned
  *
  * @sig Ord a => a -> a -> a
+ * @since 0.4.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the right value being compared
  * @return {Ord} the lesser of the two values
@@ -138,6 +144,7 @@ Ord.min = _curry(function(left, right) {
  * If the values are equal, the left value is returned
  *
  * @sig Ord a => a -> a -> a
+ * @since 0.4.0
  * @param {Ord} left the first value being compared
  * @param {Ord} right the right value being compared
  * @return {Ord} the greater of the two values
