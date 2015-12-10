@@ -52,4 +52,4 @@ Monad.pipeM = function() {
 
 Monad.member = function(value) {
     return Applicative.member(value) && _isFunction(_moduleFor(value).flatten);
-}
+};
