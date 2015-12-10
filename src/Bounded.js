@@ -46,8 +46,8 @@ Bounded.isMax = _curry(function(value) {
  * @returns {Bounded}
  * @example
  *
- *      _.maxBound(false);  // true
- *      _.maxBound(true);   // true
+ *      _.minBound(false);  // false
+ *      _.minBound(true);   // false
  */
 Bounded.minBound = _curry(function(value) {
     var M = _moduleFor(value);
