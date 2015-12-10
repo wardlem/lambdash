@@ -1,9 +1,7 @@
 var _curry = require('./internal/_curry');
 var _isFunction = require('./internal/_isFunction');
 var _moduleFor = require('./internal/_moduleFor');
-var _isNumber = require('./internal/_isNumber');
 var _flip = require('./internal/_flip');
-var _alwaysThrow = require('./internal/_alwaysThrow');
 
 var Eq = require('./Eq');
 var Enum = require('./Enum');
