@@ -14,12 +14,17 @@ Num.compare = _curry(function(left, right) {
     return Ordering.fromNum(left - right);
 });
 
+
+
 // Implementation for Enum
 Num.toInt = function(value) {
     return value << 0;
 };
 
 Num.fromInt = _identity;
+
+Num.toNum = _identity;
+Num.fromNum = _identity;
 
 // Implementation for numeric
 Num.add = _curry(function(a, b) {
@@ -44,7 +49,7 @@ Num.mod = _curry(function(a, b) {
 
 Num.abs = Math.abs;
 
-Num.neg = function(a) {
+Num.negate = function(a) {
     return -a;
 };
 
