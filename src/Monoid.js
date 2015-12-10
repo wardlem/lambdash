@@ -5,35 +5,49 @@ var _isFunction = require('./internal/_isFunction');
 var _slice = require('./internal/_slice');
 var _equal = require('./internal/_equal');
 
+var Semigroup = require('./Semigroup');
+
 var Monoid = module.exports;
 
-Monoid.empty = function(value) {
+/**
+ * Returns the empty value for the type of value.
+ *
+ * A monoid should obey the law for all values a: _.concat(_.empty(a), a) is equal to _.concat(a, _.empty(a)) is equal to a
+ *
+ * @sig Monoid m => m -> m
+ * @since 0.4.0
+ * @param {Monoid} value
+ * @returns {Monoid} the empty value for the type
+ * @example
+ *
+ *      _.empty([1,2,3]); // []
+ */
+Monoid.empty = _curry(function(value) {
     var M = _moduleFor(value);
     return M.empty();
-};
-
-Monoid.isEmpty = function(value) {
-    return _equal(value, Monoid.empty(value));
-};
-
-Monoid.concat = _curry(function(a, b) {
-    var M = _moduleFor(a);
-    return M.concat(a, b);
 });
 
-Monoid.concatAll = function() {
-    if (arguments.length === 0) {
-        throw new TypeError('Monoid#concatAll can not be called with no arguments');
-    }
+/**
+ * Returns true if the value is equal to the empty value for the type
+ *
+ * @sig Monoid m => m -> Boolean
+ * @since 0.4.0
+ * @param {Monoid} value the monoid being checked
+ * @returns {Boolean}
+ * @example
+ *
+ *      _.empty([]);      // true
+ *      _.empty([1,2,3]); // false
+ *      _.empty('');      // true
+ *      _.empty('abc');   // false
+ */
+Monoid.isEmpty = _curry(function(value) {
+    return _equal(value, Monoid.empty(value));
+});
 
-    var start = arguments[0];
-    var argsInd = 1;
+Monoid.concat = Semigroup.concat;
+Monoid.concatAll = Semigroup.concatAll;
 
-    while(argsInd < arguments.length) {
-        start = Monoid.concat(start, arguments[argsInd]);
-        argsInd += 1;
-    }
-
-    return start;
+Monoid.member = function(value) {
+    return Semigroup.member(value) && _isFunction(_moduleFor(value).empty);
 };
-
