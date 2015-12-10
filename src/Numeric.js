@@ -3,14 +3,9 @@ var _isFunction = require('./internal/_isFunction');
 var _moduleFor = require('./internal/_moduleFor');
 var _flip = require('./internal/_flip');
 
-var Eq = require('./Eq');
-var Enum = require('./Enum');
 var Num = require('./Num');
 
 var Numeric = module.exports;
-
-Numeric.equal = Eq.equal;
-
 
 var _binOp = _curry(function(op, a, b) {
     if (a == null || b == null) {

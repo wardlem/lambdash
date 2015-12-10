@@ -1,37 +1,82 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _equal = require('./internal/_equal');
 var _isFunction = require('./internal/_isFunction');
+var _curry = require('./internal/_curry');
 
 var Bounded = module.exports;
 
-
-Bounded.isMin = function(value) {
+/**
+ * Returns true if a bounded value is the minimum for its type
+ *
+ * @sig Bounded b => b -> Boolean
+ * @since 0.4.0
+ * @param value a bounded value
+ * @returns {Boolean}
+ * @example
+ *
+ *      _.isMin(false);  // true
+ *      _.isMin(true);   // false
+ */
+Bounded.isMin = _curry(function(value) {
     return _equal(value, Bounded.minBound(value));
-};
+});
 
-Bounded.isMax = function(value) {
+/**
+ * Returns true if a bounded value is the maximum for its type
+ *
+ * @sig Bounded b => b -> Boolean
+ * @since 0.4.0
+ * @param value a bounded value
+ * @returns {Boolean}
+ * @example
+ *
+ *      _.isMax(false);  // false
+ *      _.isMax(true);   // true
+ */
+Bounded.isMax = _curry(function(value) {
     return _equal(value, Bounded.maxBound(value));
-};
+});
 
-
-Bounded.minBound = function(value) {
+/**
+ * Returns the minimum bound for the type of the value.
+ *
+ * @sig Bounded b => b -> b
+ * @since 0.5.0
+ * @param value a bounded value
+ * @returns {Bounded}
+ * @example
+ *
+ *      _.maxBound(false);  // true
+ *      _.maxBound(true);   // true
+ */
+Bounded.minBound = _curry(function(value) {
     var M = _moduleFor(value);
 
     return M.minBound();
-};
+});
 
-Bounded.maxBound = function(value) {
+/**
+ * Returns the maximum bound for the type of the value.
+ *
+ * @sig Bounded b => b -> b
+ * @since 0.5.0
+ * @param value a bounded value
+ * @returns {Bounded}
+ * @example
+ *
+ *      _.maxBound(false);  // true
+ *      _.maxBound(true);   // true
+ */
+Bounded.maxBound = _curry(function(value) {
     var M = _moduleFor(value);
 
     return M.maxBound();
-};
+});
 
-Bounded.isBounded = function(value) {
+
+Bounded.member = function(value) {
     if (value == null) {
         return false;
-    }
-    if (_isFunction(value.isMin) && _isFunction(value.isMax)) {
-        return true;
     }
 
     var M = _moduleFor(value);
