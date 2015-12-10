@@ -29,8 +29,8 @@ describe('Monad', function(){
 
     });
 
-    describe('#compose', function() {
-        it('should compose several functions into one', function(){
+    describe('#composeM', function() {
+        it('should composeM several functions into one', function(){
             var fn1 = function(value) {
                 return [value, value + 1];
             };
@@ -42,7 +42,7 @@ describe('Monad', function(){
 
             var arr = [1,3];
 
-            var composed = Monad.compose(fn1, fn2);
+            var composed = Monad.composeM(fn1, fn2);
 
             assert(Arr.equal(Monad.map(fn1, arr), [[1,2],[3,4]]));
             assert(Arr.equal(Monad.map(fn2, arr), [[1,1],[3,3]]));
@@ -51,8 +51,8 @@ describe('Monad', function(){
 
     });
 
-    describe('#pipe', function() {
-        it('should compose several functions into one', function(){
+    describe('#pipem', function() {
+        it('should composeM several functions into one', function(){
             var fn1 = function(value) {
                 return [value, value + 1];
             };
@@ -64,7 +64,7 @@ describe('Monad', function(){
 
             var arr = [1,3];
 
-            var piped = Monad.pipe(fn1, fn2);
+            var piped = Monad.pipeM(fn1, fn2);
 
             assert(Arr.equal(piped(arr), [1,1,2,2,3,3,4,4]));
         });

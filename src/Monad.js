@@ -2,10 +2,6 @@ var _moduleFor = require('./internal/_moduleFor');
 var _curry = require('./internal/_curry');
 var _isFunction = require('./internal/_isFunction');
 var _compose = require('./internal/_compose');
-var _ifArrEmpty = require('./internal/_ifArrEmpty');
-var _arrMap = require('./internal/_arrMap');
-var _alwaysThrow = require('./internal/_alwaysThrow');
-var _applyTo = require('./internal/_applyTo');
 var _arrReverse = require('./internal/_reverse');
 
 var Functor = require('./Functor');
@@ -38,7 +34,7 @@ Monad.flatten = _curry(function(monad) {
  */
 Monad.chain = _compose(Monad.flatten, Monad.map);
 
-Monad.compose = function() {
+Monad.composeM = function() {
     //_checkCompose(arguments);
     var argsInd = 0;
     var args = [];
@@ -49,7 +45,11 @@ Monad.compose = function() {
     return _compose.apply(this, args);
 };
 
-Monad.pipe = function() {
+Monad.pipeM = function() {
     //_checkPipe(arguments);
-    return Monad.compose.apply(this, _arrReverse(arguments));
+    return Monad.composeM.apply(this, _arrReverse(arguments));
 };
+
+Monad.member = function(value) {
+    return Applicative.member(value) && _isFunction(_moduleFor(value).flatten);
+}
