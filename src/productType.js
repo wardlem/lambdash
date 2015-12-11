@@ -69,7 +69,7 @@ var productType = module.exports = function productType(name, definition) {
         return fn.apply(null, _slice(instance));
     });
 
-    Product.equal = _curry(function equal(left, right) {
+    Product.eq = _curry(function equal(left, right) {
         if (!Product.member(left) || !Product.member(right)) {
             throw new TypeError(name + '#equal only accepts instances of ' + name);
         }

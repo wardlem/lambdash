@@ -7,7 +7,7 @@ var Ordering = require('./Ordering');
 var Str = require('./internal/_primitives').Str;
 
 // Implementation for Eq
-Str.equal = _is;
+Str.eq = _is;
 
 // Implementation for Ord
 Str.compare = _curry(function(left, right) {

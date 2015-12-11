@@ -6,7 +6,7 @@ var Ordering = require('./Ordering');
 var Bool = require('./internal/_primitives').Bool;
 
 // Implementation for Eq
-Bool.equal = function(left, right) {
+Bool.eq = function(left, right) {
     return left === right;
 };
 

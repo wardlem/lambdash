@@ -77,7 +77,7 @@ function sumType(name, definition) {
         throw new TypeError("Non exhaustive case expression for " + name + ". " + c + " not handled.");
     });
 
-    Sum.equal = _curry(function(left, right) {
+    Sum.eq = _curry(function(left, right) {
         if (!Sum.member(left) || !Sum.member(right)) {
             throw new TypeError(name + '#equal only accepts instances of ' + name);
         }
@@ -86,7 +86,7 @@ function sumType(name, definition) {
             return false;
         }
 
-        return left.constructor.equal(left, right);
+        return left.constructor.eq(left, right);
     });
 
     require('./internal/_module')(Sum);

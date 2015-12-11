@@ -74,7 +74,7 @@ describe('Eq', function() {
         assert.equal(Eq.eq(CaseB(2), CaseB(1)), false);
         assert.equal(Eq.eq(CaseA(1), CaseB(1)), false);
 
-        Test.equal = function(left, right) {
+        Test.eq = function(left, right) {
             return left.val === right.val;
         };
 

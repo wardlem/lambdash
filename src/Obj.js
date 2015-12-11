@@ -8,7 +8,7 @@ var __ = require('./internal/_blank');
 var Obj = require('./internal/_primitives').Obj;
 
 // implementation for Eq
-Obj.equal = _curry(function(left, right) {
+Obj.eq = _curry(function(left, right) {
     if (left === right) {
         return true;
     }

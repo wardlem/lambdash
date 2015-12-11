@@ -6,7 +6,6 @@ var Functor = require('./Functor');
 
 var Applicative = module.exports;
 
-// f (a -> b) -> f a -> f b
 /**
  * Applies the function values contained in the first argument to the second
  *

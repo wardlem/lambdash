@@ -8,8 +8,8 @@ module.exports = _curry(function(left, right) {
     }
 
     var M = _moduleFor(left);
-    if (_isFunction(M.equal)) {
-        return M.equal(left, right);
+    if (_isFunction(M.eq)) {
+        return M.eq(left, right);
     }
 
     return left === right;
