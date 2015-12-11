@@ -2,7 +2,6 @@ var _curry = require('./internal/_curry');
 var _always = require('./internal/_always');
 
 var Ordering = require('./Ordering');
-var Stringable = require('./Stringable');
 
 var Bool = require('./internal/_primitives').Bool;
 

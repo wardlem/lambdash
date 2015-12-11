@@ -297,3 +297,11 @@ Numeric.pow = _binOp('pow');
  */
 Numeric.powBy = _flip(Numeric.pow);
 
+Numeric.member = function(value) {
+    if (value == null) {
+        return false;
+    }
+
+    var M = _moduleFor(value);
+    return _isFunction(M.toNum) && _isFunction(M.fromNum);
+}

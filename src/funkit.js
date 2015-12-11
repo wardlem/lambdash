@@ -19,7 +19,7 @@ var Functor = require('./Functor');
 var Monoid = require('./Monoid');
 var Applicative = require('./Applicative');
 var Monad = require('./Monad');
-var Stringable = require('./Stringable');
+var Show = require('./Show');
 
 // Auxiliary types
 var Ordering = require('./Ordering');
@@ -54,7 +54,7 @@ funkit.Functor = Functor;
 funkit.Monoid = Monoid;
 funkit.Applicatice = Applicative;
 funkit.Monad = Monad;
-funkit.Stringable = Stringable;
+funkit.Show = Show;
 
 funkit.Type = Type;
 

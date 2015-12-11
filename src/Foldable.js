@@ -462,6 +462,15 @@ Foldable.product = _fold1(
     Numeric.mul
 );
 
+Foldable.member = function(value) {
+    if (value == null) {
+        return false;
+    }
+
+    var M = _moduleFor(value);
+    return _isFunction(M.fold) && _isFunction(M.foldl) && _isFunction(M.foldr);
+}
+
 
 
 

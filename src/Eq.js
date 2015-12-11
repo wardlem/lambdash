@@ -34,3 +34,10 @@ Eq.eq = _equal;
  */
 Eq.neq = _not(Eq.eq);
 
+Eq.member = function(value) {
+    if (value == null) {
+        return false;
+    }
+
+    return _isFunction(_moduleFor(value).eq);
+}

@@ -157,3 +157,13 @@ Ord.min = _curry(function(left, right) {
 Ord.max = _curry(function(left, right) {
     return Ord.gte(left, right) ? left : right;
 });
+
+
+Ord.member = function(value) {
+    if (value == null) {
+        return false;
+    }
+
+    var M = _moduleFor(M);
+    return _isFunction(M.toInt) && _isFunction(M.fromInt);
+}
