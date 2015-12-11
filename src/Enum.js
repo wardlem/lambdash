@@ -182,4 +182,13 @@ Enum.enumFrom = _curry(function(count, from) {
     return _makeEnum(false, _moduleFor(from), step, fromVal, toVal);
 });
 
+Enum.member = function(value) {
+    if (value == null) {
+        return false;
+    }
+
+    var M = _moduleFor(value);
+    return _isFunction(M.toInt) && _isFunction(M.fromInt);
+}
+
 
