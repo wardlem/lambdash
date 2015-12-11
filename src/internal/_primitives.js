@@ -35,20 +35,20 @@ function Bool(value) {
     return !!value;
 }
 
-Bool.valid = _isBoolean;
+Bool.member = _isBoolean;
 Bool.assert = _assert(_isBoolean, "Invalid value for Bool");
 
 _primitives.Bool = Bool;
 
 function Num(value) {
-    if (Num.valid(+value)) {
+    if (Num.member(+value)) {
         return Num(+value);
     }
 
     return Num.assert(parseFloat(value));
 }
 
-Num.valid = _isNumber;
+Num.member = _isNumber;
 Num.assert = _assert(_isNumber, "Invalid value for Num");
 
 _primitives.Num = Num;
@@ -61,7 +61,7 @@ function Int(value) {
     return Int.assert(parseInt(value));
 }
 
-Int.valid = _isInteger;
+Int.member = _isInteger;
 Int.assert = _assert(_isInteger, "Invalid value for Int");
 
 _primitives.Int = Int;
@@ -73,7 +73,7 @@ function Str(value) {
     return Str.assert(String(value));
 }
 
-Str.valid = _isString;
+Str.member = _isString;
 Str.assert = _assert(_isString, "Invalid value for Str");
 
 _primitives.Str = Str;
@@ -82,7 +82,7 @@ function Arr() {
     return _slice(arguments);
 }
 
-Arr.valid = _isArray;
+Arr.member = _isArray;
 Arr.assert = _assert(_isArray, "Invalid value for Arr");
 
 _primitives.Arr = Arr;
@@ -91,7 +91,7 @@ function Obj(value){
     return Object(value)
 }
 
-Obj.valid = _isObject;
+Obj.member = _isObject;
 Obj.assert = _assert(_isObject, "Invalid value for Obj");
 _primitives.Obj = Obj;
 
@@ -100,7 +100,7 @@ function Fun(value) {
     return Fun.assert(value);
 }
 
-Fun.valid = _isFunction;
+Fun.member = _isFunction;
 Fun.assert = _assert(_isFunction, "Invalid value for Fun");
 _primitives.Fun = Fun;
 
@@ -109,7 +109,7 @@ function Regex(value) {
     return Fun.assert(value);
 }
 
-Regex.valid = _isRegExp;
+Regex.member = _isRegExp;
 Regex.assert = _assert(_isRegExp, "Invalid value for Regex");
 _primitives.Regex = Regex;
 
@@ -118,7 +118,7 @@ function DT(value) {
     return DT.assert(value);
 }
 
-DT.valid = _isDate;
+DT.member = _isDate;
 DT.assert = _assert(_isDate, "Invalid value for DT");
 _primitives.DT = DT;
 

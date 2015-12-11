@@ -19,7 +19,7 @@ var List = function List() {
     return l;
 };
 
-List.valid = function(v) {
+List.member = function(v) {
     return v instanceof List;
 };
 

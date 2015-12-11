@@ -170,7 +170,7 @@ Enum.enumUntil = _enum(false);
  */
 Enum.enumFrom = _curry(function(count, from) {
 
-    if (!Int.valid(count)) {
+    if (!Int.member(count)) {
         throw new TypeError('Enum#enumFrom must have an integer for the count parameter');
     }
 

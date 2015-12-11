@@ -16,12 +16,12 @@ function sumType(name, definition) {
     var Sum = _isFunction(name) ? name : _makeFunction(name, function(){});
     name = Sum.name;
 
-    Sum.valid = function valid(value) {
+    Sum.member = function member(value) {
         return value instanceof Sum;
     };
 
     Sum.assert = function assert(value) {
-        if (Sum.valid(valid)) {
+        if (Sum.member(value)) {
             return value;
         }
 
@@ -47,7 +47,7 @@ function sumType(name, definition) {
     });
 
     Sum.case = _curry(function(cases, value) {
-        if (!Sum.valid(value)) {
+        if (!Sum.member(value)) {
             throw new TypeError("Could not match value as " + name + " since it isn't of the right type");
         }
 
@@ -78,7 +78,7 @@ function sumType(name, definition) {
     });
 
     Sum.equal = _curry(function(left, right) {
-        if (!Sum.valid(left) || !Sum.valid(right)) {
+        if (!Sum.member(left) || !Sum.member(right)) {
             throw new TypeError(name + '#equal only accepts instances of ' + name);
         }
 

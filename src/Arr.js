@@ -11,7 +11,7 @@ Arr.equal = _arrEqual;
 
 // Implementation for Ord
 Arr.compare = _curry(function(left, right) {
-    if (!Arr.valid(left) || !Arr.valid(right)) {
+    if (!Arr.member(left) || !Arr.member(right)) {
         throw new TypeError('Arr#compare can only operate on arrays');
     }
     if (left === right) {

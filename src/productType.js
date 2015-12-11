@@ -15,7 +15,7 @@ var productType = module.exports = function productType(name, definition) {
 
     var constraints = tags.map(function(tag) {
         var c = definition[tag];
-        return c != null && _isFunction(c.valid) ? c.valid
+        return c != null && _isFunction(c.member) ? c.member
             :  _isFunction(c) ? c
             :  _isDefined;
     });
@@ -70,7 +70,7 @@ var productType = module.exports = function productType(name, definition) {
     });
 
     Product.equal = _curry(function equal(left, right) {
-        if (!Product.valid(left) || !Product.valid(right)) {
+        if (!Product.member(left) || !Product.member(right)) {
             throw new TypeError(name + '#equal only accepts instances of ' + name);
         }
 
@@ -84,7 +84,7 @@ var productType = module.exports = function productType(name, definition) {
 
 
 
-    Product.valid = function(value) {
+    Product.member = function(value) {
         return value instanceof Product;
     };
 

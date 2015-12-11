@@ -8,6 +8,7 @@ var Show = module.exports;
  * Converts a value to its string representation.
  *
  * @sig Show s => s -> String
+ * @since 0.5.0
  * @param {Show} value
  * @returns {String} a string representation of the value
  */

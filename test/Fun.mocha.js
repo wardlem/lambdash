@@ -25,10 +25,10 @@ describe('Fun', function(){
         }
     });
 
-    describe('#valid', function() {
+    describe('#member', function() {
         it('should return whether or not a value is a function', function() {
-            assert(Fun.valid(function(){}));
-            assert(!Fun.valid(1));
+            assert(Fun.member(function(){}));
+            assert(!Fun.member(1));
         });
     });
 

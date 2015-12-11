@@ -3,16 +3,16 @@ var assert = require('assert');
 var Num = require('../src/Num');
 
 describe('Num', function() {
-    describe('#valid', function() {
-        it('should return whether or not a number is valid', function(){
-            assert.equal(Num.valid(0), true);
-            assert.equal(Num.valid(1), true);
-            assert.equal(Num.valid(5467.123456), true);
-            assert.equal(Num.valid(null), false);
-            assert.equal(Num.valid(undefined), false);
-            assert.equal(Num.valid('hello'), false);
-            assert.equal(Num.valid([1]), false);
-            assert.equal(Num.valid({a:1}), false);
+    describe('#member', function() {
+        it('should return whether or not a value is a member of number', function(){
+            assert.equal(Num.member(0), true);
+            assert.equal(Num.member(1), true);
+            assert.equal(Num.member(5467.123456), true);
+            assert.equal(Num.member(null), false);
+            assert.equal(Num.member(undefined), false);
+            assert.equal(Num.member('hello'), false);
+            assert.equal(Num.member([1]), false);
+            assert.equal(Num.member({a:1}), false);
         });
     });
 });

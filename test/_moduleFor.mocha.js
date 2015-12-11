@@ -54,9 +54,9 @@ describe('_moduleFor', function(){
         var a = Sum.A(1,2);
         var b = Sum.B;
 
-        assert(Sum.valid(a));
-        assert(Sum.A.valid(a));
-        assert(Sum.valid(b));
+        assert(Sum.member(a));
+        assert(Sum.A.member(a));
+        assert(Sum.member(b));
 
         var sliced = _slice(a);
         assert(Array.isArray(sliced));
