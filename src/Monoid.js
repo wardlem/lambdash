@@ -45,6 +45,28 @@ Monoid.isEmpty = _curry(function(value) {
     return _equal(value, Monoid.empty(value));
 });
 
+/**
+ * Concats a monoid to itself a specified number of times
+ *
+ * @sig Monoid m => Number -> m -> m
+ * @since 0.5.0
+ * @param {Number} n the number of times to repeat the monoid
+ * @param {Monoid} monoid the monoid being repeatedly concatenated
+ * @returns {Monoid} monoid repeated n number of times
+ * @example
+ *
+ *      _.cycleN(4, [1,2]);    // [1,2,1,2,1,2,1,2]
+ *      _.cycleN(3, 'ABC');    // 'ABCABCABC'
+ */
+Monoid.cycleN = _curry(function(n, monoid) {
+    var res = Monoid.empty(monoid);
+    while (n > 0) {
+        res = Monoid.concat(res, monoid);
+        n -= 1;
+    }
+    return res;
+});
+
 Monoid.concat = Semigroup.concat;
 Monoid.concatAll = Semigroup.concatAll;
 
