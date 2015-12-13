@@ -356,6 +356,43 @@ Foldable.any = _curry(function(fn, foldable) {
     }, false, foldable);
 });
 
+/**
+ * Returns the number of elements in the structure that return true for a predicate.
+ *
+ * @since 0.5.0
+ * @sig Foldable f => (a -> Boolean) -> f a -> Number
+ * @param {Function} fn the function used to test each value
+ * @param {Foldable} foldable the structure being tested
+ * @return {Number} The number of elements that the predicate returned true for
+ * @example
+ *
+ *      var arr = [1,1,2,3,4,4,5]
+ *
+ *      _.countWith(_.gt(2), arr);  // 4
+ */
+Foldable.countWith = _curry(function(fn, foldable) {
+    return Foldable.fold(function(accum, value) {
+        return fn(value) ? accum + 1 : accum;
+    }, 0, foldable)
+});
+
+/**
+ * Returns the number of elements in foldable which are equal to a given value.
+ * @since 0.5.0
+ * @sig (Foldable f, Eq e) => e -> f e -> Number
+ * @param {Eq} v the value being counted in the structure
+ * @param {Foldable} foldable the structure
+ * @return {Number} The number of values in the structure equal to v
+ * @example
+ *
+ *      var arr = [1,1,2,3,4,4,5]
+ *
+ *      _.count(4, arr);  // 2
+ */
+Foldable.count = _curry(function(v, foldable) {
+    return Foldable.countWith(_equal(v), foldable);
+});
+
 
 var __fold1 = _curry(function(_fold, err, fn, foldable) {
     var NOTHING = {};
@@ -469,7 +506,7 @@ Foldable.member = function(value) {
 
     var M = _moduleFor(value);
     return _isFunction(M.fold) && _isFunction(M.foldl) && _isFunction(M.foldr);
-}
+};
 
 
 
