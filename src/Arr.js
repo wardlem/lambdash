@@ -4,16 +4,45 @@ var _curry = require('./internal/_curry');
 var Ord = require('./Ord');
 var Ordering = require('./Ordering');
 
+/**
+ * Arr is the module for javascript's built-in array type.
+ *
+ * @module
+ * @implements Eq, Ord, Functor, Foldable, Semigroup, Monoid, Applicative, Monad, Show
+ */
 var Arr = require('./internal/_primitives').Arr;
 
-// Implementation for Eq
+/**
+ * Returns true if two arrays are structurally equal.
+ *
+ * This function implements Eq for arrays so long as all of the contained values of both arrays implement Eq.
+ *
+ * @sig Eq e => Array e -> Array e -> Boolean
+ * @since 0.5.0
+ * @see Eq.eq
+ * @param {Array} first one of the arrays being compared for equality
+ * @param {Array} second the other array being compared for equality
+ * @return {Boolean} Whether or not the two arrays are structurally equal
+ */
 Arr.eq = _arrEqual;
 
-// Implementation for Ord
+/**
+ * Returns a comparison of two arrays.
+ *
+ * This function implements Ord for arrays so long as all the members of both arrays implement Ord.
+ *
+ * Comparison is done on the arrays elements from left to right, until a non-equal result is found, which is returned.
+ * If one array is a prefix of another, the result is _.LT if the the length of the first is less than the second,
+ * _.GT if the length of the first is greater than the second or _.EQ if they are the same length.
+ *
+ * @sig Ord o => Array o -> Array o -> Ordering
+ * @since 0.4.0
+ * @see Ord.compare
+ * @param {Array} first the first array being compared
+ * @param {Array} second the second array being compared
+ * @return {Ordering} The result of the comparison
+ */
 Arr.compare = _curry(function(left, right) {
-    if (!Arr.member(left) || !Arr.member(right)) {
-        throw new TypeError('Arr#compare can only operate on arrays');
-    }
     if (left === right) {
         // short-circuit
         return Ordering.EQ;
@@ -37,7 +66,18 @@ Arr.compare = _curry(function(left, right) {
 });
 
 
-// Implementation for Functor
+/**
+ * Maps a function over the elements of an array.
+ *
+ * This function implements Functor for arrays.
+ *
+ * @sig (a -> b) -> Array a -> Array b
+ * @since 0.4.0
+ * @see Functor.map
+ * @param {Function} fn the function mapping over the array
+ * @param {Array} arr the array being mapped over
+ * @return {Array} The array with fn applied to each of its elements
+ */
 Arr.map = _curry(function(fn, arr) {
     var res = [];
     var ind = 0;
@@ -48,22 +88,97 @@ Arr.map = _curry(function(fn, arr) {
     return res;
 });
 
-// Implementation for Foldable
+/**
+ * Folds an array from the left.
+ *
+ * This function is part of the implementation for Foldable for arrays.
+ *
+ * @sig (b -> a -> b) -> b -> Array a -> b
+ * @since 0.5.0
+ * @see Foldable.foldl
+ * @param {Function} fn the function that calculates the accumulated value
+ * @param {*} init the initial value of the accumulation
+ * @param {Array} arr the array being accumulated
+ * @return {*} The final accumulation of the fold
+ */
 Arr.foldl = _curry(function(fn, init, arr) {
     return arr.reduce(fn, init);
 });
 
+/**
+ * Folds an array from the right.
+ *
+ * This function is part of the implementation for Foldable for arrays.
+ *
+ * @sig (b -> a -> b) -> b -> Array a -> b
+ * @since 0.5.0
+ * @see Foldable.foldr
+ * @param {Function} fn the function that calculates the accumulated value
+ * @param {*} init the initial value of the accumulation
+ * @param {Array} arr the array being accumulated
+ * @return {*} The final accumulation of the fold
+ */
 Arr.foldr = _curry(function(fn, init, arr) {
     return arr.reduceRight(fn, init);
 });
 
+/**
+ * Folds an array from the left.
+ *
+ * This function is part of the implementation for Foldable for arrays.
+ *
+ * @sig (b -> a -> b) -> b -> Array a -> b
+ * @since 0.5.0
+ * @see Foldable.fold
+ * @param {Function} fn the function that calculates the accumulated value
+ * @param {*} init the initial value of the accumulation
+ * @param {Array} arr the array being accumulated
+ * @return {*} The final accumulation of the fold
+ */
 Arr.fold = Arr.foldl;
 
+/**
+ * Concatenates two arrays into one with.
+ *
+ * This function implements Semigroup for arrays.
+ *
+ * @sig Array a -> Array a -> Array a
+ * @since 0.4.0
+ * @see Semigroup.concat
+ * @param {Array} left the prefix of the concatenation
+ * @param {Array} right the suffix of the concatenation
+ * @returns {Array} left and right concatenated together
+ */
 Arr.concat = _curry(function(left, right){
     return left.concat(right);
 });
 
-// Implementation for Applicative
+/**
+ * Returns the empty, unit value of an array.
+ *
+ * This function implements Monoid for arrays.
+ *
+ * @sig () -> Array
+ * @since 0.4.0
+ * @see Monoid.empty
+ * @returns {Array} An empty array.
+ */
+Arr.empty = _curry(function empty() {
+    return [];
+});
+
+/**
+ * Applies the functions contained in one array to another array
+ *
+ * This function along with Arr.of implements Applicative for arrays.
+ *
+ * @sig Array (a -> b) -> Array a -> Array b
+ * @since 0.4.0
+ * @see Applicative.ap
+ * @param {Function[]} applicative an array of functions
+ * @param {*[]} arr an array to which each function in applicative will be applied
+ * @return {*[]}
+ */
 Arr.ap = _curry(function(applicative, arr){
     var result = [];
     var ind = 0;
@@ -75,20 +190,127 @@ Arr.ap = _curry(function(applicative, arr){
     return result;
 });
 
-// Implementation for Monad
-Arr.of = function of(value) {
+/**
+ * Returns an array of the value supplied
+ *
+ * This function along with Arr.ap implements Applicative for arrays.
+ *
+ * @sig a -> Array a
+ * @since 0.4.0
+ * @see Applicative.of
+ * @param value a value that will be wrapped in an array
+ * @returns {*[]} An array with the provided value as its only element
+ */
+Arr.of = _curry(function of(value) {
     return [value];
-};
+});
 
-Arr.empty = function empty() {
-    return [];
-};
 
+/**
+ * Flattens an array of arrays.
+ *
+ * This function implements Monad for array
+ *
+ * @sig Array (Array a) -> Array a
+ * @since 0.4.0
+ * @see Monad.flatten
+ * @param {Array[]} arr The array of arrays being flattened
+ * @return {Array}
+ */
 Arr.flatten = Arr.foldl(Arr.concat, []);
 
-// Other array functions
+/**
+ * Applies an array of values to a function
+ *
+ * @sig Array * -> (* -> *) -> *
+ * @since 0.4.0
+ * @param {Array} arr an array that will be applied to the function
+ * @param {Function} fn a function the array will be applied to
+ * @return {*}
+ * @example
+ *
+ *      Arr.applyTo([1,2], (a,b) => a + b);  // 3
+ *      Arr.applyTo([1,2])((a,b) => a + b);  // 3
+ */
 Arr.applyTo = _curry(function(arr, fn) {
     fn.apply(this, arr);
+});
+
+
+Arr.nth = _curry(function(n, arr) {
+    if (n >= arr.length) {
+        throw new RangeError('Index out of bounds');
+    }
+});
+
+Arr.take = _curry(function(n, arr) {
+    return Array.prototype.slice.call(arr, 0, n);
+});
+
+Arr.drop = _curry(function(n, arr) {
+    return Array.prototype.slice.call(arr, n);
+});
+
+Arr.slice = _curry(function(start, end, arr) {
+    return Array.prototype.slice.call(arr, start, end);
+});
+
+Arr.head = Arr.nth(0);
+
+Arr.tail = Arr.drop(1);
+
+Arr.init = _curry(function(arr){
+    return Arr.take(arr.length - 1);
+});
+
+Arr.last = _curry(function(arr){
+    return Arr.nth(arr.length - 1);
+});
+
+Arr.len = _curry(function(arr) {
+    return arr.length;
+});
+
+Arr.reverse = _curry(function(arr) {
+    return Array.prototype.reverse.call(Arr.drop(0, arr));
+});
+
+Arr.intersperse = _curry(function(value, arr) {
+    if (!arr.length) {
+        return [];
+    }
+
+    var res = [arr[0]];
+    var ind = 1;
+    while (ind < arr.length) {
+        res.push(value[ind]);
+        res.push(value);
+        ind += 1;
+    }
+
+    return res;
+});
+
+Arr.transpose = _curry(function(value, arr) {
+    var res = [];
+    var maxLen = Arr.foldl(function(accum, v) {
+        return Math.max(accum, v.length);
+    }, 0, arr);
+
+    var ind = 0;
+    while(ind < maxLen) {
+        res[ind] = [];
+        var innerInd = 0;
+        while(innerInd < arr.length) {
+            if (arr[innerInd].length > ind) {
+                res[ind].push(arr[innerInd][ind]);
+            }
+            innerInd += 1;
+        }
+        ind += 1;
+    }
+
+    return res;
 });
 
 module.exports = Arr;

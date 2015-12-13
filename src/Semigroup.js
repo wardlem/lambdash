@@ -10,8 +10,6 @@ var Semigroup = module.exports;
 /**
  * Returns the concatenation of two values
  *
- * A semigroup should obey the law for all values a: _.concat(_.empty(a), a) is equal to _.concat(a, _.empty(a)) is equal to a
- *
  * @sig Semigroup m => m -> m -> m
  * @since 0.4.0
  * @param {Semigroup} first the prefix of the concatenation
