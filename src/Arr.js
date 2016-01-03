@@ -265,18 +265,6 @@ Arr.slice = _curry(function(start, end, arr) {
     return Array.prototype.slice.call(arr, start, end);
 });
 
-Arr.head = Arr.nth(0);
-
-Arr.tail = Arr.drop(1);
-
-Arr.init = _curry(function(arr){
-    return Arr.take(arr.length - 1);
-});
-
-Arr.last = _curry(function(arr){
-    return Arr.nth(arr.length - 1);
-});
-
 Arr.length = _curry(function(arr) {
     return arr.length;
 });

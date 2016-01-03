@@ -32,22 +32,48 @@ Str.map = _curry(function(fn, str) {
     return str.split('').map(fn).join('');
 });
 
+// Implementation for Semigroup
+Str.concat = _curry(function(left, right) {
+    return String(left) + String(right);
+});
+
 // Implementation for Monoid
 Str.empty = function() {
     return '';
 };
 
-Str.concat = _curry(function(left, right) {
-    return String(left) + String(right);
-});
-
-// Implementation for foldable
+// Implementation for Foldable
 Str.fold = Str.foldl = _curry(function(fn, init, string) {
     return string.split('').reduce(fn, init);
 });
 
 Str.foldr = _curry(function(fn, init, string) {
     return string.split('').reduceRight(fn, init);
+});
+
+// Implementation for Sequential
+Str.length = _curry(function(str){
+    return str.length;
+});
+
+Str.nth = _curry(function(ind, str) {
+    if (ind < 0) {
+        ind = str.length + ind;
+    }
+
+    if (ind < 0 || ind >= str.length) {
+        throw new RangeError('String index out of bounds');
+    }
+
+    return str[ind];
+});
+
+Str.append = _curry(function(app, str) {
+    return str + app;
+});
+
+Str.prepend = _curry(function(prep, str) {
+    return prep + str;
 });
 
 // String functions
@@ -58,8 +84,6 @@ Str.split = _curry(function(delim, string) {
 Str.join = _curry(function(delim, arr) {
     return arr.join(delim);
 });
-
-
 
 Str.lines = Str.split('\n');
 Str.words = Str.split(/\s/);

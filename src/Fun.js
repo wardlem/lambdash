@@ -38,9 +38,9 @@ Fun.liftN = _curry(function(n, fn) {
     });
 });
 
-Fun.lift = function(fn) {
+Fun.lift = _curry(function(fn) {
     return Fun.liftN(fn.length, fn);
-};
+});
 
 require('./internal/_module')(Fun);
 

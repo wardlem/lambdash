@@ -195,3 +195,41 @@ lamdash.pipeM = Monad.pipeM;
 
 // Show
 lamdash.show = Show.show;
+
+// Bool
+lamdash.and = Bool.and;
+lamdash.or = Bool.or;
+lamdash.not = Bool.not;
+lamdash.condition = Bool.condition;
+lamdash.T = Bool.T;
+lamdash.F = Bool.F;
+
+// Str
+lamdash.split = Str.split;
+lamdash.lines = Str.lines;
+lamdash.words = Str.words;
+lamdash.unlines = Str.unlines;
+lamdash.unwords = Str.unwords;
+
+// Function
+lamdash.compose = Fun.compose;
+lamdash.pipe = Fun.pipe;
+lamdash.always = Fun.always;
+lamdash.alwaysThrow = Fun.alwaysThrow;
+lamdash.thunk = Fun.thunk;
+lamdash.identity = Fun.identity;
+lamdash.curry = Fun.curry;
+lamdash.curryN = Fun.curryN;
+lamdash.arity = Fun.arity;
+lamdash.make = Fun.make;
+lamdash.thisify = Fun.thisify;
+lamdash.liftN = Fun.liftN;
+lamdash.lift = Fun.lift;
+
+// Ordering
+lamdash.Ordering = Ordering;
+lamdash.LT = Ordering.LT;
+lamdash.GT = Ordering.GT;
+lamdash.EQ = Ordering.EQ;
+
+
