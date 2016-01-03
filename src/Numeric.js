@@ -304,4 +304,4 @@ Numeric.member = function(value) {
 
     var M = _moduleFor(value);
     return _isFunction(M.toNum) && _isFunction(M.fromNum);
-}
+};

@@ -40,4 +40,4 @@ Eq.member = function(value) {
     }
 
     return _isFunction(_moduleFor(value).eq);
-}
+};

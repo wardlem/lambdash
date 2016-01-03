@@ -33,7 +33,7 @@ var fromInt = _curry(function fromInt(M, value){
  *      _.toInt(_.LT);  // -1
  *      _.toInt('A');   // 65, the char code value
  */
-Enum.toInt = function toInt(value) {
+Enum.toInt = _curry(function toInt(value) {
     if (value == null) {
         throw new TypeError('Enum#toInt requires a defined, non-null value');
     }
@@ -44,7 +44,7 @@ Enum.toInt = function toInt(value) {
     }
 
     throw new TypeError('Enum#toInt called on a value that does not implement Enum');
-};
+});
 
 /**
  * Returns the previous value of the one given.
@@ -59,13 +59,13 @@ Enum.toInt = function toInt(value) {
  *      _.prev('B');  // 'A'
  *
  */
-Enum.prev = function(value) {
+Enum.prev = _curry(function(value) {
     if (value == null) {
         throw new TypeError('Enum#pred requires a defined, non-null value');
     }
 
     return fromInt(_moduleFor(value), Enum.toInt(value) - 1);
-};
+});
 
 /**
  * Returns the next value of the one given.
@@ -80,13 +80,13 @@ Enum.prev = function(value) {
  *      _.prev('B');  // 'C'
  *
  */
-Enum.next = function(value) {
+Enum.next = _curry(function(value) {
     if (value == null) {
         throw new TypeError('Enum#pred requires a defined, non-null value');
     }
 
     return fromInt(_moduleFor(value), Enum.toInt(value) + 1);
-};
+});
 
 
 var _makeEnum = function(withLast, M, step, fromVal, toVal) {
