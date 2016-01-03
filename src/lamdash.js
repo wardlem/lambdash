@@ -1,8 +1,3 @@
-var _condition = require('./internal/_condition');
-var _alwaysThrow = require('./internal/_alwaysThrow');
-var _hasModuleMethod = require('./internal/_hasModuleMethod');
-var _useModuleMethod = require('./internal/_useModuleMethod');
-
 // Modules for Built-in Types
 var Bool = require('./Bool');
 var Num = require('./Num');
@@ -38,7 +33,9 @@ var Type = {
     enumerated: require('./enumeratedType'),
     module: require('./internal/_module'),
     subModule: require('./internal/_subModule'),
-    moduleFor: require('./internal/_moduleFor')
+    moduleFor: require('./internal/_moduleFor'),
+    hasModuleMethod: require('./internal/_hasModuleMethod'),
+    useModuleMethod: require('./internal/_useModuleMethod')
 };
 
 var lamdash = module.exports;
@@ -122,10 +119,10 @@ lamdash.concatAll = Semigroup.concatAll;
 
 // Monoid
 lamdash.empty = Monoid.empty;
-lamdash.isEmpty = _condition(
+lamdash.isEmpty = Bool.condition(
     [Monoid.member, Monoid.isEmpty],
     [Foldable.member, Foldable.isEmpty],
-    [Bool.T, _alwaysThrow(TypeError, "lamdash#isEmpty can only be called on a value that implements monoid or foldable")]
+    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#isEmpty can only be called on a value that implements monoid or foldable")]
 );
 lamdash.cycleN = Monoid.cycleN;
 
@@ -138,10 +135,10 @@ lamdash.foldMap2 = Foldable.foldMap2;
 lamdash.join = Foldable.join;
 lamdash.join2 = Foldable.join2;
 lamdash.toArray = Foldable.toArray;
-lamdash.length = _condition(
-    [_hasModuleMethod('length'), _useModuleMethod('length')],
+lamdash.length = Bool.condition(
+    [Type.hasModuleMethod('length'), Type.useModuleMethod('length')],
     [Foldable.member, Foldable.length],
-    [Bool.T, _alwaysThrow(TypeError, "lamdash#length called on invalid value")]
+    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#length called on invalid value")]
 );
 lamdash.contains = Foldable.contains;
 lamdash.notContains = Foldable.notContains;

@@ -1,5 +1,6 @@
 var _curry = require('./internal/_curry');
 var _always = require('./internal/_always');
+var _condition = require('./internal/_condition');
 
 var Ordering = require('./Ordering');
 
@@ -44,6 +45,8 @@ Bool.or = _curry(function(left, right) {
 Bool.not = function(bool) {
     return !bool;
 };
+
+Bool.condition = _condition;
 
 Bool.T = _always(true);
 Bool.F = _always(false);
