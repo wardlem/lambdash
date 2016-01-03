@@ -26,7 +26,6 @@ List.member = function(v) {
 List = sumType(List, {Cons: {head: null, tail: List}, Nil: []});
 
 List.foldl = _curry(function(fn, init, l){
-    console.log(l);
     return List.case({
         "Nil": init,
         "Cons": function(hd, tl) {
@@ -271,7 +270,6 @@ describe('Foldable', function(){
     describe('#toArray', function() {
         it('should convert a foldable to an array', function() {
             var l = List(1,2,3,4);
-            console.log(l);
             var a = Foldable.toArray(l);
 
             assert(l instanceof List);

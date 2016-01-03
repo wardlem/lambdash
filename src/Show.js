@@ -31,4 +31,4 @@ Show.member = function(value) {
     }
 
     return _isFunction(_moduleFor(value).show);
-}
+};

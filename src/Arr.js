@@ -8,7 +8,15 @@ var Ordering = require('./Ordering');
  * Arr is the module for javascript's built-in array type.
  *
  * @module
- * @implements Eq, Ord, Functor, Foldable, Semigroup, Monoid, Applicative, Monad, Show
+ * @implements Eq
+ * @implements Ord
+ * @implements Functor
+ * @implements Foldable
+ * @implements Semigroup
+ * @implements Monoid
+ * @implements Applicative
+ * @implements Monad
+ * @implements Show
  */
 var Arr = require('./internal/_primitives').Arr;
 
@@ -238,9 +246,11 @@ Arr.applyTo = _curry(function(arr, fn) {
 
 
 Arr.nth = _curry(function(n, arr) {
-    if (n >= arr.length) {
+    if (n >= arr.length || n < 0) {
         throw new RangeError('Index out of bounds');
     }
+
+    return arr[n];
 });
 
 Arr.take = _curry(function(n, arr) {
@@ -267,7 +277,7 @@ Arr.last = _curry(function(arr){
     return Arr.nth(arr.length - 1);
 });
 
-Arr.len = _curry(function(arr) {
+Arr.length = _curry(function(arr) {
     return arr.length;
 });
 
