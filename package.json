@@ -1,6 +1,6 @@
 {
   "name": "lambdash",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Generic functional programming for javascript",
   "main": "src/funkit.js",
   "directories": {
