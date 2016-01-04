@@ -165,5 +165,5 @@ Ord.member = function(value) {
     }
 
     var M = _moduleFor(value);
-    return _isFunction(M.toInt) && _isFunction(M.fromInt);
-}
+    return Eq.member(value) && _isFunction(M.compare);
+};
