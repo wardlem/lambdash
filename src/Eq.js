@@ -2,6 +2,7 @@ var _curry = require('./internal/_curry');
 var _moduleFor = require('./internal/_moduleFor');
 var _equal = require('./internal/_equal');
 var _not = require('./internal/_not');
+var _isFunction = require('./internal/_isFunction');
 
 var Eq = module.exports;
 

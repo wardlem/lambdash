@@ -164,6 +164,6 @@ Ord.member = function(value) {
         return false;
     }
 
-    var M = _moduleFor(M);
+    var M = _moduleFor(value);
     return _isFunction(M.toInt) && _isFunction(M.fromInt);
 }
