@@ -51,6 +51,5 @@ Bool.condition = _condition;
 Bool.T = _always(true);
 Bool.F = _always(false);
 
-
 module.exports = Bool;
 

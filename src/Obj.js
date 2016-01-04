@@ -2,7 +2,7 @@ var _curry = require('./internal/_curry');
 var _arrSort = require('./internal/_arrSort');
 var _arrEqual = require('./internal/_arrayEqual');
 var _equal = require('./internal/_equal');
-var __ = require('./internal/_blank');
+var _show
 
 var Obj = require('./internal/_primitives').Obj;
 
@@ -29,4 +29,13 @@ Obj.eq = _curry(function(left, right) {
     }
 
     return true;
+});
+
+Obj.show = _curry(function(obj){
+    var keys = Object.keys(obj);
+    var items = keys.map(function(key){
+        return key + ": " + _show(obj[key]);
+    });
+
+    return "{" + items.join(', ') + "}";
 });

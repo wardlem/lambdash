@@ -1,6 +1,7 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
 var _curry = require('./internal/_curry');
+var _show = require('./internal/_show');
 
 var Show = module.exports;
 
@@ -12,18 +13,7 @@ var Show = module.exports;
  * @param {Show} value
  * @returns {String} a string representation of the value
  */
-Show.show = _curry(function(value) {
-    if (value == null) {
-        return String(value);
-    }
-
-    var M = _moduleFor(value);
-    if (_isFunction(M.show)) {
-        return M.show(value);
-    }
-
-    throw new TypeError('Show#show called on a value that does not implement Show.');
-});
+Show.show = _show;
 
 Show.member = function(value) {
     if (value == null) {

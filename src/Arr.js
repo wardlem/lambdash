@@ -1,5 +1,6 @@
 var _arrEqual = require('./internal/_arrayEqual');
 var _curry = require('./internal/_curry');
+var _show = require('./internal/_show');
 
 var Ord = require('./Ord');
 var Ordering = require('./Ordering');
@@ -309,6 +310,11 @@ Arr.transpose = _curry(function(value, arr) {
     }
 
     return res;
+});
+
+Arr.show = _curry(function(arr) {
+    var items = Arr.map(_show, arr);
+    return "[" + items.join(',') + "]";
 });
 
 module.exports = Arr;
