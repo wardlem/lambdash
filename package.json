@@ -2,7 +2,7 @@
   "name": "lambdash",
   "version": "0.5.2",
   "description": "Generic functional programming for javascript",
-  "main": "src/lamdash.js",
+  "main": "src/lambdash.js",
   "directories": {
     "test": "test"
   },
