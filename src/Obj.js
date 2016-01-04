@@ -2,7 +2,7 @@ var _curry = require('./internal/_curry');
 var _arrSort = require('./internal/_arrSort');
 var _arrEqual = require('./internal/_arrayEqual');
 var _equal = require('./internal/_equal');
-var _show
+var _show = require('./internal/_show');
 
 var Obj = require('./internal/_primitives').Obj;
 
