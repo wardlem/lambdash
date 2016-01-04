@@ -27,6 +27,9 @@ var Show = require('./Show');
 // Auxiliary types
 var Ordering = require('./Ordering');
 
+// Blank
+var __ = require('./internal/_blank');
+
 var Type = {
     product: require('./productType'),
     sum: require('./sumType'),
@@ -232,4 +235,12 @@ lamdash.LT = Ordering.LT;
 lamdash.GT = Ordering.GT;
 lamdash.EQ = Ordering.EQ;
 
+// Blank
+lamdash.__ = __;
+Object.defineProperty(lamdash, '@@functional/blank', {
+    value: true,
+    configurable: false,
+    enumerable: false,
+    writable: false
+});
 
