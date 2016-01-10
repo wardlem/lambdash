@@ -83,10 +83,10 @@ describe('Sequential', function(){
 
     describe('#length', function() {
         it('should return the length of a sequential value', function() {
-            assert.equal(Sequential.length(List()), 0);
-            assert.equal(Sequential.length(List(1,2,3,4)), 4);
-            assert.equal(Sequential.length([]), 0);
-            assert.equal(Sequential.length([1,2,3,4]), 4);
+            assert.equal(Sequential.len(List()), 0);
+            assert.equal(Sequential.len(List(1,2,3,4)), 4);
+            assert.equal(Sequential.len([]), 0);
+            assert.equal(Sequential.len([1,2,3,4]), 4);
         })
     });
 
@@ -113,8 +113,8 @@ describe('Sequential', function(){
             var list = List(1,2,3);
             var list2 = Sequential.append(4, list);
 
-            assert.equal(Sequential.length(list), 3);
-            assert.equal(Sequential.length(list2), 4);
+            assert.equal(Sequential.len(list), 3);
+            assert.equal(Sequential.len(list2), 4);
             assert.equal(_equal(list2, List(1,2,3,4)), true);
         });
     });
@@ -124,8 +124,8 @@ describe('Sequential', function(){
             var list = List(1,2,3);
             var list2 = Sequential.prepend(4, list);
 
-            assert.equal(Sequential.length(list), 3);
-            assert.equal(Sequential.length(list2), 4);
+            assert.equal(Sequential.len(list), 3);
+            assert.equal(Sequential.len(list2), 4);
             assert.equal(_equal(list2, List(4,1,2,3)), true);
         });
     });
@@ -138,9 +138,9 @@ describe('Sequential', function(){
             var subList = Sequential.slice(1,4, list);
             var subArr = Sequential.slice(1,4, arr);
 
-            assert.equal(Sequential.length(subList), 3);
+            assert.equal(Sequential.len(subList), 3);
             assert.equal(_equal(List(6,5,4), subList), true);
-            assert.equal(Sequential.length(subArr), 3);
+            assert.equal(Sequential.len(subArr), 3);
             assert.equal(_equal([6,5,4], subArr), true);
         });
     });
@@ -283,10 +283,10 @@ describe('Sequential', function(){
             var uniqA = Sequential.uniqueBy(fnA, list);
             var uniqB = Sequential.uniqueBy(fnB, list);
 
-            assert.equal(Sequential.length(uniqA), 3);
+            assert.equal(Sequential.len(uniqA), 3);
             assert.equal(_equal(uniqA, List({a:1, b:3},{a:2, b:2},{a:3, b:1})), true);
 
-            assert.equal(Sequential.length(uniqB), 4);
+            assert.equal(Sequential.len(uniqB), 4);
             assert.equal(_equal(uniqB, List({a:1, b:3}, {a:1, b:1},{a:2,b:2}, {a:1, b:6})), true);
         })
     });
@@ -297,7 +297,7 @@ describe('Sequential', function(){
 
             var uniq = Sequential.unique(list);
 
-            assert.equal(Sequential.length(uniq), 4);
+            assert.equal(Sequential.len(uniq), 4);
             assert.equal(_equal(uniq, List({a:1, b:3},{a:1, b:1},{a:2,b:2},{a:3,b:1})), true);
 
         })

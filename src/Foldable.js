@@ -99,7 +99,7 @@ Foldable.foldr = _fold('foldr');
  *     var fn = n => return String(n + 1)
  *     var empty = '';
  *
- *     Foldable.foldMap(fn, empty, foldable);  // '234'
+ *     _.foldMap(fn, empty, foldable);  // '234'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
@@ -141,7 +141,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  *     var fn = n => return String(n + 1)
  *     var empty = '';
  *
- *     Foldable.foldMap(fn, empty, foldable);  // '234'
+ *     _.foldMap(fn, empty, foldable);  // '234'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
@@ -236,10 +236,10 @@ Foldable.toArray = Foldable.foldMap2(Arr.of, []);
  * @return {Number} The number of elements in the container
  * @example
  *
- *     _.Foldable.length([1,2,3]);  // 3
- *     _.Foldable.length('');       // 0
+ *     _.Foldable.len([1,2,3]);  // 3
+ *     _.Foldable.len('');       // 0
  */
-Foldable.length = Foldable.fold(function(count, x) {return count + 1;}, 0);
+Foldable.len = Foldable.fold(function(count, x) {return count + 1;}, 0);
 
 /**
  * Returns whether or not a foldable value is empty
@@ -254,7 +254,7 @@ Foldable.length = Foldable.fold(function(count, x) {return count + 1;}, 0);
  *      _.Foldable.isEmpty([1,2,3]);  // false
  *      _.Foldable.isEmpty('');       // true
  */
-Foldable.isEmpty = _curry(function(foldable) { return Foldable.length(foldable) === 0});
+Foldable.isEmpty = _curry(function(foldable) { return Foldable.len(foldable) === 0});
 
 /**
  * The inverse of Foldable.isEmpty function

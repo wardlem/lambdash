@@ -138,10 +138,10 @@ lambdash.foldMap2 = Foldable.foldMap2;
 lambdash.join = Foldable.join;
 lambdash.join2 = Foldable.join2;
 lambdash.toArray = Foldable.toArray;
-lambdash.length = Bool.condition(
-    [Type.hasModuleMethod('length'), Type.useModuleMethod('length')],
-    [Foldable.member, Foldable.length],
-    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#length called on invalid value")]
+lambdash.len = Bool.condition(
+    [Type.hasModuleMethod('len'), Type.useModuleMethod('len')],
+    [Foldable.member, Foldable.len],
+    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#len called on invalid value")]
 );
 lambdash.contains = Foldable.contains;
 lambdash.notContains = Foldable.notContains;
@@ -228,6 +228,8 @@ lambdash.make = Fun.make;
 lambdash.thisify = Fun.thisify;
 lambdash.liftN = Fun.liftN;
 lambdash.lift = Fun.lift;
+lambdash.apply = Fun.apply;
+lambdash.noop = Fun.noop;
 
 // Ordering
 lambdash.Ordering = Ordering;

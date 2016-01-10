@@ -189,11 +189,11 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#length', function() {
+    describe('#len', function() {
         it('should return the number of elements in a foldable', function() {
-            assert.equal(Foldable.length([1,2,3,4,5]), 5);
-            assert.equal(Foldable.length('abc'), 3);
-            assert.equal(Foldable.length([]), 0);
+            assert.equal(Foldable.len([1,2,3,4,5]), 5);
+            assert.equal(Foldable.len('abc'), 3);
+            assert.equal(Foldable.len([]), 0);
         });
     });
 

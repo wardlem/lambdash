@@ -21,13 +21,13 @@ var Sequential = module.exports;
  * @param {Sequential} sequence the structure whose elements are being counted
  * @return {Number}
  */
-Sequential.length = _curry(function(sequence) {
+Sequential.len = _curry(function(sequence) {
     var M = _moduleFor(sequence);
-    if (_isFunction(M.length)) {
-        return M.length(sequence);
+    if (_isFunction(M.len)) {
+        return M.len(sequence);
     }
 
-    return Foldable.length(sequence);
+    return Foldable.len(sequence);
 });
 
 /**
@@ -45,7 +45,7 @@ Sequential.length = _curry(function(sequence) {
  */
 Sequential.nth = _curry(function(ind, sequence) {
     if (ind < 0) {
-        ind = Sequential.length(sequence) + ind;
+        ind = Sequential.len(sequence) + ind;
         if (ind < 0) {
             throw new RangeError('Index out of bounds');
         }
@@ -116,7 +116,7 @@ Sequential.slice = _curry(function(start, end, sequence){
 
     var res = M.empty();
     start = Math.max(0, start);
-    end = Math.min(end, Sequential.length(sequence));
+    end = Math.min(end, Sequential.len(sequence));
 
 
     while (start < end) {
@@ -157,7 +157,7 @@ Sequential.take = Sequential.slice(0);
  * @return {Sequential}
  */
 Sequential.drop = _curry(function(n, sequence) {
-    return Sequential.slice(n, Sequential.length(sequence), sequence);
+    return Sequential.slice(n, Sequential.len(sequence), sequence);
 });
 
 /**
@@ -172,7 +172,7 @@ Sequential.drop = _curry(function(n, sequence) {
  * @return {Sequential}
  */
 Sequential.takeLast = _curry(function(n, sequence) {
-    return Sequential.drop(Sequential.length(sequence) - n, sequence);
+    return Sequential.drop(Sequential.len(sequence) - n, sequence);
 });
 
 /**
@@ -187,7 +187,7 @@ Sequential.takeLast = _curry(function(n, sequence) {
  * @return {Sequential}
  */
 Sequential.dropLast = _curry(function(n, sequence) {
-    return Sequential.take(Sequential.length(sequence) - n, sequence);
+    return Sequential.take(Sequential.len(sequence) - n, sequence);
 });
 
 /**
@@ -250,7 +250,7 @@ Sequential.intersperse = _curry(function(value, sequence) {
         return M.intersperse(value, sequence);
     }
 
-    var l = Sequential.length(sequence);
+    var l = Sequential.len(sequence);
 
     if (l < 2) {
         return sequence;
@@ -295,7 +295,7 @@ Sequential.reverse = _curry(function(sequence) {
         return Sequential.append(head, _reverse(l-1, tail));
     }
 
-    return _reverse(Sequential.length(sequence), sequence);
+    return _reverse(Sequential.len(sequence), sequence);
 });
 
 /**
@@ -326,7 +326,7 @@ Sequential.splitAt = _curry(function(n, sequence) {
  */
 Sequential.takeWhile = _curry(function(fn, sequence) {
     var idx = 0;
-    var l = Sequential.length(sequence);
+    var l = Sequential.len(sequence);
     while (idx < l && fn(Sequential.nth(idx, sequence))) {
         idx += 1;
     }
@@ -345,7 +345,7 @@ Sequential.takeWhile = _curry(function(fn, sequence) {
  */
 Sequential.dropWhile = _curry(function(fn, sequence) {
     var idx = 0;
-    var l = Sequential.length(sequence);
+    var l = Sequential.len(sequence);
     while (idx < l && fn(Sequential.nth(idx, sequence))) {
         idx += 1;
     }
@@ -363,7 +363,7 @@ Sequential.dropWhile = _curry(function(fn, sequence) {
  * @return {Sequential}
  */
 Sequential.takeLastWhile = _curry(function(fn, sequence) {
-    var idx = Sequential.length(sequence) - 1;
+    var idx = Sequential.len(sequence) - 1;
     while(idx >= 0 && fn(Sequential.nth(idx, sequence))) {
         idx -= 1;
     }
@@ -381,7 +381,7 @@ Sequential.takeLastWhile = _curry(function(fn, sequence) {
  * @return {Sequential}
  */
 Sequential.dropLastWhile = _curry(function(fn, sequence) {
-    var idx = Sequential.length(sequence) - 1;
+    var idx = Sequential.len(sequence) - 1;
     while(idx >= 0 && fn(Sequential.nth(idx, sequence))) {
         idx -= 1;
     }
@@ -406,7 +406,7 @@ Sequential.filter = _curry(function(fn, sequence) {
 
     var res = M.empty();
     var idx = 0;
-    var len = Sequential.length(sequence);
+    var len = Sequential.len(sequence);
 
     while (idx < len) {
         var v = M.nth(idx, sequence);
@@ -434,7 +434,7 @@ Sequential.uniqueBy = _curry(function(fn, sequence) {
         return M.uniqueBy(fn, sequence);
     }
 
-    if (Sequential.length(sequence) === 0) {
+    if (Sequential.len(sequence) === 0) {
         return M.empty();
     }
 
@@ -472,7 +472,7 @@ Sequential.findIndex = _curry(function(fn, sequence) {
         return M.find(fn, sequence);
     }
 
-    var len = Sequential.length(sequence);
+    var len = Sequential.len(sequence);
     var idx = 0;
     while (idx < len) {
         var v = M.nth(idx, sequence);
@@ -502,7 +502,7 @@ Sequential.findLastIndex = _curry(function(fn, sequence) {
         return M.find(fn, sequence);
     }
 
-    var idx = Sequential.length(sequence) - 1;
+    var idx = Sequential.len(sequence) - 1;
     while (idx >= 0) {
         var v = M.nth(idx, sequence);
         if (fn(v)) {
