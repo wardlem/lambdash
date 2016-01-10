@@ -33,7 +33,7 @@ var Arr = require('./internal/_primitives').Arr;
  * @param {Array} second the other array being compared for equality
  * @return {Boolean} Whether or not the two arrays are structurally equal
  */
-Arr.eq = _arrEqual;
+Arr.eq = _curry(_arrEqual);
 
 /**
  * Returns a comparison of two arrays.
@@ -231,21 +231,35 @@ Arr.flatten = Arr.foldl(Arr.concat, []);
 /**
  * Applies an array of values to a function
  *
- * @sig Array * -> (* -> *) -> *
+ * @sig (* -> *) -> Array *  -> *
  * @since 0.4.0
- * @param {Array} arr an array that will be applied to the function
  * @param {Function} fn a function the array will be applied to
+ * @param {Array} arr an array that will be applied to the function
  * @return {*}
  * @example
  *
- *      Arr.applyTo([1,2], (a,b) => a + b);  // 3
- *      Arr.applyTo([1,2])((a,b) => a + b);  // 3
+ *      _.applyTo((a,b) => a + b, [1,2]);  // 3
+ *      _.applyTo((a,b) => a + b)([1,2]);  // 3
  */
-Arr.applyTo = _curry(function(arr, fn) {
-    fn.apply(this, arr);
+Arr.applyTo = _curry(function(fn, arr) {
+    return fn.apply(this, arr);
 });
 
-
+/**
+ * Returns the nth index in the array.
+ *
+ * The index must be between 0 and 1 less than the length of the array.
+ *
+ * @sig Number -> Array a -> a
+ * @since 0.5.0
+ * @param {Number} n a valid index in the array
+ * @param {Array} arr an array
+ * @return {*} The value in the array at the given index
+ * @example
+ *
+ *      _.nth(2)([1,2,3,4]);          // 3
+ *      _.nth(2, ["a","b","c","d"]);  // "c"
+ */
 Arr.nth = _curry(function(n, arr) {
     if (n >= arr.length || n < 0) {
         throw new RangeError('Index out of bounds');
@@ -254,26 +268,63 @@ Arr.nth = _curry(function(n, arr) {
     return arr[n];
 });
 
-Arr.take = _curry(function(n, arr) {
-    return Array.prototype.slice.call(arr, 0, n);
+/**
+ * Returns the length of an array.
+ *
+ * @sig Arr a -> Number
+ * @since 0.5.0
+ * @param {Array} arr
+ * @return {Number}
+ */
+Arr.len = _curry(function(arr) {
+    return arr.length;
 });
 
-Arr.drop = _curry(function(n, arr) {
-    return Array.prototype.slice.call(arr, n);
-});
-
+/**
+ * Returns a subsection of an array.
+ *
+ * @sig Number -> Number -> Array a -> Array a
+ * @since 0.5.0
+ * @param {Number} start The start index of the subsection
+ * @param {Number} end The end index of the subsection
+ * @param {Array} arr The array being sliced
+ * @return {Array}
+ *
+ */
 Arr.slice = _curry(function(start, end, arr) {
     return Array.prototype.slice.call(arr, start, end);
 });
 
-Arr.length = _curry(function(arr) {
-    return arr.length;
-});
-
+/**
+ * Reverses an array.
+ *
+ * Does not modify the original array.
+ *
+ * @sig Array a -> Array a
+ * @since 0.5.0
+ * @param {Array} arr The array to reverse
+ * @return {Array}
+ *
+ */
 Arr.reverse = _curry(function(arr) {
-    return Array.prototype.reverse.call(Arr.drop(0, arr));
+    return Array.prototype.reverse.call(Array.prototype.slice.call(arr));
 });
 
+/**
+ * Puts an element between every element in an array.
+ *
+ * @sig a -> Array a -> Array a
+ * @since 0.5.0
+ * @param {*} value
+ * @param {Array} array
+ * @return {Array}
+ *
+ * @example
+ *
+ *      var arr = ["c","r","c","s"];
+ *      var caracas = _.intersperse("a", arr);
+ *      // caracas is ["c", "a", "r", "a", "c", "a", "s"]
+ */
 Arr.intersperse = _curry(function(value, arr) {
     if (!arr.length) {
         return [];
@@ -282,35 +333,36 @@ Arr.intersperse = _curry(function(value, arr) {
     var res = [arr[0]];
     var ind = 1;
     while (ind < arr.length) {
-        res.push(value[ind]);
         res.push(value);
+        res.push(arr[ind]);
         ind += 1;
     }
 
     return res;
 });
 
-Arr.transpose = _curry(function(value, arr) {
-    var res = [];
-    var maxLen = Arr.foldl(function(accum, v) {
-        return Math.max(accum, v.length);
-    }, 0, arr);
-
-    var ind = 0;
-    while(ind < maxLen) {
-        res[ind] = [];
-        var innerInd = 0;
-        while(innerInd < arr.length) {
-            if (arr[innerInd].length > ind) {
-                res[ind].push(arr[innerInd][ind]);
-            }
-            innerInd += 1;
-        }
-        ind += 1;
-    }
-
-    return res;
-});
+// TODO
+//Arr.transpose = _curry(function(arr) {
+//    var res = [];
+//    var maxLen = Arr.foldl(function(accum, v) {
+//        return Math.max(accum, v.length);
+//    }, 0, arr);
+//
+//    var ind = 0;
+//    while(ind < maxLen) {
+//        res[ind] = [];
+//        var innerInd = 0;
+//        while(innerInd < arr.length) {
+//            if (arr[innerInd].length > ind) {
+//                res[ind].push(arr[innerInd][ind]);
+//            }
+//            innerInd += 1;
+//        }
+//        ind += 1;
+//    }
+//
+//    return res;
+//});
 
 Arr.show = _curry(function(arr) {
     var items = Arr.map(_show, arr);
