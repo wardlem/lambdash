@@ -11,13 +11,13 @@ Ordering.compare = _curry(function(left, right) {
 });
 
 // Implementation for Enum
-Ordering.fromNum = Ordering.fromInt = function(num) {
+Ordering.fromNum = Ordering.fromInt = Ordering.fromInt = function(num) {
     return num < 0 ? Ordering.LT
         : num > 0 ? Ordering.GT
         : Ordering.EQ
 };
 
-Ordering.toInt = Ordering.case({
+Ordering.toNum = Ordering.toInt = Ordering.case({
     "LT": -1,
     "GT": 1,
     "EQ": 0
