@@ -11,7 +11,7 @@ var Enum = module.exports;
 
 var fromInt = _curry(function fromInt(M, value){
 
-    if (M !== Int && !_isFunction(M.fromInt)) {
+    if (!_isFunction(M.fromInt)) {
         throw new TypeError('Type can not be converted from Int');
     }
 
