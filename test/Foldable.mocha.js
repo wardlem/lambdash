@@ -1,13 +1,14 @@
 var assert = require('assert');
 
-var Foldable = require('../src/Foldable');
-var Arr = require('../src/Arr');
-var Num = require('../src/Num');
-var productType = require('../src/productType');
-var sumType = require('../src/sumType');
-var _equal = require('../src/internal/_equal');
-var _always = require('../src/internal/_always');
-var _curry = require('../src/internal/_curry');
+var _ = require('../src/lambdash.js');
+
+var Foldable = _.Foldable;
+var Arr = _.Arr;
+var Num = _.Num;
+var productType = _.Type.product;
+var sumType = _.Type.sum;
+var _always = _.always;
+var _curry = _.curry;
 
 var List = function List() {
     var l = List.Nil;
@@ -43,20 +44,7 @@ List.foldr = _curry(function(fn, init, l){
     }, l);
 });
 
-List.fold = List.foldl;
-
 describe('Foldable', function(){
-    describe('#fold', function(){
-        it('should fold an implementing value', function(){
-            var arr = [1,2,3];
-
-            var fn = function(accum, value) {
-                return accum + value;
-            };
-
-            assert.equal(Foldable.fold(fn, 5, arr), 11);
-        });
-    });
 
     describe('#foldl', function(){
         it('should fold an implementing value from left to right', function(){
@@ -267,6 +255,20 @@ describe('Foldable', function(){
         });
     });
 
+    describe('#countWith', function(){
+        it('should count all the items in a foldable that match a predicate', function(){
+            var arr = [1,1,2,3,4,4,5];
+            assert.equal(_.countWith(_.gt(_,2), arr), 4);
+        });
+    });
+
+    describe('#count', function(){
+        it('should count all the items in a foldable that are equal to a value', function(){
+            var arr = [1,1,2,3,4,4,5];
+            assert.equal(_.count(4, arr), 2);
+        });
+    });
+
     describe('#toArray', function() {
         it('should convert a foldable to an array', function() {
             var l = List(1,2,3,4);
@@ -345,6 +347,17 @@ describe('Foldable', function(){
             } catch (e) {
                 assert(e instanceof TypeError);
             }
+        });
+    });
+
+    describe('#member', function(){
+        it('should return true for a value that implements Foldable, false otherwise', function(){
+            assert(Foldable.member([]));
+            assert(Foldable.member(List()));
+            assert(!Foldable.member(1));
+            assert(!Foldable.member(true));
+            assert(!Foldable.member(null));
+            assert(!Foldable.member(undefined));
         });
     });
 

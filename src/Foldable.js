@@ -18,40 +18,14 @@ var Foldable = module.exports;
 var Arr = require('./Arr');
 
 var _fold = _curry(function(_f, fn, init, foldable){
-    if (_isFunction(foldable[_f])) {
-        return foldable[_f](fn, init);
-    }
 
     var M = _moduleFor(foldable);
     if (_isFunction(M[_f])) {
         return M[_f](fn, init, foldable);
     }
 
-    if (_isFunction(M.toArray)) {
-        return Foldable[_f](fn, init, M.toArray(foldable));
-    }
-
     throw new TypeError('Foldable#' + _f + ' called on a value that does not implement Foldable');
 });
-
-/**
- * Folds a value in the value's default fold direction.
- *
- * This will typically be equivalent to the types foldl or foldr implementation.
- *
- * @since 0.5.0
- * @sig Foldable f => (b -> a -> b) -> b -> f a -> b
- * @param {Function} fn the iterator function with signature (b -> a -> b) where the first parameter
- *                   is the accumulated value and a is a value in the container being folded
- * @param {*} init the initial accumulation value
- * @param {Foldable} the container being folded
- * @return {*} the accumulated value
- *
- * @example
- *
- *     _.fold(_.add, 5, [1,2,3])  // 11
- */
-Foldable.fold = _fold('fold');
 
 
 /**
@@ -239,7 +213,7 @@ Foldable.toArray = Foldable.foldMap2(Arr.of, []);
  *     _.Foldable.len([1,2,3]);  // 3
  *     _.Foldable.len('');       // 0
  */
-Foldable.len = Foldable.fold(function(count, x) {return count + 1;}, 0);
+Foldable.len = Foldable.foldl(function(count, x) {return count + 1;}, 0);
 
 /**
  * Returns whether or not a foldable value is empty
@@ -288,7 +262,7 @@ Foldable.isNotEmpty = _not(Foldable.isEmpty);
  *     _.contains([1,2,3], [[4,5,6], [7,8,9], [1,2,3]]); // true
  */
 Foldable.contains = _curry(function(search, foldable) {
-    return Foldable.fold(function(accum, value) {
+    return Foldable.foldl(function(accum, value) {
         return accum || _equal(search, value);
     }, false, foldable);
 });
@@ -329,7 +303,7 @@ Foldable.notContains = _not(Foldable.contains);
  *     _.all(test, []);       // true
  */
 Foldable.all = _curry(function(fn, foldable) {
-    return Foldable.fold(function(accum, v) {
+    return Foldable.foldl(function(accum, v) {
         return accum && fn(v);
     }, true, foldable);
 });
@@ -351,7 +325,7 @@ Foldable.all = _curry(function(fn, foldable) {
  *     _.any(test, []);         // false
  */
 Foldable.any = _curry(function(fn, foldable) {
-    return Foldable.fold(function(accum, v) {
+    return Foldable.foldl(function(accum, v) {
         return accum || fn(v);
     }, false, foldable);
 });
@@ -368,10 +342,10 @@ Foldable.any = _curry(function(fn, foldable) {
  *
  *      var arr = [1,1,2,3,4,4,5]
  *
- *      _.countWith(_.gt(2), arr);  // 4
+ *      _.countWith(_.gt(_, 2), arr);  // 4
  */
 Foldable.countWith = _curry(function(fn, foldable) {
-    return Foldable.fold(function(accum, value) {
+    return Foldable.foldl(function(accum, value) {
         return fn(value) ? accum + 1 : accum;
     }, 0, foldable)
 });
@@ -411,19 +385,7 @@ var __fold1 = _curry(function(_fold, err, fn, foldable) {
     return result;
 });
 
-var _fold1 = __fold1('fold');
-
-/**
- * Folds a non-empty structure without a base case in the structures default fold direction.
- *
- * @sig Foldable f => (b -> a -> b) -> f a -> b
- * @param {Function} fn the function that will fold over the structure
- * @param {Foldable} foldable the structure being folded
- * @return {*}
- */
-Foldable.fold1 = _fold1(
-    _alwaysThrow(TypeError, 'Foldable#fold1 can not be called on an empty structure')
-);
+var _fold1 = __fold1('foldl');
 
 /**
  * Folds a non-empty structure without a base case from left to right.
@@ -505,7 +467,7 @@ Foldable.member = function(value) {
     }
 
     var M = _moduleFor(value);
-    return _isFunction(M.fold) && _isFunction(M.foldl) && _isFunction(M.foldr);
+    return _isFunction(M.foldl) && _isFunction(M.foldr);
 };
 
 
