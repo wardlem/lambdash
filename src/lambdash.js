@@ -130,7 +130,6 @@ lambdash.isEmpty = Bool.condition(
 lambdash.cycleN = Monoid.cycleN;
 
 // Foldable
-lambdash.fold = Foldable.fold;
 lambdash.foldl = Foldable.foldl;
 lambdash.foldr = Foldable.foldr;
 lambdash.foldMap = Foldable.foldMap;
@@ -149,7 +148,6 @@ lambdash.all = Foldable.all;
 lambdash.any = Foldable.any;
 lambdash.countWith = Foldable.countWith;
 lambdash.count = Foldable.count;
-lambdash.fold1 = Foldable.fold1;
 lambdash.foldl1 = Foldable.foldl1;
 lambdash.foldr1 = Foldable.foldr1;
 lambdash.maximum = Foldable.maximum;
