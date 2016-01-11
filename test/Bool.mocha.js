@@ -202,5 +202,27 @@ describe('#bool', function(){
         it('should always return false', function(){
             assert.equal(Bool.F(), false);
         });
-    })
+    });
+
+    describe('@implements', function(){
+        it('should implement Eq', function(){
+            assert(_.Eq.member(false));
+            assert(_.Eq.member(true));
+        });
+
+        it('should implement Ord', function(){
+            assert(_.Ord.member(false));
+            assert(_.Ord.member(true));
+        });
+
+        it('should implement Enum', function(){
+            assert(_.Enum.member(false));
+            assert(_.Enum.member(true));
+        });
+
+        it('should implement Bounded', function(){
+            assert(_.Bounded.member(false));
+            assert(_.Bounded.member(true));
+        });
+    });
 });
