@@ -199,6 +199,9 @@ lambdash.pipeM = Monad.pipeM;
 // Show
 lambdash.show = Show.show;
 
+// Arr
+lambdash.applyTo = Arr.applyTo;
+
 // Bool
 lambdash.and = Bool.and;
 lambdash.or = Bool.or;
