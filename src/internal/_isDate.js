@@ -1,3 +1,3 @@
 module.exports = function(value) {
-    return typeof value === 'object' && value.constructor === Date;
+    return value != null && value.constructor === Date;
 };
