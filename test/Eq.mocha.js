@@ -101,8 +101,10 @@ describe('Eq', function() {
             assert(Eq.member(1));
             assert(Eq.member([]));
             assert(Eq.member({}));
-            assert(!Eq.member(function(){}))
-        })
-    })
+            assert(!Eq.member(function(){}));
+            assert(!Eq.member(null));
+            assert(!Eq.member(undefined));
+        });
+    });
 
 });
