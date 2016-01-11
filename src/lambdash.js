@@ -202,7 +202,12 @@ lambdash.show = Show.show;
 // Bool
 lambdash.and = Bool.and;
 lambdash.or = Bool.or;
+lambdash.xor = Bool.xor;
 lambdash.not = Bool.not;
+lambdash.both = Bool.both;
+lambdash.either = Bool.either;
+lambdash.neither = Bool.neither;
+lambdash.eitherExclusive = Bool.eitherExclusive;
 lambdash.condition = Bool.condition;
 lambdash.T = Bool.T;
 lambdash.F = Bool.F;
