@@ -1,13 +1,10 @@
 var assert = require('assert');
 
 var productType = require('../src/productType');
-var sumType = require('../src/sumType');
 
-var Bool = require('../src/Bool');
-var Num = require('../src/Num');
-var Str = require('../src/Str');
-var Obj = require('../src/Obj');
-var Int = require('../src/Int');
+var _ = require('../src/lambdash');
+
+var Int = _.Int;
 
 var Enum = require('../src/Enum');
 
@@ -33,6 +30,33 @@ describe('Enum', function() {
             assert.equal(Enum.toInt(true), 1);
             assert.equal(Enum.toInt(Test(1)), 2);
         });
+
+        it('should throw an exception if given undefined', function(){
+            try {
+                Enum.toInt(undefined);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
+
+        it('should throw an exception if given null', function(){
+            try {
+                Enum.toInt(null);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
+
+        it('should throw an exception if given a value that does not implement Enum', function(){
+            try {
+                Enum.toInt([]);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
     });
 
     describe('#prev', function() {
@@ -48,6 +72,24 @@ describe('Enum', function() {
             var prevTest = Enum.prev(Test(2));
             assert.equal(prevTest.val, 1);
         });
+
+        it('should throw an exception if given undefined', function(){
+            try {
+                Enum.prev(undefined);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
+
+        it('should throw an exception if given null', function(){
+            try {
+                Enum.prev(null);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
     });
 
     describe('#next', function() {
@@ -62,6 +104,24 @@ describe('Enum', function() {
 
             var prevTest = Enum.next(Test(2));
             assert.equal(prevTest.val, 3);
+        });
+
+        it('should throw an exception if given undefined', function(){
+            try {
+                Enum.next(undefined);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        });
+
+        it('should throw an exception if given null', function(){
+            try {
+                Enum.next(null);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
         });
     });
 
@@ -84,6 +144,7 @@ describe('Enum', function() {
             assert(_arrEqual(Enum.enumTo('e', 'a'), ['e', 'd', 'c', 'b', 'a']));
             assert(_arrEqual(Enum.enumTo(true, false), [true, false]));
         });
+
     });
 
     describe('#enumUntil', function() {
@@ -121,11 +182,24 @@ describe('Enum', function() {
             assert(_arrEqual(Enum.enumFrom(-2, true), [true, false]));
         });
 
+        it('should throw an exception if given a non integer as the count', function(){
+            try {
+                Enum.enumFrom(1.2, 2);
+                assert(false);
+            } catch (e){
+                assert(e instanceof TypeError);
+            }
+        })
+
+
     });
 
-    //describe('#enumToBy', function() {
-    //    it('should create enum with the specified step', function() {
-    //
-    //    });
-    //});
+    describe('#member', function(){
+        it('should return true for a value that implements Enum false otherwise', function(){
+            assert.equal(Enum.member(1), true);
+            assert.equal(Enum.member(false), true);
+            assert.equal(Enum.member([]), false);
+            assert.equal(Enum.member({}), false);
+        });
+    })
 });
