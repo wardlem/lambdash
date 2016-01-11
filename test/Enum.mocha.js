@@ -200,6 +200,8 @@ describe('Enum', function() {
             assert.equal(Enum.member(false), true);
             assert.equal(Enum.member([]), false);
             assert.equal(Enum.member({}), false);
+            assert.equal(Enum.member(null), false);
+            assert.equal(Enum.member(undefined), false);
         });
     })
 });
