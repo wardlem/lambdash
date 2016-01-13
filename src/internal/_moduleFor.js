@@ -4,7 +4,7 @@ var _isSubModule = require('./_isSubModule');
 
 function moduleFor(value) {
     if (value == null) {
-        throw new TypeError('Can not get module for null or undefined');
+        return _primitives.Unit;
     }
 
     var C = value.constructor;

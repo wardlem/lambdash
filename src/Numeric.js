@@ -8,10 +8,6 @@ var Num = require('./Num');
 var Numeric = module.exports;
 
 var _binOp = _curry(function(op, a, b) {
-    if (a == null || b == null) {
-        throw new TypeError('Numeric#' + op + ' can not operate on null or undefined values');
-    }
-
     var M = _moduleFor(a);
     if (_isFunction(M[op])) {
         return M[op](a, b);
@@ -21,10 +17,6 @@ var _binOp = _curry(function(op, a, b) {
 });
 
 var _unaryOp = _curry(function(op, a) {
-    if (a == null) {
-        throw new TypeError('Numeric#' + op + ' can not operate on null or undefined values');
-    }
-
     var M = _moduleFor(a);
     if (_isFunction(M[op])) {
         return M[op](a);
@@ -298,10 +290,6 @@ Numeric.pow = _binOp('pow');
 Numeric.powBy = _flip(Numeric.pow);
 
 Numeric.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return _isFunction(M.toNum) && _isFunction(M.fromNum);
 };

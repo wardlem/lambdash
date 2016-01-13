@@ -462,10 +462,6 @@ Foldable.product = _fold1(
 );
 
 Foldable.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return _isFunction(M.foldl) && _isFunction(M.foldr);
 };

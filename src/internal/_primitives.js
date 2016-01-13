@@ -11,6 +11,7 @@ var _isFunction = require('./_isFunction');
 var _isRegExp = require('./_isRegExp');
 var _isDate = require('./_isDate');
 var _isDefined = require('./_isDefined');
+var _isUnit = require('./_isUnit');
 var _curry = require('./_curry');
 
 
@@ -121,4 +122,12 @@ function DT(value) {
 DT.member = _isDate;
 DT.assert = _assert(_isDate, "Invalid value for DT");
 _primitives.DT = DT;
+
+function Unit(value) {
+    return Unit.assert(value);
+}
+
+Unit.member = _isUnit;
+Unit.assert = _assert(_isUnit, "Invalid value for Unit");
+_primitives.Unit = Unit;
 

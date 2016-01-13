@@ -10,7 +10,6 @@ var Enum = module.exports;
 
 
 var fromInt = _curry(function fromInt(M, value){
-
     if (!_isFunction(M.fromInt)) {
         throw new TypeError('Type can not be converted from Int');
     }
@@ -34,10 +33,6 @@ var fromInt = _curry(function fromInt(M, value){
  *      _.toInt('A');   // 65, the char code value
  */
 Enum.toInt = _curry(function toInt(value) {
-    if (value == null) {
-        throw new TypeError('Enum#toInt requires a defined, non-null value');
-    }
-
     var M = _moduleFor(value);
     if (_isFunction(M.toInt)) {
         return M.toInt(value);
@@ -81,10 +76,6 @@ Enum.prev = _curry(function(value) {
  *
  */
 Enum.next = _curry(function(value) {
-    if (value == null) {
-        throw new TypeError('Enum#pred requires a defined, non-null value');
-    }
-
     return fromInt(_moduleFor(value), Enum.toInt(value) + 1);
 });
 
@@ -183,10 +174,6 @@ Enum.enumFrom = _curry(function(count, from) {
 });
 
 Enum.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return _isFunction(M.toInt) && _isFunction(M.fromInt);
 }

@@ -579,10 +579,6 @@ Sequential.lastIndexOf = _curry(function(v, sequence) {
 });
 
 Sequential.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return Foldable.member(value) && Monoid.member(value) && _isFunction(M.nth) && _isFunction(M.of);
 };

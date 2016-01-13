@@ -30,10 +30,6 @@ Applicative.ap = _curry(function(apply, value){
 });
 
 Applicative.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return Functor.member(value) && _isFunction(M.ap) && _isFunction(M.of);
 };

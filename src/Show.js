@@ -16,9 +16,5 @@ var Show = module.exports;
 Show.show = _show;
 
 Show.member = function(value) {
-    if (value == null) {
-        return true;
-    }
-
     return _isFunction(_moduleFor(value).show);
 };

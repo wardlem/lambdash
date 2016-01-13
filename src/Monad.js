@@ -23,10 +23,6 @@ Monad.map = Functor.map;
  *      _.flatten([[1,2,3],[4,5,6],[7,8,9]]); [1,2,3,4,5,6,7,8,9]
  */
 Monad.flatten = _curry(function(monad) {
-    if (monad == null) {
-        throw new TypeError('Monad#flatten can not be called on an undefined or null value');
-    }
-
     var M = _moduleFor(monad);
     if (_isFunction(M.flatten)) {
         return M.flatten(monad);

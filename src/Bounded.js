@@ -75,10 +75,6 @@ Bounded.maxBound = _curry(function(value) {
 
 
 Bounded.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return (_isFunction(M.minBound) && _isFunction(M.maxBound));
 };

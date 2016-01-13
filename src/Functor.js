@@ -17,19 +17,11 @@ var Functor = module.exports;
  *      _.map(x => x * 2, [1,2,3]);  // [2,4,6]
  */
 Functor.map = _curry(function(fn, functor) {
-    if (functor == null) {
-        throw new TypeError('Functor#map can not operate on null values');
-    }
-
     var M = _moduleFor(functor);
     return M.map(fn, functor);
 });
 
 Functor.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return _isFunction(M.map);
 };
