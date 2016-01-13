@@ -301,7 +301,7 @@ Fun.apply = _curry(function(values, fn) {
 });
 
 /**
- * A function that does nothing.
+ * A function that does nothing and returns nothing.
  *
  * @since 0.6.0
  * @sig () -> ()

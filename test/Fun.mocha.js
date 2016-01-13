@@ -363,6 +363,6 @@ describe('Fun', function(){
                 assert.equal(ap(fn2), 18);
 
             });
-        })
+        });
     });
 });
