@@ -11,6 +11,15 @@ describe('Monad', function(){
 
             assert(Arr.eq(Monad.flatten(arr), [1,2,3,4,5,6,9,8,7]));
         });
+
+        it('should throw a TypeError if the value does not implement Monad', function(){
+            try {
+                Monad.flatten(function(x){return x}, null);
+                assert(false);
+            } catch (e) {
+                assert(e instanceof TypeError);
+            }
+        });
     });
 
     describe('#chain', function() {
@@ -51,7 +60,7 @@ describe('Monad', function(){
 
     });
 
-    describe('#pipem', function() {
+    describe('#pipeM', function() {
         it('should composeM several functions into one', function(){
             var fn1 = function(value) {
                 return [value, value + 1];
@@ -69,6 +78,14 @@ describe('Monad', function(){
             assert(Arr.eq(piped(arr), [1,1,2,2,3,3,4,4]));
         });
 
+    });
+
+    describe('#member', function(){
+        it('should return true if a value implements Monad, false otherwise', function(){
+            assert(Monad.member([]));
+            assert(!Monad.member(null));
+            assert(!Monad.member(undefined));
+        });
     });
 
 });
