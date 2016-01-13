@@ -1,7 +1,8 @@
 var assert = require('assert');
 
-var Fun = require('../src/Fun');
-var Arr = require('../src/Arr');
+var _ = require('../src/lambdash');
+var Fun = _.Fun;
+var Arr = _.Arr;
 
 describe('Fun', function(){
 
@@ -102,6 +103,108 @@ describe('Fun', function(){
         });
     });
 
+    describe('#thunk', function(){
+        it('should create a function from another function with arguments pre-applied', function(){
+            var fn = function(a, b) {
+                return a + b;
+            };
+
+            var thunk = Fun.thunk(fn, 3, 4);
+
+            assert.equal(typeof thunk, 'function');
+            assert.equal(thunk.length, 0);
+            assert.equal(thunk(), 7);
+        });
+    });
+
+    describe('#identity', function(){
+        it('should always return the value it is given', function(){
+            assert.equal(Fun.identity(1), 1);
+            assert(Arr.eq(Fun.identity([1,2,3]), [1,2,3]));
+            assert.equal(Fun.identity(null), null);
+        });
+    });
+
+    describe('#curry', function(){
+        it('should create a function from another function', function(){
+            var fn = function(a,b,c){return a + b + c};
+
+            var c3 = Fun.curry(fn);
+            assert.equal(typeof c3, 'function');
+            assert.equal(c3.length, 3);
+
+            var c2 = c3('a');
+            assert.equal(typeof c2, 'function');
+            assert.equal(c2.length, 2);
+
+            var c1 = c2('b');
+            assert.equal(typeof c1, 'function');
+            assert.equal(c1.length, 1);
+
+            var c = c1('c');
+            assert.equal(typeof c, 'string');
+            assert.equal(c, 'abc');
+
+            c2 = c3(_,_,'a');
+            assert.equal(typeof c2, 'function');
+            assert.equal(c2.length, 2);
+
+            c1 = c2(_,'b');
+            assert.equal(typeof c1, 'function');
+            assert.equal(c1.length, 1);
+
+            c = c1('c');
+            assert.equal(typeof c, 'string');
+            assert.equal(c, 'cba');
+        });
+    });
+
+    describe('#curryN', function(){
+        it('should create a function from another function', function(){
+            var fn = function(a,b,c){return a + b + (c || 'z')};
+
+            var c3 = Fun.curryN(3, fn);
+            assert.equal(typeof c3, 'function');
+            assert.equal(c3.length, 3);
+
+            var c2 = c3('a');
+            assert.equal(typeof c2, 'function');
+            assert.equal(c2.length, 2);
+
+            var c1 = c2('b');
+            assert.equal(typeof c1, 'function');
+            assert.equal(c1.length, 1);
+
+            var c = c1('c');
+            assert.equal(typeof c, 'string');
+            assert.equal(c, 'abc');
+
+            c2 = c3(_,_,'a');
+            assert.equal(typeof c2, 'function');
+            assert.equal(c2.length, 2);
+
+            c1 = c2(_,'b');
+            assert.equal(typeof c1, 'function');
+            assert.equal(c1.length, 1);
+
+            c = c1('c');
+            assert.equal(typeof c, 'string');
+            assert.equal(c, 'cba');
+
+            c2 = Fun.curryN(2, fn);
+            assert.equal(typeof c2, 'function');
+            assert.equal(c2.length, 2);
+
+            c1 = c2('b');
+            assert.equal(typeof c1, 'function');
+            assert.equal(c1.length, 1);
+
+            c = c1('c');
+            assert.equal(typeof c, 'string');
+            assert.equal(c, 'bcz');
+        });
+    });
+
     describe('#make', function() {
         it ('should create a new named function', function(){
             var name = "Test";
@@ -116,6 +219,37 @@ describe('Fun', function(){
             assert.equal(Test.length, test.length);
             assert.equal(Test(1,5,2), 3);
         });
+    });
+
+    describe('#thisify', function(){
+        it('should create a function with an implicit this as the last parameter', function(){
+            var obj = {
+                a: 'apple'
+            };
+
+            var fn = Fun.curry(function(suffix, obj){
+                return obj.a + suffix;
+            });
+
+            obj.fn = Fun.thisify(fn);
+
+            assert.equal(obj.fn(' starts with a'), 'apple starts with a');
+        });
+
+        it('should be able to hand being given too many arguments', function(){
+            var obj = {
+                a: 'apple'
+            };
+
+            var fn = Fun.curry(function(suffix, obj){
+                return obj.a + suffix;
+            });
+
+            obj.fn = Fun.thisify(fn);
+
+            assert.equal(obj.fn(' starts with a', 'whatever'), 'apple starts with a');
+        })
+
     });
 
     describe('#liftN', function(){
@@ -176,5 +310,59 @@ describe('Fun', function(){
             assert.equal(result[2], 6);
             assert.equal(result[3], 8);
         });
+
+        describe('#apply', function(){
+            it('should apply an array to a function', function(){
+                var fn1 = function(a,b){
+                    return a + b;
+                };
+
+                var fn2 = function(a,b){
+                    return a * b;
+                };
+
+                var ap = Fun.apply([3,6]);
+
+                assert.equal(ap(fn1), 9);
+                assert.equal(ap(fn2), 18);
+            });
+
+            it('should work with a foldable as well', function(){
+                var List = function List(){};
+                List = _.Type.sum(List, {Cons: {hd: null, tl: List}, Nil: []});
+
+                List.foldl = _.curry(function(fn, accum, list){
+                    return List.case({
+                        "Nil": accum,
+                        "Cons": function(hd, tl) {
+                            return List.foldl(fn, fn(accum, hd), tl);
+                        }
+                    }, list);
+                });
+
+                List.foldr = _.curry(function(fn, accum, list) {
+                    return List.case({
+                        "Nil": accum,
+                        "Cons": function(hd, tl) {
+                            return fn(List.foldr(fn, accum, tl), hd);
+                        }
+                    }, list);
+                });
+
+                var fn1 = Fun.curry(function(a,b){
+                    return a + b;
+                });
+
+                var fn2 = Fun.curry(function(a,b){
+                    return a * b;
+                });
+
+                var ap = Fun.apply(List.Cons(3, List.Cons(6, List.Nil)));
+
+                assert.equal(ap(fn1), 9);
+                assert.equal(ap(fn2), 18);
+
+            });
+        })
     });
 });
