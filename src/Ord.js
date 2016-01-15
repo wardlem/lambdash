@@ -35,20 +35,17 @@ Ord.eq = Eq.eq;
  *      _.compare([1,2,3], [1,2,5]); // _.LT
  *      _.compare([1,2,3], [1,2,3]); // _.EQ
  *
- *      _.compare('CAB')('CAR');  // _.LT
+ *      _.compare('CAB')('CAR');    // _.LT
  *
  */
 Ord.compare = _curry(function(left, right) {
-    if (left == null || right == null) {
-        throw new TypeError('Ord#compare can not operate on undefined or null values');
-    }
-
     var M = _moduleFor(left);
     if (_isFunction(M.compare)) {
         return M.compare(left, right);
     }
 
-    return _defaultCompare(left, right);
+    // default
+    return Ord.compare(String(left),String(right));
 });
 
 
@@ -160,10 +157,6 @@ Ord.max = _curry(function(left, right) {
 
 
 Ord.member = function(value) {
-    if (value == null) {
-        return false;
-    }
-
     var M = _moduleFor(value);
     return Eq.member(value) && _isFunction(M.compare);
 };

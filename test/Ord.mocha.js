@@ -50,6 +50,14 @@ describe('Ord', function() {
             assert.equal(Ord.compare([1,2,3,4,5,6,7],[1,2,3,4,5,6]), GT);
             assert.equal(Ord.compare([1,2,3,4,5,6],[1,2,3,4,5,6,7]), LT);
         });
+
+        it('should use a default sort for functions', function(){
+            var fn1 = function(a){return a};
+            var fn2 = function(b){return b};
+
+            assert.equal(Ord.compare(fn1,fn2), Ord.compare(String(fn1),String(fn2)));
+            assert.equal(Ord.compare(fn2,fn1), Ord.compare(String(fn2),String(fn1)));
+        });
     });
 
     describe('#gt', function(){
