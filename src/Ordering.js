@@ -7,7 +7,7 @@ var Ordering = sumType('Ordering', {'LT': [], 'EQ': [], 'GT': []});
 
 // Implementation for Ord
 Ordering.compare = _curry(function(left, right) {
-    return Ordering.fromInt(Ordering.toInt(right) - Ordering.toInt(left));
+    return Ordering.fromInt(Ordering.toInt(left) - Ordering.toInt(right));
 });
 
 // Implementation for Enum

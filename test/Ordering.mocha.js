@@ -4,6 +4,19 @@ var Ordering = require('../src/Ordering');
 var _always = require('../src/internal/_always');
 
 describe('Ordering', function() {
+    describe('#compare', function(){
+        it('should return a comparison of two comparison', function(){
+            assert.equal(Ordering.compare(Ordering.LT, Ordering.LT), Ordering.EQ);
+            assert.equal(Ordering.compare(Ordering.LT, Ordering.EQ), Ordering.LT);
+            assert.equal(Ordering.compare(Ordering.LT, Ordering.GT), Ordering.LT);
+            assert.equal(Ordering.compare(Ordering.EQ, Ordering.EQ), Ordering.EQ);
+            assert.equal(Ordering.compare(Ordering.EQ, Ordering.LT), Ordering.GT);
+            assert.equal(Ordering.compare(Ordering.EQ, Ordering.GT), Ordering.LT);
+            assert.equal(Ordering.compare(Ordering.GT, Ordering.GT), Ordering.EQ);
+            assert.equal(Ordering.compare(Ordering.GT, Ordering.LT), Ordering.GT);
+            assert.equal(Ordering.compare(Ordering.GT, Ordering.EQ), Ordering.GT);
+        });
+    });
     describe('#isLT', function() {
         it('should return true only if the value is Ordering.LT', function() {
             assert.equal(Ordering.isLT(Ordering.LT), true);
