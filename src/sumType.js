@@ -79,7 +79,7 @@ function sumType(name, definition) {
 
     Sum.eq = _curry(function(left, right) {
         if (!Sum.member(left) || !Sum.member(right)) {
-            throw new TypeError(name + '#equal only accepts instances of ' + name);
+            throw new TypeError(name + '#eq only accepts instances of ' + name);
         }
 
         if (left.constructor !== right.constructor) {
