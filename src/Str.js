@@ -85,6 +85,10 @@ Str.join = _curry(function(delim, arr) {
     return arr.join(delim);
 });
 
+Str.show = _curry(function(str){
+    return '"' + str + '"';
+});
+
 Str.lines = Str.split('\n');
 Str.words = Str.split(/\s/);
 Str.unlines = Str.join('\n');
