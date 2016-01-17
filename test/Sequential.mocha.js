@@ -329,7 +329,6 @@ describe('Sequential', function(){
             var fn = function(obj){return obj.a === 2};
             var obj = Sequential.find(fn, list);
 
-            console.log(obj);
             assert.equal(_equal(obj, {a:2,b:2}), true);
         });
     });
@@ -340,7 +339,6 @@ describe('Sequential', function(){
             var fn = function(obj){return obj.a === 2};
             var obj = Sequential.findLast(fn, list);
 
-            console.log(obj);
             assert.equal(_equal(obj, {a:2,b:4}), true);
         });
     });

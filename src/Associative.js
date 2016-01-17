@@ -60,7 +60,7 @@ Associative.lookupAll = _curryN(2, function(keys, assoc){
  * @since 0.6.0
  */
 Associative.lookupOr = _curryN(3, function(def, key, assoc){
-    return Associative.exists(key, assoc) ? Associate.lookup(key, assoc) : def;
+    return Associative.exists(key, assoc) ? Associative.lookup(key, assoc) : def;
 });
 
 /**
@@ -135,6 +135,7 @@ Associative.filterAssoc = _curryN(2, _useModuleMethod('filterAssoc'));
 Associative.pairs = _curryN(1, function(assoc){
     return Associative.foldlAssoc(function(accum, v, k){
         accum.push([k,v]);
+        return accum;
     }, [], assoc);
 });
 
