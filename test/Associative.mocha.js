@@ -161,4 +161,13 @@ describe('Associative', function(){
             assertEqual(Associative.pairs(obj), [['a',1],['b',2],['c',3]]);
         })
     });
+
+    describe('#member', function(){
+        it('shoudl return true if a value implements Associative', function(){
+            assert.equal(Associative.member({}), true);
+            assert.equal(Associative.member(ArrayMap.empty()), true);
+            assert.equal(Associative.member(false), false);
+            assert.equal(Associative.member(1), false);
+        })
+    })
 });
