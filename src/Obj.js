@@ -9,6 +9,9 @@ var __ = require('./internal/_blank');
 
 var Functor = require('./Functor');
 var Foldable = require('./Foldable');
+var Ord = require('./Ord');
+var Ordering = require('./Ordering');
+
 
 var Obj = require('./internal/_primitives').Obj;
 
@@ -45,6 +48,40 @@ Obj.eq = _curry(function(left, right) {
 });
 
 /**
+ * Compares two objects and returns an ordering.
+ *
+ * Keys are compared based on their lexical ordering.
+ *
+ * @sig {String: a} -> {String: a} -> Ordering
+ * @since 0.6.0
+ */
+Obj.compare = _curry(function(left, right){
+    if (left === right) {
+        return Ordering.EQ;
+    }
+
+    var lKeys = _arrSort(Object.keys(left));
+    var rKeys = _arrSort(Object.keys(right));
+
+    var count = Math.min(lKeys.length, rKeys.length);
+    var ind = 0;
+    var comp;
+    while(ind < count) {
+        comp = Ord.compare(lKeys[ind], rKeys[ind]);
+        if (comp !== Ordering.EQ) {
+            return comp;
+        }
+        comp = Ord.compare(left[lKeys[ind]], right[rKeys[ind]]);
+        if (comp !== Ordering.EQ) {
+            return comp;
+        }
+        ind += 1;
+    }
+
+    return Ordering.fromNum(lKeys.length - rKeys.length);
+});
+
+/**
  * Maps the values of an objects own keys, returning a transformed object.
  *
  * @sig (a -> b) -> {String: a} -> {String: b}
@@ -54,7 +91,7 @@ Obj.map = _curry(function(fn, obj) {
     return Foldable.foldl(function(accum, key){
         accum[key] = fn(obj[key]);
         return accum;
-    }, {}, Obj.ownKeys(obj));
+    }, {}, Obj.ownPropNames(obj));
 });
 
 /**
@@ -67,7 +104,7 @@ Obj.mapAssoc = _curry(function(fn, obj) {
     return Foldable.foldl(function(accum, key){
         accum[key] = fn(obj[key], key);
         return accum;
-    }, {}, Obj.ownKeys(obj));
+    }, {}, Obj.ownPropNames(obj));
 });
 
 /**
@@ -142,7 +179,7 @@ Obj.intersection = _curry(function(left, right){
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.symettricDifference = _curry(function(left, right){
+Obj.symmetricDifference = _curry(function(left, right){
     var result = {};
     var k;
     for (k in left){
@@ -275,12 +312,21 @@ Obj.dissoc = _curry(function(key, obj){
 /**
  * Returns true if an object has a property.
  *
+ *
+ *
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
-Obj.has = _curry(function(key, obj){
+Obj.propExists = _curry(function(key, obj){
     return key in obj;
 });
+
+/**
+ * Returns true if an object has a property.
+ *
+ *
+ */
+Obj.exists = Obj.propExists;
 
 /**
  * Returns true if an object has an own property.
@@ -288,12 +334,18 @@ Obj.has = _curry(function(key, obj){
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
-Obj.hasOwn = _curry(function(key, obj){
+Obj.ownPropExists = _curry(function(key, obj){
     return Object.prototype.hasOwnProperty.call(obj, key);
 });
 
 /**
  * Returns the property associated with a key in an object.
+ *
+ * This function treats every value given to it as a regular javascript object.
+ * This is in contrast to the librarie's lookup function which treats its
+ * operands as associative collections.
+ * However, when operating on plain-old javascript objects, these two functions
+ * behave identically.
  *
  * @sig String -> {String: a} -> a|undefined
  * @since 0.6.0
@@ -303,13 +355,21 @@ Obj.prop = _curry(function(key, obj){
 });
 
 /**
+ * Returns the property associated with a key in an object.
+ *
+ * @sig String -> {String: a} -> a|undefined
+ * @since 0.6.0
+ */
+Obj.lookup = Obj.prop;
+
+/**
  * Returns the property associated with a key in an object if it exists or a default value if it does not exist.
  *
  * @sig a -> String -> {String: a} -> a
  * @since 0.6.0
  */
 Obj.propOr = _curry(function(def, key, obj){
-    return Obj.has(key, obj) ? obj[key] : def;
+    return Obj.exists(key, obj) ? obj[key] : def;
 });
 
 /**
@@ -330,9 +390,11 @@ Obj.props = _curry(function(props, obj){
  * @sig {String: a} -> [String]
  * @since 0.6.0
  */
-Obj.keys = _curry(function(obj){
+Obj.propNames = _curry(function(obj){
     return _arrSort(Object.keys(Obj.copy(obj)));
 });
+
+Obj.keys = Obj.propNames;
 
 /**
  * Returns the enumerable own keys of an object as an array.
@@ -342,7 +404,7 @@ Obj.keys = _curry(function(obj){
  * @sig {String: a} -> [String]
  * @since 0.6.0
  */
-Obj.ownKeys = _curry(function(obj){
+Obj.ownPropNames = _curry(function(obj){
     return _arrSort(Object.keys(obj));
 });
 
@@ -363,7 +425,7 @@ Obj.values = _curry(function(obj){
  * @since 0.6.0
  */
 Obj.ownValues = _curry(function(obj){
-    return Obj.props(Obj.ownKeys(obj), obj);
+    return Obj.props(Obj.ownPropNames(obj), obj);
 });
 
 /**
@@ -376,7 +438,7 @@ Obj.ownValues = _curry(function(obj){
 Obj.pairs = _curry(function(obj){
     return Functor.map(function(key){
         return [key, obj[key]];
-    }, Obj.keys(obj))
+    }, Obj.propNames(obj));
 });
 
 /**
@@ -389,7 +451,7 @@ Obj.pairs = _curry(function(obj){
 Obj.ownPairs = _curry(function(obj){
     return Functor.map(function(key){
         return [key, obj[key]];
-    }, Obj.ownKeys(obj));
+    }, Obj.ownPropNames(obj));
 });
 
 /**

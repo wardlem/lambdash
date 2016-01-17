@@ -27,6 +27,26 @@ describe('Obj', function(){
         });
     });
 
+    describe('#compare', function(){
+        it('should return an ordering based on the keys and values in the object', function(){
+            assert.equal(Obj.compare({},{}), _.EQ);
+            assert.equal(Obj.compare({a:1,b:2},{a:1,b:2}), _.EQ);
+            assert.equal(Obj.compare({a:1,b:2},{b:2,a:1}), _.EQ);
+            assert.equal(Obj.compare({a:1,b:[1,2]},{b:[1,2],a:1}), _.EQ);
+
+            assert.equal(Obj.compare({},{a:1}), _.LT);
+            assert.equal(Obj.compare({a:1},{}), _.GT);
+            assert.equal(Obj.compare({a:1},{a:2}), _.LT);
+            assert.equal(Obj.compare({a:2},{a:1}), _.GT);
+            assert.equal(Obj.compare({a:1},{b:1}), _.LT);
+            assert.equal(Obj.compare({b:1},{a:1}), _.GT);
+            assert.equal(Obj.compare({a:1,b:2},{a:1,b:3}), _.LT);
+            assert.equal(Obj.compare({a:1,b:4},{a:1,b:3}), _.GT);
+            assert.equal(Obj.compare({a:1,b:[1,2]},{b:[1,3],a:1}), _.LT);
+            assert.equal(Obj.compare({a:1,b:[1,4]},{b:[1,3],a:1}), _.GT);
+        });
+    });
+
     describe('#map', function(){
         it('should map the own values of an object', function(){
             var obj = {a:1, b:3};
@@ -81,7 +101,7 @@ describe('Obj', function(){
         });
     });
 
-    describe('#intersect', function(){
+    describe('#intersection', function(){
         it('should return an object with all keys in both the left and right and values of the left', function(){
             assertEqual(Obj.intersection({a:1,b:2},{c:3}), {});
             assertEqual(Obj.intersection({a:1,b:2},{b:3,d:4}), {b:2});
@@ -91,9 +111,9 @@ describe('Obj', function(){
 
     describe('#symmetricDifference', function(){
         it('should return an object with all keys that exist in one but not both of left and right', function(){
-            assertEqual(Obj.symettricDifference({a:1,b:2},{c:3}), {a:1,b:2,c:3});
-            assertEqual(Obj.symettricDifference({a:1,b:2},{b:3,d:4}), {a:1,d:4});
-            assertEqual(Obj.symettricDifference({a:1,b:2},{b:3,a:4}), {});
+            assertEqual(Obj.symmetricDifference({a:1,b:2},{c:3}), {a:1,b:2,c:3});
+            assertEqual(Obj.symmetricDifference({a:1,b:2},{b:3,d:4}), {a:1,d:4});
+            assertEqual(Obj.symmetricDifference({a:1,b:2},{b:3,a:4}), {});
         });
     });
 
@@ -196,7 +216,7 @@ describe('Obj', function(){
         });
     });
 
-    describe('#has', function(){
+    describe('#propExists', function(){
         it('should return whether or not an object has a value', function(){
             function C(a){
                 this.a = a;
@@ -206,13 +226,13 @@ describe('Obj', function(){
 
             var obj = new C(1);
 
-            assert.equal(Obj.has('a')(obj), true);
-            assert.equal(Obj.has('b')(obj), true);
+            assert.equal(Obj.propExists('a')(obj), true);
+            assert.equal(Obj.propExists('b')(obj), true);
         });
 
     });
 
-    describe('#hasOwn', function(){
+    describe('#ownPropExists', function(){
         it('should return whether or not an object has an own value', function(){
             function C(a){
                 this.a = a;
@@ -222,8 +242,8 @@ describe('Obj', function(){
 
             var obj = new C(1);
 
-            assert.equal(Obj.hasOwn('a')(obj), true);
-            assert.equal(Obj.hasOwn('b')(obj), false);
+            assert.equal(Obj.ownPropExists('a')(obj), true);
+            assert.equal(Obj.ownPropExists('b')(obj), false);
         });
     });
 
@@ -258,7 +278,7 @@ describe('Obj', function(){
         });
     });
 
-    describe('#keys', function(){
+    describe('#propNames', function(){
         it('should return all the keys of an object in sorted order', function(){
             function C(a){
                 this.a = a;
@@ -268,7 +288,7 @@ describe('Obj', function(){
 
             var obj = new C(1);
 
-            assertEqual(Obj.keys(obj), ['a', 'b']);
+            assertEqual(Obj.propNames(obj), ['a', 'b']);
         });
     });
 
@@ -282,7 +302,7 @@ describe('Obj', function(){
 
             var obj = new C(1);
 
-            assertEqual(Obj.ownKeys(obj), ['a']);
+            assertEqual(Obj.ownPropNames(obj), ['a']);
         });
     });
 
