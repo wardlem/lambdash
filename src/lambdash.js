@@ -225,7 +225,7 @@ lambdash.mapAssoc = Associative.mapAssoc;
 lambdash.foldlAssoc = Associative.foldlAssoc;
 lambdash.foldrAssoc = Associative.foldrAssoc;
 lambdash.filterAssoc = Associative.filterAssoc;
-lamdbash.pairs = Associative.pairs;
+lambdash.pairs = Associative.pairs;
 
 // Show
 lambdash.show = Show.show;
@@ -234,7 +234,7 @@ lambdash.show = Show.show;
 lambdash.applyTo = Arr.applyTo;
 
 // Obj
-lambash.copy = Obj.copy;
+lambdash.copy = Obj.copy;
 lambdash.copyOwn = Obj.copyOwn;
 lambdash.propExists = Obj.propExists;
 lambdash.ownPropExists = Obj.ownPropExists;

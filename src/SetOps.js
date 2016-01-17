@@ -1,5 +1,5 @@
 var _curryN = require('./internal/_curryN');
-var _useModuleMethod = ('./internal/_useModuleMethod');
+var _useModuleMethod = require('./internal/_useModuleMethod');
 var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
 
