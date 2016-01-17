@@ -246,8 +246,6 @@ lambdash.ownPropNames = Obj.ownPropNames;
 lambdash.ownValues = Obj.ownValues;
 lambdash.ownPairs = Obj.ownPairs;
 
-
-
 // Bool
 lambdash.and = Bool.and;
 lambdash.or = Bool.or;
@@ -284,6 +282,10 @@ lambdash.liftN = Fun.liftN;
 lambdash.lift = Fun.lift;
 lambdash.apply = Fun.apply;
 lambdash.noop = Fun.noop;
+
+// Regex
+lambdash.test = Regex.test;
+lambdash.exec = Regex.exec;
 
 // Ordering
 lambdash.Ordering = Ordering;
