@@ -23,6 +23,9 @@ var Foldable = require('./Foldable');
 var Sequential = require('./Sequential');
 var Applicative = require('./Applicative');
 var Monad = require('./Monad');
+var SetOps = require('./SetOps');
+var Set = require('./Set');
+var Associative = require('./Associative');
 var Show = require('./Show');
 
 // Auxiliary types
@@ -67,6 +70,9 @@ lambdash.Foldable = Foldable;
 lambdash.Sequential = Sequential;
 lambdash.Applicative = Applicative;
 lambdash.Monad = Monad;
+lambdash.SetOps = SetOps;
+lambdash.Set = Set;
+lambdash.Associative = Associative;
 lambdash.Show = Show;
 
 lambdash.Type = Type;
@@ -196,11 +202,51 @@ lambdash.chain = Monad.chain;
 lambdash.composeM = Monad.composeM;
 lambdash.pipeM = Monad.pipeM;
 
+// SetOps
+lambdash.union = SetOps.union;
+lambdash.difference = SetOps.difference;
+lambdash.intersection = SetOps.intersection;
+lambdash.symmetricDifference = SetOps.symmetricDifference;
+
+// Set
+lambdash.exists = Set.exists;
+lambdash.insert = Set.insert;
+lambdash.remove = Set.remove;
+
+// Associative
+lambdash.assoc = Associative.assoc;
+lambdash.dissoc = Associative.dissoc;
+lambdash.lookup = Associative.lookup;
+lambdash.lookupAll = Associative.lookupAll;
+lambdash.lookupOr = Associative.lookupOr;
+lambdash.keys = Associative.keys;
+lambdash.values = Associative.values;
+lambdash.mapAssoc = Associative.mapAssoc;
+lambdash.foldlAssoc = Associative.foldlAssoc;
+lambdash.foldrAssoc = Associative.foldrAssoc;
+lambdash.filterAssoc = Associative.filterAssoc;
+lamdbash.pairs = Associative.pairs;
+
 // Show
 lambdash.show = Show.show;
 
 // Arr
 lambdash.applyTo = Arr.applyTo;
+
+// Obj
+lambash.copy = Obj.copy;
+lambdash.copyOwn = Obj.copyOwn;
+lambdash.propExists = Obj.propExists;
+lambdash.ownPropExists = Obj.ownPropExists;
+lambdash.prop = Obj.prop;
+lambdash.propOr = Obj.propOr;
+lambdash.props = Obj.props;
+lambdash.propNames = Obj.propNames;
+lambdash.ownPropNames = Obj.ownPropNames;
+lambdash.ownValues = Obj.ownValues;
+lambdash.ownPairs = Obj.ownPairs;
+
+
 
 // Bool
 lambdash.and = Bool.and;
