@@ -5,6 +5,8 @@ var _isFunction = require('./internal/_isFunction');
 var _slice = require('./internal/_slice');
 var _equal = require('./internal/_equal');
 
+var Foldable = require('./Foldable');
+
 var Semigroup = module.exports;
 
 /**
@@ -26,29 +28,20 @@ Semigroup.concat = _curry(function(a, b) {
 });
 
 /**
- * Variadic function to concatenate one or more values together
+ * Concatenates all values in a foldable into one.
  *
- * @sig Semigroup m => ...m -> m
+ * The foldable can not be empty.
+ *
+ * @sig (Semigroup m, Foldable f)  => f m -> m
  * @since 0.4.0
  * @returns {Semigroup}
  */
-Semigroup.concatAll = function () {
-    if (arguments.length === 0) {
-        throw new TypeError('Semigroup#concatAll can not be called with no arguments');
-    }
-
-    var start = arguments[0];
-    var argsInd = 1;
-
-    while(argsInd < arguments.length) {
-        start = Semigroup.concat(start, arguments[argsInd]);
-        argsInd += 1;
-    }
-
-    return start;
-};
+Semigroup.concatAll = _curry(function (foldable) {
+    return Foldable.foldl1(Semigroup.concat, foldable);
+});
 
 
 Semigroup.member = function(value) {
-    return value != null && _isFunction(_moduleFor(value).concat);
+    var M = _moduleFor(value);
+    return _isFunction(M.concat);
 };
