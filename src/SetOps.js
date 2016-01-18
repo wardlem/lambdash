@@ -14,8 +14,9 @@ SetOps.symmetricDifference = _curryN(2, _useModuleMethod('symmetricDifference'))
 
 SetOps.member = function(value) {
     var M = _moduleFor(value);
-    return
-        _isFunction(M.union) && _isFunction(M.difference) &&
-        _isFunction(M.interesection) && _isFunction(M.symmetricDifference);
+    return _isFunction(M.union)
+        && _isFunction(M.difference)
+        && _isFunction(M.intersection)
+        && _isFunction(M.symmetricDifference);
 
 }
