@@ -3,6 +3,12 @@ var assert = require('assert');
 var _ = require('../src/lambdash');
 var Arr = _.Arr;
 
+var assertEqual = function(left, right){
+    if (!_.eq(left,right)){
+        assert.fail(left, right, undefined, 'eq');
+    }
+};
+
 describe('Arr', function(){
     describe('#eq', function(){
         it('should return true if two arrays are structurally equal', function(){
@@ -247,14 +253,71 @@ describe('Arr', function(){
         });
     });
 
-    //describe('#transpose', function(){
-    //    var arr = [[1,2,3],[4,5],[6,7,8,9]];
-    //    throw Arr.transpose(arr);
-    //});
+    describe('#exists', function(){
+        it('should return true if there is at least one value in an array equal to a given value, false otherwise', function(){
+            assert.equal(Arr.exists(1)([1,2,3,4,5]), true);
+            assert.equal(Arr.exists(6)([1,2,3,4,5]), false);
+            assert.equal(Arr.exists([3])([[1],[2],[3],[4]]),true);
+            assert.equal(Arr.exists([5])([[1],[2],[3],[4]]),false);
+        });
+    });
+
+    describe('#insert', function(){
+        it('should add a value to an array if it does not already exist', function(){
+            assertEqual(Arr.insert(3, [1,2,3,4]), [1,2,3,4]);
+            assertEqual(Arr.insert(5, [1,2,3,4]), [1,2,3,4,5]);
+        });
+    });
+
+    describe('#remove', function(){
+        it('should remove all instances of a value from an array', function(){
+            assertEqual(Arr.remove(1, [1,1,1,1,1,1,1,1]), []);
+            assertEqual(Arr.remove(1, [1,2,3,4,5,1,2,3,4,5]), [2,3,4,5,2,3,4,5]);
+            assertEqual(Arr.remove(1, [2,3,4,5,6,7,8,9]), [2,3,4,5,6,7,8,9]);
+        });
+    });
+
+    describe('#union', function(){
+        it('should join two arrays together without duplicating values', function(){
+            var arr1 = [1,2,3,4,4,5];
+            var arr2 = [8,7,6,6,5,4];
+
+            assertEqual(Arr.union(arr1, arr2), [1,2,3,4,5,8,7,6]);
+        });
+    });
+
+    describe('#difference', function(){
+        it('should give all the values in left not in right', function(){
+            var arr1 = [1,2,3,4,4,5];
+            var arr2 = [8,7,6,6,5,4];
+
+            assertEqual(Arr.difference(arr1, arr2), [1,2,3]);
+        });
+    });
+
+    describe('#intersection', function(){
+        it('should return an array of all the values in left and right', function(){
+            var arr1 = [1,2,3,4,4,5];
+            var arr2 = [8,7,6,6,5,4];
+
+            assertEqual(Arr.intersection(arr1, arr2), [4,5]);
+        });
+    });
+
+    describe('#symmetricDifference', function(){
+        it('should return all the values in left or right but not both', function(){
+            var arr1 = [1,2,3,4,4,5];
+            var arr2 = [8,7,6,6,5,4];
+
+            assertEqual(Arr.symmetricDifference(arr1, arr2), [1,2,3,8,7,6]);
+        });
+    });
 
     describe('#show', function(){
         it('should create a string representation of an array', function(){
             assert.equal(Arr.show([1,2,3]), "[1,2,3]");
         });
-    })
+    });
+
+
 });

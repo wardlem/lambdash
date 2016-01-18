@@ -1,9 +1,13 @@
 var _arrEqual = require('./internal/_arrayEqual');
 var _curry = require('./internal/_curry');
 var _show = require('./internal/_show');
+var _equal = require('./internal/_equal');
+var _not = require('./internal/_not');
+var __ = require('./internal/_blank');
 
 var Ord = require('./Ord');
 var Ordering = require('./Ordering');
+var Sequential = require('./Sequential');
 
 /**
  * Arr is the module for javascript's built-in array type.
@@ -341,29 +345,114 @@ Arr.intersperse = _curry(function(value, arr) {
     return res;
 });
 
-// TODO
-//Arr.transpose = _curry(function(arr) {
-//    var res = [];
-//    var maxLen = Arr.foldl(function(accum, v) {
-//        return Math.max(accum, v.length);
-//    }, 0, arr);
-//
-//    var ind = 0;
-//    while(ind < maxLen) {
-//        res[ind] = [];
-//        var innerInd = 0;
-//        while(innerInd < arr.length) {
-//            if (arr[innerInd].length > ind) {
-//                res[ind].push(arr[innerInd][ind]);
-//            }
-//            innerInd += 1;
-//        }
-//        ind += 1;
-//    }
-//
-//    return res;
-//});
+/**
+ * Returns true if at least one value in an array is equal to a value.
+ *
+ * This function is part of array's set implementation.
+ *
+ * @sig a -> Array a -> Boolean
+ * @since 0.6.0
+ */
+Arr.exists = _curry(function(key, arr){
+    var ind = 0;
+    while(ind < arr.length) {
+        if (_equal(key, arr[ind])){
+            return true;
+        }
 
+        ind += 1;
+    }
+
+    return false;
+});
+
+/**
+ * Adds a value to an array if it doesn't already exist.
+ *
+ * This function is part of array's set implementation.
+ *
+ * @sig a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.insert = _curry(function(key, arr){
+    if (Arr.exists(key, arr)){
+        return arr;
+    }
+
+    return Arr.concat(arr, [key]);
+
+});
+
+/**
+ * Removes all instances of a value from an array.
+ *
+ * This function is part of array's set implementation.
+ *
+ * @sig a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.remove = _curry(function(key, arr){
+    var ind = 0;
+    while(ind < arr.length) {
+        if (_equal(key, arr[ind])){
+            arr = Arr.concat(Arr.slice(0, ind, arr), Arr.slice(ind+1, arr.length, arr));
+        } else {
+            ind += 1;
+        }
+
+    }
+
+    return arr;
+});
+
+/**
+ * Returns a unique array of all values in left or right.
+ *
+ * @sig Array a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.union = _curry(function(left, right){
+    return Sequential.unique(Arr.concat(left,right));
+});
+
+/**
+ * Returns all values contained in left that are not in right.
+ *
+ * @sig Array a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.difference = _curry(function(left, right){
+    return Sequential.filter(_not(Arr.exists(__, right)), Sequential.unique(left));
+});
+
+/**
+ * Returns all values contained in left and in right.
+ *
+ * @sig Array a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.intersection = _curry(function(left, right){
+    return Sequential.filter(Arr.exists(__, right), Sequential.unique(left));
+});
+
+/**
+ * Returns all values contained in left or right, but not both.
+ *
+ * @sig Array a -> Array a -> Array a
+ * @since 0.6.0
+ */
+Arr.symmetricDifference = _curry(function(left, right){
+    return Arr.concat(Arr.difference(left,right), Arr.difference(right,left));
+});
+
+/**
+ * Returns a string representation of an array.
+ *
+ * This function implements Show for arrays.
+ *
+ * @sig Array a -> String
+ * @since 0.5.0
+ */
 Arr.show = _curry(function(arr) {
     var items = Arr.map(_show, arr);
     return "[" + items.join(',') + "]";

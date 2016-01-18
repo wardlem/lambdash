@@ -15,8 +15,6 @@ var Numeric = require('./Numeric');
 
 var Foldable = module.exports;
 
-var Arr = require('./Arr');
-
 var _fold = _curry(function(_f, fn, init, foldable){
 
     var M = _moduleFor(foldable);
@@ -199,7 +197,7 @@ Foldable.join2 = Foldable.foldMap2(_identity);
  * @param {Foldable} foldable the structure being converted to an array
  * @return {Array}
  */
-Foldable.toArray = Foldable.foldMap2(Arr.of, []);
+Foldable.toArray = Foldable.foldMap2(function(v){return [v]}, []);
 
 /**
  * Counts the elements in a foldable value
