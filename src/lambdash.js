@@ -9,6 +9,7 @@ var Regex = require('./Regex');
 var DT = require('./DT');
 var Fun = require('./Fun');
 var Unit = require('./Unit');
+var Any = require('./Any');
 
 // Type Classes
 var Eq = require('./Eq');
@@ -57,6 +58,7 @@ lambdash.Regex = Regex;
 lambdash.DT = DT;
 lambdash.Fun = Fun;
 lambdash.Unit = Unit;
+lambdash.Any = Any;
 
 lambdash.Eq = Eq;
 lambdash.Bounded = Bounded;
