@@ -134,12 +134,11 @@ Foldable.foldMap2 = _curry(function(fn, empty, foldable) {
  * Folds a container, accumulating the result in a monoid
  *
  * Corresponds to Haskell's `fold`
- * The type signature is different than Haskell's version.
- * The reason for this is that the empty value for the monoid can not be consistently inferred.
+ *
+ * This function will throw an exception if the Foldable container is empty.
  *
  * @since 0.5.0
  * @sig (Foldable f, Monoid m) => f m -> m
- * @param {Monoid} empty the empty value for the monoid that will be concatenated
  * @param {Foldable} foldable the container being folded
  * @return {Monoid} the concatenated result of the fold
  * @example
@@ -147,7 +146,7 @@ Foldable.foldMap2 = _curry(function(fn, empty, foldable) {
  *     var foldable = ['a','b','c']
  *     var empty = '';
  *
- *     _.join(empty, foldable);  // 'abc'
+ *     _.join(foldable);  // 'abc'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
@@ -156,9 +155,35 @@ Foldable.foldMap2 = _curry(function(fn, empty, foldable) {
  *         return Sum(left.value + right.value);
  *     });
  *
- *     _.join(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
+ *     _.join([Sum(1),Sum(2),Sum(3)]); // Sum(6)
  */
 Foldable.join = Foldable.foldMap(_identity);
+
+/**
+ * Joins a monad with a separator.
+ *
+ * This function will throw an exception with the collection is empty.
+ *
+ * @since 0.6.0
+ * @sig (Foldable f, Monoid m) => m -> f m -> m
+ * @param {Monoid} sep the separator to join the values with
+ * @param {Foldable} foldable a collection of monoids
+ * @returns {Monoid}
+ * @example
+ *
+ *      _.joinWith(',', ['first', 'second', 'third']); // 'first,second,third'
+ */
+Foldable.joinWith = _curry(function(sep, foldable){
+    var ind = 0;
+    return Foldable.foldMap(function(v){
+        if (ind === 0) {
+            ind += 1;
+            return v;
+        } else {
+            return Monoid.concat(v,sep);
+        }
+    }, foldable);
+});
 
 /**
  * Folds a container, accumulating the result in a monoid
@@ -177,7 +202,7 @@ Foldable.join = Foldable.foldMap(_identity);
  *     var foldable = ['a','b','c']
  *     var empty = '';
  *
- *     _.join(empty, foldable);  // 'abc'
+ *     _.join2(empty, foldable);  // 'abc'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
@@ -186,9 +211,38 @@ Foldable.join = Foldable.foldMap(_identity);
  *         return Sum(left.value + right.value);
  *     });
  *
- *     _.join(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
+ *     _.join2(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
  */
 Foldable.join2 = Foldable.foldMap2(_identity);
+
+/**
+ * Joins a monad with a separator.
+ *
+ * This function is like joinWith except that it accepts an empty value
+ * to prevent throwing an exception.
+ *
+ * @since 0.6.0
+ * @sig (Foldable f, Monoid m) => m -> f m -> m
+ * @param {Monoid} empty the empty value for
+ * @param {Monoid} sep the separator to join the values with
+ * @param {Foldable} foldable a collection of monoids
+ * @returns {Monoid}
+ * @example
+ *
+ *      _.joinWith2(',', '', ['first', 'second', 'third']); // 'first,second,third'
+ *      _.joinWith2(',', '', []);                           // ''
+ */
+Foldable.joinWith2 = _curry(function(empty, sep, foldable){
+    var ind = 0;
+    return Foldable.foldMap2(function(v){
+        if (ind === 0) {
+            ind += 1;
+            return v;
+        } else {
+            return Monoid.concat(v,sep);
+        }
+    }, empty, foldable);
+});
 
 /**
  * Transforms a foldable structure into an array
