@@ -144,6 +144,8 @@ lambdash.foldMap = Foldable.foldMap;
 lambdash.foldMap2 = Foldable.foldMap2;
 lambdash.join = Foldable.join;
 lambdash.join2 = Foldable.join2;
+lambdash.joinWith = Foldable.joinWith;
+lambdash.joinWith2 = Foldable.joinWith2;
 lambdash.toArray = Foldable.toArray;
 lambdash.len = Bool.condition(
     [Type.hasModuleMethod('len'), Type.useModuleMethod('len')],
@@ -261,6 +263,11 @@ lambdash.F = Bool.F;
 
 // Str
 lambdash.split = Str.split;
+lambdash.match = Str.match;
+lambdash.replace = Str.replace;
+lambdash.toLower = Str.toLower;
+lambdash.toUpper = Str.toUpper;
+lambdash.trim = Str.trim;
 lambdash.lines = Str.lines;
 lambdash.words = Str.words;
 lambdash.unlines = Str.unlines;
