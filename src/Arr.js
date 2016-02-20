@@ -136,21 +136,6 @@ Arr.foldr = _curry(function(fn, init, arr) {
 });
 
 /**
- * Folds an array from the left.
- *
- * This function is part of the implementation for Foldable for arrays.
- *
- * @sig (b -> a -> b) -> b -> Array a -> b
- * @since 0.5.0
- * @see Foldable.fold
- * @param {Function} fn the function that calculates the accumulated value
- * @param {*} init the initial value of the accumulation
- * @param {Array} arr the array being accumulated
- * @return {*} The final accumulation of the fold
- */
-Arr.fold = Arr.foldl;
-
-/**
  * Concatenates two arrays into one with.
  *
  * This function implements Semigroup for arrays.
@@ -459,4 +444,3 @@ Arr.show = _curry(function(arr) {
 });
 
 module.exports = Arr;
-

@@ -46,6 +46,9 @@ Num.toInt = function(value) {
  */
 Num.fromInt = _identity;
 
+
+// implementation for Numeric
+
 /**
  * Identity
  *
@@ -139,6 +142,15 @@ Num.reciprocal = _curry(function(a) {
  */
 Num.sign = _curry(function(a) {
     return a === 0 ? 0 : a < 0 ? -1 : 1;
+});
+
+/**
+ * Returns a string representation of a Number.
+ *
+ * @sig Number -> String
+ */
+Num.show = _curry(function(a){
+    return String(a);
 });
 
 /**

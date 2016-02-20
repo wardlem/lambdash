@@ -89,6 +89,10 @@ function sumType(name, definition) {
         return left.constructor.eq(left, right);
     });
 
+    Sum.unapply = _curry(function(fn, instance) {
+        return instance.constructor.unapply(fn, instance);
+    });
+
     require('./internal/_module')(Sum);
 
     return Sum;

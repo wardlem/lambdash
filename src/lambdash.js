@@ -48,6 +48,7 @@ var Type = {
 
 var lambdash = module.exports;
 
+lambdash.Any = Any;
 lambdash.Bool = Bool;
 lambdash.Num = Num;
 lambdash.Int = Int;
@@ -58,7 +59,6 @@ lambdash.Regex = Regex;
 lambdash.DT = DT;
 lambdash.Fun = Fun;
 lambdash.Unit = Unit;
-lambdash.Any = Any;
 
 lambdash.Eq = Eq;
 lambdash.Bounded = Bounded;
@@ -302,6 +302,10 @@ lambdash.LT = Ordering.LT;
 lambdash.GT = Ordering.GT;
 lambdash.EQ = Ordering.EQ;
 
+// ADTs
+lambdash.unapply = Type.useModuleMethod('unapply');
+lambdash.case = Type.useModuleMethod('case');
+
 // Blank
 lambdash.__ = __;
 Object.defineProperty(lambdash, '@@functional/blank', {
@@ -310,4 +314,3 @@ Object.defineProperty(lambdash, '@@functional/blank', {
     enumerable: false,
     writable: false
 });
-

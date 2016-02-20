@@ -86,6 +86,19 @@ Bool.minBound = _always(false);
 Bool.maxBound = _always(true);
 
 
+// Implementation for Show
+
+/**
+ * Returns a string representation of a boolean value.
+ *
+ * @since 0.6.0
+ * @sig Boolean -> String
+ */
+Bool.show = _curry(function(bool){
+    return String(bool);
+});
+
+
 // Logic
 
 /**
@@ -224,4 +237,3 @@ Bool.T = _always(true);
 Bool.F = _always(false);
 
 module.exports = Bool;
-

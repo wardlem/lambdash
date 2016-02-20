@@ -55,10 +55,6 @@ Enum.toInt = _curry(function toInt(value) {
  *
  */
 Enum.prev = _curry(function(value) {
-    if (value == null) {
-        throw new TypeError('Enum#pred requires a defined, non-null value');
-    }
-
     return fromInt(_moduleFor(value), Enum.toInt(value) - 1);
 });
 
@@ -177,5 +173,3 @@ Enum.member = function(value) {
     var M = _moduleFor(value);
     return _isFunction(M.toInt) && _isFunction(M.fromInt);
 }
-
-

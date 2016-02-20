@@ -82,7 +82,12 @@ var productType = module.exports = function productType(name, definition) {
         return _arrayEqual(left, right);
     });
 
-
+    Product.fromObject = _curry(function(obj){
+        var values = tags.map(function(tag){
+            return obj[tag];
+        });
+        return Product.apply(this, values);
+    });
 
     Product.member = function(value) {
         return value instanceof Product;

@@ -32,12 +32,17 @@ Int.add = _curry(function(a, b){
     return a + b;
 });
 
-Int.subtract = _curry(function(a, b) {
+Int.sub = _curry(function(a, b) {
     return a - b;
 });
 
-Int.multiply = _curry(function(a, b) {
+Int.mul = _curry(function(a, b) {
     return a * b;
+});
+
+Int.div = _curry(function(a, b) {
+    return b === 0 ? NaN : (a << 0 / b << 0) << 0; 
+
 });
 
 module.exports = Int;

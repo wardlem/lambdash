@@ -115,13 +115,13 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#foldMap2', function() {
+    describe('#foldMapDef', function() {
         it('should map and concatenate a monoid', function() {
             var foldable = [1,2,3];
             var fn = function(n){return String(n + 1)};
             var empty = '';
 
-            assert.equal(Foldable.foldMap2(fn, empty, foldable), '234');
+            assert.equal(Foldable.foldMapDef(fn, empty, foldable), '234');
 
             var Sum = productType('Sum', {value: Num});
             Sum.empty = _always(Sum(0));
@@ -129,7 +129,7 @@ describe('Foldable', function(){
                 return Sum(left.value + right.value);
             });
 
-            var sum = Foldable.foldMap2(Sum, Sum.empty(), [1,2,3]);
+            var sum = Foldable.foldMapDef(Sum, Sum.empty(), [1,2,3]);
             assert(sum instanceof Sum);
             assert.equal(sum.value, 6);
         });
@@ -160,10 +160,10 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#join2', function() {
+    describe('#joinDef', function() {
         it('should join the contained monoids into one', function() {
-            assert.equal(Foldable.join2('', ['abc', 'def', 'ghi']), 'abcdefghi');
-            assert.equal(Foldable.join2('', []), '');
+            assert.equal(Foldable.joinDef('', ['abc', 'def', 'ghi']), 'abcdefghi');
+            assert.equal(Foldable.joinDef('', []), '');
 
             var Sum = productType('Sum', {value: Num});
             Sum.empty = _always(Sum(0));
@@ -171,7 +171,7 @@ describe('Foldable', function(){
                 return Sum(left.value + right.value);
             });
 
-            var sum = Foldable.join2(Sum.empty(), [Sum(1),Sum(2),Sum(3)]);
+            var sum = Foldable.joinDef(Sum.empty(), [Sum(1),Sum(2),Sum(3)]);
             assert(sum instanceof Sum);
             assert.equal(sum.value, 6);
         });

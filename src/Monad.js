@@ -45,7 +45,13 @@ Monad.flatten = _curry(function(monad) {
  *
  *      _.chain(n => [n + 1], [1,2,3]);  // [2,3,4]
  */
-Monad.chain = _compose(Monad.flatten, Functor.map);
+Monad.chain = _curry(function(fn, monad){
+    var M = _moduleFor(monad);
+    if (_isFunction(M.chain)) {
+        return M.chain(fn, monad);
+    }
+    return Monad.flatten(Functor.map(fn, monad));
+});
 
 /**
  * Composes functions using the chain function.

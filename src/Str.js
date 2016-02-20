@@ -269,7 +269,7 @@ Str.words = Str.split(/\s+/);
  * @sig Foldable f => f String -> String
  * @since 0.6.0
  */
-Str.unlines = Foldable.joinWith2('', '\n');
+Str.unlines = Foldable.joinWithDef('', '\n');
 
 /**
  * Joins a foldable of strings with a space character.
@@ -277,7 +277,7 @@ Str.unlines = Foldable.joinWith2('', '\n');
  * @sig Foldable f => f String -> String
  * @since 0.6.0
  */
-Str.unwords = Foldable.joinWith2('', ' ');
+Str.unwords = Foldable.joinWithDef('', ' ');
 
 /**
  * Returns an evaluatable representation of a string.

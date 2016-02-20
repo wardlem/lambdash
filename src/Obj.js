@@ -312,8 +312,6 @@ Obj.dissoc = _curry(function(key, obj){
 /**
  * Returns true if an object has a property.
  *
- *
- *
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
@@ -324,7 +322,8 @@ Obj.propExists = _curry(function(key, obj){
 /**
  * Returns true if an object has a property.
  *
- *
+ * @sig String -> {String: a} -> Boolean
+ * @since 0.6.0
  */
 Obj.exists = Obj.propExists;
 

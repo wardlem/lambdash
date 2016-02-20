@@ -68,7 +68,7 @@ Foldable.foldr = _fold('foldr');
  * @example
  *
  *     var foldable = [1,2,3]
- *     var fn = n => return String(n + 1)
+ *     var fn = n => String(n + 1)
  *     var empty = '';
  *
  *     _.foldMap(fn, empty, foldable);  // '234'
@@ -124,7 +124,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  *
  *     _.foldMap(Sum, Sum.empty(), [1,2,3]); // Sum(6)
  */
-Foldable.foldMap2 = _curry(function(fn, empty, foldable) {
+Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
     return Foldable.foldr(function(accum, value) {
         return Monoid.concat(fn(value), accum);
     }, empty, foldable)
@@ -213,7 +213,7 @@ Foldable.joinWith = _curry(function(sep, foldable){
  *
  *     _.join2(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
  */
-Foldable.join2 = Foldable.foldMap2(_identity);
+Foldable.joinDef = Foldable.foldMapDef(_identity);
 
 /**
  * Joins a monad with a separator.
@@ -232,9 +232,9 @@ Foldable.join2 = Foldable.foldMap2(_identity);
  *      _.joinWith2(',', '', ['first', 'second', 'third']); // 'first,second,third'
  *      _.joinWith2(',', '', []);                           // ''
  */
-Foldable.joinWith2 = _curry(function(empty, sep, foldable){
+Foldable.joinWithDef = _curry(function(empty, sep, foldable){
     var ind = 0;
-    return Foldable.foldMap2(function(v){
+    return Foldable.foldMapDef(function(v){
         if (ind === 0) {
             ind += 1;
             return v;
@@ -251,7 +251,7 @@ Foldable.joinWith2 = _curry(function(empty, sep, foldable){
  * @param {Foldable} foldable the structure being converted to an array
  * @return {Array}
  */
-Foldable.toArray = Foldable.foldMap2(function(v){return [v]}, []);
+Foldable.toArray = Foldable.foldMapDef(function(v){return [v]}, []);
 
 /**
  * Counts the elements in a foldable value
@@ -404,6 +404,7 @@ Foldable.countWith = _curry(function(fn, foldable) {
 
 /**
  * Returns the number of elements in foldable which are equal to a given value.
+ *
  * @since 0.5.0
  * @sig (Foldable f, Eq e) => e -> f e -> Number
  * @param {Eq} v the value being counted in the structure
@@ -517,8 +518,3 @@ Foldable.member = function(value) {
     var M = _moduleFor(value);
     return _isFunction(M.foldl) && _isFunction(M.foldr);
 };
-
-
-
-
-

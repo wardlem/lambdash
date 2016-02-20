@@ -37,7 +37,7 @@ Sequential.len = _curry(function(sequence) {
  *
  * The index should be an integer.
  *
- * @sig Sequence s => Number -> s a -> a
+ * @sig Sequential s => Number -> s a -> a
  * @since 0.5.0
  * @param {Number} ind
  * @param {Sequential} sequence
@@ -132,7 +132,7 @@ Sequential.slice = _curry(function(start, end, sequence){
  *
  * If there are fewer than n values in the sequence, a copy of the sequence will be returned.
  *
- * This function is the same as sequential.slice with 0 as the first parameter
+ * This function is the same as Sequential.slice with 0 as the first parameter
  *
  * @sig Sequential s => Number -> s a -> s a
  * @since 0.5.0
@@ -147,7 +147,7 @@ Sequential.take = Sequential.slice(0);
  *
  * If there are fewer than n values in the sequence, an empty sequence will be returned.
  *
- * This function is the same as sequential.slice with n as the first parameter and
+ * This function is the same as Sequential.slice with n as the first parameter and
  * the length of the sequence as the second parameter.
  *
  * @sig Sequential s => Number -> s a -> s a
@@ -582,4 +582,3 @@ Sequential.member = function(value) {
     var M = _moduleFor(value);
     return Foldable.member(value) && Monoid.member(value) && _isFunction(M.nth) && _isFunction(M.of);
 };
-

@@ -89,7 +89,7 @@ Fun.alwaysThrow = _alwaysThrow;
 /**
  * Takes a function and arguments to that function and returns a function that can be called without arguments.
  *
- * @sig (*... -> *) -> *... -> () -> *
+ * @sig (*... -> *) -> *... -> (() -> *)
  * @since 0.4.0
  * @example
  *
@@ -252,7 +252,7 @@ Fun.liftN = _curry(function(n, fn) {
 /**
  * Takes a regular function and creates a new one that will map over multiple arguments.
  *
- * @sig Applicative a => -> Number -> (*... -> c) -> ((a *)... -> a c)
+ * @sig Applicative a => (*... -> c) -> ((a *)... -> a c)
  * @since 0.5.0
  * @example
  *
