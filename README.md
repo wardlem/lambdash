@@ -18,6 +18,7 @@ that lambdash can provide for your types.
 Lamdash attempts to provide a mostly pure functional api.
 This includes curried functions and operations that do not modify the values they operate on (immutability).
 
+*Contents*
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -1024,7 +1025,7 @@ The following is either planned or under review for the 0.7.0 release.
 4. Possibly adding a way to create a Union type (like a sum type from existing types)
 5. Improve and further standardize docblocks and generate api docs
 
-### Future Plans
+### Eventual Plans
 
 1. Create a script that will amalgamate the files into one and minimize for the browser.
 2. Create benchmarks.
