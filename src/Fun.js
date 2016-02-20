@@ -11,6 +11,7 @@ var _makeFunction = require('./internal/_makeFunction');
 var _thisify = require('./internal/_thisify');
 var _slice = require('./internal/_slice');
 var _isArray = require('./internal/_isArray');
+var _flip = require('./internal/_flip');
 
 var ap = require('./Applicative').ap;
 var map = require('./Functor').map;
@@ -299,6 +300,24 @@ Fun.apply = _curry(function(values, fn) {
         return accum(value);
     }, fn, values);
 });
+
+/**
+ * Reorders the first two parameters of a function.
+ *
+ * @sig (*... -> *) -> (*... -> *)
+ * @example
+ *
+ *      var fn = function(a,b,c){
+ *          return a + b + c;
+ *      }
+ *
+ *      fn('a', 'b', 'c');         // 'abc'
+ *
+ *      var flipped = _.flip(fn);
+ *      flipped('a', 'b', 'c');    // 'bac'
+ *
+ */
+Fun.flip = _flip;
 
 /**
  * A function that does nothing and returns nothing.

@@ -364,5 +364,19 @@ describe('Fun', function(){
 
             });
         });
+
+        describe('#flip', function(){
+            it ('should reorder the first two parameters of a function', function(){
+                var fn = function(a,b,c) {
+                    return a + b + c;
+                }
+
+                var flipped = Fun.flip(fn);
+
+                assert.equal(fn('a','b','c'), 'abc');
+                assert.equal(flipped('a','b','c'), 'bac');
+            });
+
+        });
     });
 });

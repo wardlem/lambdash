@@ -275,7 +275,7 @@ lambdash.words = Str.words;
 lambdash.unlines = Str.unlines;
 lambdash.unwords = Str.unwords;
 
-// Function
+// Fun
 lambdash.compose = Fun.compose;
 lambdash.pipe = Fun.pipe;
 lambdash.always = Fun.always;
@@ -291,6 +291,7 @@ lambdash.liftN = Fun.liftN;
 lambdash.lift = Fun.lift;
 lambdash.apply = Fun.apply;
 lambdash.noop = Fun.noop;
+lambdash.flip = Fun.flip;
 
 // Regex
 lambdash.test = Regex.test;
