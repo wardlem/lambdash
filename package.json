@@ -1,6 +1,6 @@
 {
   "name": "lambdash",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Generic functional programming for javascript",
   "main": "src/lambdash.js",
   "directories": {
