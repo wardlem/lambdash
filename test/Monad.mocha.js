@@ -1,8 +1,8 @@
 var assert = require('assert');
 
-var Monad = require('../src/Monad');
-
-var Arr = require('../src/Arr');
+var _ = require('../src/lambdash');
+var Monad = _.Monad;
+var Arr = _.Arr;
 
 describe('Monad', function(){
     describe('#flatten', function(){
@@ -56,6 +56,13 @@ describe('Monad', function(){
             assert(Arr.eq(Monad.map(fn1, arr), [[1,2],[3,4]]));
             assert(Arr.eq(Monad.map(fn2, arr), [[1,1],[3,3]]));
             assert(Arr.eq(composed(arr), [1,2,1,2,3,4,3,4]));
+
+            var add1 = x => [_.add(x,1)];
+            var mul2 = x => [_.mul(x,2)];
+            var sub2 = x => [_.sub(x,2)];
+
+            var composed = _.composeM(add1, mul2, sub2);
+            assert(Arr.eq(composed([3,4,5]), [3,5,7]));
         });
 
     });
@@ -76,6 +83,13 @@ describe('Monad', function(){
             var piped = Monad.pipeM(fn1, fn2);
 
             assert(Arr.eq(piped(arr), [1,1,2,2,3,3,4,4]));
+
+            var add1 = x => [_.add(x,1)];
+            var mul2 = x => [_.mul(x,2)];
+            var sub2 = x => [_.sub(x,2)];
+
+            var piped = _.pipeM(add1, mul2, sub2);
+            assert(Arr.eq(piped([3,4,5]), [6,8,10]));
         });
 
     });

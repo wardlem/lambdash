@@ -387,10 +387,14 @@ These functions behave in a similar manner to `_.compose` and `_.pipe` except th
 
     _.chain(n => [n, n * 2], [1,2,3]);     // [1,2,2,4,3,6]
 
-    var composed = _.composeM(_.add(1), _.mul(2), _.sub(2));
+    var add1 = x => [_.add(x,1)];
+    var mul2 = x => [_.mul(x,2)];
+    var sub2 = x => [_.sub(x,2)];
+
+    var composed = _.composeM(add1, mul2, sub2);
     composed([3,4,5]);                     // [3,5,7]
 
-    var piped = _.pipeM(_.add(1), _.mul(2), _.sub(2));
+    var piped = _.pipeM(add1, mul2, sub2);
     piped([3,4,5]);                        // [6,8,10]
 
 ```
