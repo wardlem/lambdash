@@ -142,6 +142,28 @@ describe('Associative', function(){
         });
     });
 
+    describe('#update', function(){
+        it('should update a value if it exists', function(){
+            var fn = function(x){return x+1};
+            assertEqual(Associative.update('a', fn, {a:1}), {a:2});
+            assertEqual(Associative.update(1, fn, ArrayMap([[1,3]])), ArrayMap([[1,4]]));
+        });
+    });
+
+    describe('#updateOr', function(){
+        it('should update a value if it exists', function(){
+            var fn = function(x){return x+1};
+            assertEqual(Associative.updateOr(0, 'a', fn, {a:1}), {a:2});
+            assertEqual(Associative.updateOr(0, 1, fn, ArrayMap([[1,3]])), ArrayMap([[1,4]]));
+        });
+
+        it('should set a default if a value does not exists', function(){
+            var fn = function(x){return x+1};
+            assertEqual(Associative.updateOr(0, 'b', fn, {a:1}), {a:1,b:0});
+            assertEqual(Associative.updateOr(0, 2, fn, ArrayMap([[1,3]])), ArrayMap([[1,3],[2,0]]));
+        });
+    });
+
     describe('#keys', function(){
         it('should return all the keys of a container as an array', function(){
             assertEqual(Associative.keys({a:1,b:2,c:3}), ['a','b','c']);

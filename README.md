@@ -539,6 +539,8 @@ These functions may be implemented, but they are not required nor are they deriv
 
 1. `lookupAll`: `(Functor f, Associative a) => f k -> a k v -> f v`
 2. `lookupOr`: `Associative a => v -> k -> a k v -> v`
+3. `update`: `Associative a => k -> (v -> v) -> a k v -> a k v`
+4. `updateOr`: `Associative a => v -> k -> (v -> v) -> a k v -> a k v`
 
 Additionally, if the type implements foldlAssoc the following is derived:
 
@@ -771,6 +773,7 @@ Nothing.
 13. `lift`: `(*... -> c) -> ((a *)... -> a c)`
 14. `apply`: `Foldable f => f * -> (*... -> a) -> a`
 15. `noop`: `() -> ()`
+16. `flip`: ``
 
 ### Unit
 

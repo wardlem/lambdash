@@ -69,18 +69,16 @@ Foldable.foldr = _fold('foldr');
  *
  *     var foldable = [1,2,3]
  *     var fn = n => String(n + 1)
- *     var empty = '';
  *
- *     _.foldMap(fn, empty, foldable);  // '234'
+ *     _.foldMap(fn, foldable);  // '234'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
- *     Sum.empty = _.always(Sum(0));
  *     Sum.concat = _.curry(function(left, right) {
  *         return Sum(left.value + right.value);
  *     });
  *
- *     _.foldMap(Sum, Sum.empty(), [1,2,3]); // Sum(6)
+ *     _.foldMap(Sum, [1,2,3]); // Sum(6)
  */
 Foldable.foldMap = _curry(function(fn, foldable) {
     var EMPTY = {};
@@ -113,7 +111,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  *     var fn = n => return String(n + 1)
  *     var empty = '';
  *
- *     _.foldMap(fn, empty, foldable);  // '234'
+ *     _.foldMapDef(fn, empty, foldable);  // '234'
  *
  *
  *     var Sum = _.productType('Sum', {value: _.Num});
@@ -122,7 +120,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  *         return Sum(left.value + right.value);
  *     });
  *
- *     _.foldMap(Sum, Sum.empty(), [1,2,3]); // Sum(6)
+ *     _.foldMapDef(Sum, Sum.empty(), [1,2,3]); // Sum(6)
  */
 Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
     return Foldable.foldr(function(accum, value) {

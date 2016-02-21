@@ -362,6 +362,19 @@ describe('Obj', function(){
         });
     });
 
+    describe('#fromPairs', function(){
+        it('should create an object from pairs', function(){
+            assertEqual(Obj.fromPairs([['a', 1],['b', 2]]), {a:1,b:2});
+        });
+
+    });
+
+    describe('#zip', function(){
+        it('should create an object from a list of keys and a list of values', function(){
+            assertEqual(Obj.zip(['a','b','c'], [1,2,3]), {a:1,b:2,c:3});
+        });
+    });
+
     describe('#filter', function(){
         it('should filter all keys from an object whose values do not pass a predicate', function(){
             var obj = {

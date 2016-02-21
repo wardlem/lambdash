@@ -64,6 +64,30 @@ Associative.lookupOr = _curryN(3, function(def, key, assoc){
 });
 
 /**
+ * Returns an associative with the value at the given key updated by a function.
+ *
+ * @sig Associative a => k -> (v -> v) -> a k v -> a k v
+ * @since 0.6.2
+ */
+Associative.update = _curryN(3, function(key, fn, assoc){
+    return Associative.assoc(key, fn(Associative.lookup(key, assoc)), assoc);
+});
+
+/**
+ * Returns an associative with the value at the given key updated by a function.
+ *
+ * If the key does not exist a default is associated.
+ *
+ * @sig Associative a => v -> k -> (v -> v) -> a k v -> a k v
+ * @since 0.6.2
+ */
+Associative.updateOr = _curryN(4, function(def, key, fn, assoc){
+    return Associative.exists(key, assoc)
+        ? Associative.update(key, fn, assoc)
+        : Associative.assoc(key, def, assoc);
+});
+
+/**
  * Returns all the keys in an associative collection as an array.
  *
  * This method is optional for being considered an implementation of Associative.

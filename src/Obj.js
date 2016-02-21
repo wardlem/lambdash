@@ -11,6 +11,7 @@ var Functor = require('./Functor');
 var Foldable = require('./Foldable');
 var Ord = require('./Ord');
 var Ordering = require('./Ordering');
+var nth = require('./Sequential').nth;
 
 
 var Obj = require('./internal/_primitives').Obj;
@@ -451,6 +452,36 @@ Obj.ownPairs = _curry(function(obj){
     return Functor.map(function(key){
         return [key, obj[key]];
     }, Obj.ownPropNames(obj));
+});
+
+/**
+ * Returns an object from a sequence of pairs.
+ *
+ * @sig Sequential s => s (s String|a) -> {String: a}
+ * @since 0.6.2
+ */
+Obj.fromPairs = _curry(function(pairs){
+    return Foldable.foldl(function(accum, pair){
+        accum[nth(0, pair)] = nth(1, pair);
+        return accum;
+    }, {}, pairs);
+});
+
+/**
+ * Takes a sequence of keys and a sequence of values and creates an object
+ *
+ * @sig Sequential s => s String -> s a -> {String: a}
+ * @since 0.6.2
+ */
+Obj.zip = _curry(function(keys, values){
+    var l = Foldable.len(keys);
+    var i = 0;
+    var obj = {};
+    while (i < l) {
+        obj[nth(i,keys)] = nth(i,values);
+        i += 1;
+    }
+    return obj;
 });
 
 /**
