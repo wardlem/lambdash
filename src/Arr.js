@@ -443,4 +443,17 @@ Arr.show = _curry(function(arr) {
     return "[" + items.join(',') + "]";
 });
 
+/**
+ * Converts an array like value into an array
+ *
+ * An array like value is one with a length property and sequential
+ * numeric indices.
+ *
+ * @sig * -> Array
+ * @since 0.6.3
+ */
+Arr.fromArrayLike = _curry(function(arrLike){
+    return Array.prototype.slice.call(arrLike);
+});
+
 module.exports = Arr;

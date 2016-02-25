@@ -319,5 +319,19 @@ describe('Arr', function(){
         });
     });
 
+    describe('#fromArrayLike', function(){
+        it('should create an array from an array like value', function(){
+            var arrayLike = {
+                0: 'ok',
+                1: 'hmm',
+                2: 1,
+                length: 3
+            }
+
+            var arr = Arr.fromArrayLike(arrayLike);
+            assertEqual(arr, ['ok','hmm', 1]);
+            assert(Array.isArray(arr));
+        });
+    });
 
 });

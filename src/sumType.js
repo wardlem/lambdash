@@ -3,6 +3,7 @@ var _isFunction = require('./internal/_isFunction');
 var _makeFunction = require('./internal/_makeFunction');
 var _isDefined = require('./internal/_isDefined');
 var _curry = require('./internal/_curry');
+var _ucfirst = require('./internal/_ucfirst');
 var productType = require('./productType');
 
 
@@ -43,6 +44,8 @@ function sumType(name, definition) {
 
 
         Sum[name] = Object.keys(def).length ? Product : Product();
+
+        Sum['is'+_ucfirst(name)] = Product.member;
 
     });
 
@@ -91,6 +94,44 @@ function sumType(name, definition) {
 
     Sum.unapply = _curry(function(fn, instance) {
         return instance.constructor.unapply(fn, instance);
+    });
+
+    Sum.set = _curry(function(key,value,instance){
+        return instance.length === 0 ? instance : instance.constructor.set(key,value,instance);
+    });
+
+    Sum.patch = _curry(function(patches,instance){
+        return instance.length === 0 ? instance : instance.constructor.patch(patches,instance);
+    });
+
+    Sum.toJSON = _curry(function(instance) {
+        return {
+            __tag__: instance.constructor.name,
+            data: instance.constructor.toJSON(instance)
+        }
+    })
+
+    Sum.fromJSON = _curry(function(obj) {
+        var t = obj.__tag__;
+        if (typeof t !== 'string') {
+            throw new TypeError('Could not create ' + name + ' from object, missing type.');
+        }
+
+        if (typeof Sum[t] === 'function') {
+            return Sum[t].fromJSON(obj.data);
+        }
+
+        if (typeof Sum[t] === 'object') {
+            return Sum[t];
+        }
+
+        throw new TypeError('Could not create ' + name + ' from object, invalid type.');
+    });
+
+    Sum.show = _curry(function(instance){
+        return instance.length === 0
+            ? name + '.' + instance.constructor.name
+            : name + '.' + instance.constructor.show(instance);
     });
 
     require('./internal/_module')(Sum);

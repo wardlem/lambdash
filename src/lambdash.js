@@ -308,6 +308,9 @@ lambdash.EQ = Ordering.EQ;
 // ADTs
 lambdash.unapply = Type.useModuleMethod('unapply');
 lambdash.case = Type.useModuleMethod('case');
+lambdash.set = Type.useModuleMethod('set');
+lambdash.patch = Type.useModuleMethod('patch');
+lambdash.toJSON = Type.useModuleMethod('toJSON');
 
 // Blank
 lambdash.__ = __;

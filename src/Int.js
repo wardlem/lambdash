@@ -20,11 +20,11 @@ Int.fromInt = _identity;
 
 // Implementation for Bounded
 Int.minBound = function(){
-    return 9007199254740991;
+    return -2147483648;
 };
 
 Int.maxBound = function() {
-    return -9007199254740991;
+    return 2147483647;
 };
 
 // Implementation for Numeric
@@ -41,7 +41,7 @@ Int.mul = _curry(function(a, b) {
 });
 
 Int.div = _curry(function(a, b) {
-    return b === 0 ? NaN : (a << 0 / b << 0) << 0; 
+    return b === 0 ? NaN : (a << 0 / b << 0) << 0;
 
 });
 
