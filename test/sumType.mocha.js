@@ -211,7 +211,7 @@ describe('#sumType', function(){
 
             assertEqual(aJSON, {__tag__: 'A', data: {a:'ok'}});
             assertEqual(bJSON, {__tag__: 'B', data: {b: 1}});
-            assertEqual(cJSON, {__tag__: 'C', data: {}});
+            assertEqual(cJSON, {__tag__: 'C'});
         });
     });
 

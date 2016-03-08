@@ -15,6 +15,9 @@ describe('_arity', function() {
         var fn8 = _arity(8, function(){assert(arguments.length === 8); return 8;});
         var fn9 = _arity(9, function(){assert(arguments.length === 9); return 9;});
         var fn10 = _arity(10, function(){assert(arguments.length === 10); return 10;});
+        var fn11 = _arity(11, function(){assert(arguments.length === 11); return 11;});
+        var fn26 = _arity(26, function(){assert(arguments.length === 26); return 26;});
+
 
         assert.equal(fn0.length, 0);
         assert.equal(fn1.length, 1);
@@ -27,6 +30,8 @@ describe('_arity', function() {
         assert.equal(fn8.length, 8);
         assert.equal(fn9.length, 9);
         assert.equal(fn10.length, 10);
+        assert.equal(fn11.length, 11);
+        assert.equal(fn26.length,26)
 
         assert.equal(fn0(), 0);
         assert.equal(fn1(0), 1);
@@ -39,5 +44,8 @@ describe('_arity', function() {
         assert.equal(fn8(0, 1, 2, 3, 4, 5, 6, 7), 8);
         assert.equal(fn9(0, 1, 2, 3, 4, 5, 6, 7, 8), 9);
         assert.equal(fn10(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), 10);
+        assert.equal(fn11(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 11);
+        assert.equal(fn26(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25), 26);
+
     });
 });

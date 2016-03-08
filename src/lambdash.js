@@ -43,7 +43,9 @@ var Type = {
     subModule: require('./internal/_subModule'),
     moduleFor: require('./internal/_moduleFor'),
     hasModuleMethod: require('./internal/_hasModuleMethod'),
-    useModuleMethod: require('./internal/_useModuleMethod')
+    useModuleMethod: require('./internal/_useModuleMethod'),
+    isModule: require('./internal/_isModule'),
+    isSubModule: require('./internal/_isSubModule')
 };
 
 var lambdash = module.exports;

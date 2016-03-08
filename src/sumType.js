@@ -105,6 +105,11 @@ function sumType(name, definition) {
     });
 
     Sum.toJSON = _curry(function(instance) {
+        if (instance.length == 0) {
+            return {
+                __tag__: instance.constructor.name
+            }
+        }
         return {
             __tag__: instance.constructor.name,
             data: instance.constructor.toJSON(instance)

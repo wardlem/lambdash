@@ -1,3 +1,15 @@
+
+function intRange(from, count){
+    var range = [];
+    while (count > 0) {
+        range.push(from);
+        from += 1;
+        count -= 1;
+    }
+
+    return range;
+}
+
 module.exports = function _arity(n, fn) {
     switch(n) {
         case 0:
@@ -45,6 +57,10 @@ module.exports = function _arity(n, fn) {
                 return fn.apply(this, arguments)
             };
         default:
-            throw new TypeError('_arity supports a max arity of 10');
+            var argNames = intRange(0, n).map(function(i){return '_'+i}).join(',')
+            var fnName = "_f" + n;
+            var fnStr = "function " + fnName + "("+argNames+"){return fn.apply(this,arguments);}";
+            var wrapped = "(function(){return " +fnStr+ "})()";
+            return eval(wrapped);
     }
 };
