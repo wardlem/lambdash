@@ -12,7 +12,7 @@ var _moduleFor = require('./internal/_moduleFor');
 
 var Eq = require('./Eq');
 var Show = require('./Show');
-var Obj = require('./internal/_primitives').Obj;
+var Obj = require('./internal/_primitives').Object;
 
 var productType = module.exports = function productType(name, definition) {
 

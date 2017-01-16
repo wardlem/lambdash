@@ -9,7 +9,7 @@ var assertEqual = function(left, right){
     }
 };
 
-describe('Arr', function(){
+describe('Array', function(){
     describe('#eq', function(){
         it('should return true if two arrays are structurally equal', function(){
             var l = [1,2,3];
@@ -93,10 +93,10 @@ describe('Arr', function(){
         });
     });
 
-    describe('#map', function(){
+    describe('#fmap', function(){
         it('should return a new array with a function mapped over the values', function(){
             var arr = [1,2,3];
-            var res = Arr.map(_.pipe(_.add(1), _.show), arr);
+            var res = Arr.fmap(_.pipe(_.add(1), _.show), arr);
             assert(Arr.eq(res, ["2", "3", "4"]));
             assert(_.eq(arr, [1,2,3]));
         });

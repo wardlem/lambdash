@@ -14,11 +14,11 @@ var _isArray = require('./internal/_isArray');
 var _flip = require('./internal/_flip');
 
 var ap = require('./Applicative').ap;
-var map = require('./Functor').map;
+var map = require('./Functor').fmap;
 var foldl = require('./Foldable').foldl;
 
 
-var Fun = require('./internal/_primitives').Fun;
+var _Function = require('./internal/_primitives').Function;
 
 /**
  * Combines multiple functions into one such that each function is run with the return value of the previous.
@@ -35,7 +35,7 @@ var Fun = require('./internal/_primitives').Fun;
  *      composed(3,5); // -3
  *      composed(7,2); // 11
  */
-Fun.compose = _compose;
+_Function.compose = _compose;
 
 /**
  * Combines multiple functions into one such that each function is run with the return value of the previous.
@@ -54,7 +54,7 @@ Fun.compose = _compose;
  *      piped(3,5); // -3
  *      piped(7,2); // 11
  */
-Fun.pipe = _pipe;
+_Function.pipe = _pipe;
 
 /**
  * Creates a function that always returns a given value.
@@ -66,7 +66,7 @@ Fun.pipe = _pipe;
  *      var one = _.always(1);
  *      one();  // 1
  */
-Fun.always = _curry(_always);
+_Function.always = _curry(_always);
 
 /**
  * Creates a function that always throws a value with the given parameters.
@@ -85,7 +85,7 @@ Fun.always = _curry(_always);
  *          // e is a TypeError with a message of "The value was invalid";
  *      }
  */
-Fun.alwaysThrow = _alwaysThrow;
+_Function.alwaysThrow = _alwaysThrow;
 
 /**
  * Takes a function and arguments to that function and returns a function that can be called without arguments.
@@ -97,7 +97,7 @@ Fun.alwaysThrow = _alwaysThrow;
  *     var thunk =  _.thunk(_.add, 1, 2);
  *     thunk(); // 3
  */
-Fun.thunk = _thunk;
+_Function.thunk = _thunk;
 
 /**
  * Always returns its argument.
@@ -109,7 +109,7 @@ Fun.thunk = _thunk;
  *      _.identity(1);       // 1
  *      _.identity([1,2,3]); // [1,2,3]
  */
-Fun.identity = _identity;
+_Function.identity = _identity;
 
 /**
  * Curries a function.
@@ -143,7 +143,7 @@ Fun.identity = _identity;
  *
  *      curried(10,6);    // 4
  */
-Fun.curry = _curry;
+_Function.curry = _curry;
 
 /**
  * Curries a function with given number of arguments to curry.
@@ -173,7 +173,7 @@ Fun.curry = _curry;
  *
  *      curried(10,6);    // 4
  */
-Fun.curryN = _curryN;
+_Function.curryN = _curryN;
 
 /**
  * Creates a function from another function with a specified length.
@@ -192,7 +192,7 @@ Fun.curryN = _curryN;
  *      fn4(1,2,3,4);  // "whatever"
  *      fn4();         // "whatever"
  */
-Fun.arity = _arity;
+_Function.arity = _arity;
 
 /**
  * Creates a function identical to another function but with a different name.
@@ -201,7 +201,7 @@ Fun.arity = _arity;
  *
  * @sig String -> (*... -> *) -> (*... -> *)
  */
-Fun.make = _makeFunction;
+_Function.make = _makeFunction;
 
 /**
  * Creates a function from another with the last argument implicitly applied as "this".
@@ -228,7 +228,7 @@ Fun.make = _makeFunction;
  *      arr.eq([2,3,4]);  // false
  *
  */
-Fun.thisify = _thisify;
+_Function.thisify = _thisify;
 
 /**
  * Takes a regular function and creates a new one that will map over a specified number of arguments.
@@ -242,7 +242,7 @@ Fun.thisify = _thisify;
  *      lifted([1],[2],[3]);        // [6]
  *      lifted([1,2], [3,5], [7]);  // [11,13,12,14]
  */
-Fun.liftN = _curry(function(n, fn) {
+_Function.liftN = _curry(function(n, fn) {
     // Thank you Ramda: https://github.com/ramda/ramda/blob/master/src/liftN.js
     var lifted = _curryN(n, fn);
     return _curryN(n, function() {
@@ -262,8 +262,8 @@ Fun.liftN = _curry(function(n, fn) {
  *      lifted([1],[2],[3]);        // [6]
  *      lifted([1,2], [3,5], [7]);  // [11,13,12,14]
  */
-Fun.lift = _curry(function(fn) {
-    return Fun.liftN(fn.length, fn);
+_Function.lift = _curry(function(fn) {
+    return _Function.liftN(fn.length, fn);
 });
 
 /**
@@ -291,7 +291,7 @@ Fun.lift = _curry(function(fn) {
  *      ap(fn1);  // 9
  *      ap(fn2);  // 18
  */
-Fun.apply = _curry(function(values, fn) {
+_Function.apply = _curry(function(values, fn) {
     if (_isArray(values)) {
         return fn.apply(this, values);
     }
@@ -317,7 +317,7 @@ Fun.apply = _curry(function(values, fn) {
  *      flipped('a', 'b', 'c');    // 'bac'
  *
  */
-Fun.flip = _flip;
+_Function.flip = _flip;
 
 /**
  * A function that does nothing and returns nothing.
@@ -325,8 +325,8 @@ Fun.flip = _flip;
  * @since 0.6.0
  * @sig () -> ()
  */
-Fun.noop = function(){};
+_Function.noop = function(){};
 
-require('./internal/_module')(Fun);
+require('./internal/_module')(_Function);
 
-module.exports = Fun;
+module.exports = _Function;

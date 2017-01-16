@@ -6,11 +6,11 @@ var LT = Ordering.LT;
 var EQ = Ordering.EQ;
 var GT = Ordering.GT;
 
-var Bool = require('../src/Bool');
-var Num = require('../src/Num');
-var Str = require('../src/Str');
-var Obj = require('../src/Obj');
-var Arr = require('../src/Arr');
+var Bool = require('../src/Boolean');
+var Num = require('../src/Number');
+var Str = require('../src/String');
+var Obj = require('../src/Object');
+var Arr = require('../src/Array');
 
 describe('Ord', function() {
     describe('#compare', function() {

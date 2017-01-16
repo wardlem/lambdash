@@ -2,11 +2,11 @@ var _arity = require('./_arity');
 var _slice = require('./_slice');
 var _curryN = require('./_curryN');
 var _last = require('./_last');
-var Fun = require('./_primitives').Fun;
+var Fun = require('./_primitives').Function;
 
 module.exports = function compose() {
     if (arguments.length === 0) {
-        throw new TypeError('Fun#compose can not be called without any arguments.');
+        throw new TypeError('Function#compose can not be called without any arguments.');
     }
 
     var f = Fun.assert(_last(arguments));

@@ -53,8 +53,8 @@ describe('Monad', function(){
 
             var composed = Monad.composeM(fn1, fn2);
 
-            assert(Arr.eq(Monad.map(fn1, arr), [[1,2],[3,4]]));
-            assert(Arr.eq(Monad.map(fn2, arr), [[1,1],[3,3]]));
+            assert(Arr.eq(Monad.fmap(fn1, arr), [[1,2],[3,4]]));
+            assert(Arr.eq(Monad.fmap(fn2, arr), [[1,1],[3,3]]));
             assert(Arr.eq(composed(arr), [1,2,1,2,3,4,3,4]));
 
             var add1 = x => [_.add(x,1)];

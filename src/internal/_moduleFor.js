@@ -18,21 +18,29 @@ function moduleFor(value) {
 
     switch(C){
         case Number:
-            return _primitives.Num;
+            return _primitives.Number;
         case Boolean:
-            return _primitives.Bool;
+            return _primitives.Boolean;
         case String:
-            return _primitives.Str;
+            return _primitives.String;
         case Array:
-            return _primitives.Arr;
+            return _primitives.Array;
         case Function:
-            return _primitives.Fun;
+            return _primitives.Function;
         case RegExp:
-            return _primitives.Regex;
+            return _primitives.RegExp;
         case Date:
-            return _primitives.DT;
+            return _primitives.Date;
+        case Object:
+        case null:
+            return _primitives.Object;
+        case Map:
+            return _primitives.Map;
+        case Set:
+            return _primitives.Set;
         default:
-            return _primitives.Obj;
+            // not a plain javascript object
+            return C;
     }
 }
 

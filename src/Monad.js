@@ -9,7 +9,7 @@ var Applicative = require('./Applicative');
 
 var Monad = module.exports;
 
-Monad.map = Functor.map;
+Monad.fmap = Functor.fmap;
 
 /**
  * Flattens a monadic structure.
@@ -50,7 +50,7 @@ Monad.chain = _curry(function(fn, monad){
     if (_isFunction(M.chain)) {
         return M.chain(fn, monad);
     }
-    return Monad.flatten(Functor.map(fn, monad));
+    return Monad.flatten(Functor.fmap(fn, monad));
 });
 
 /**

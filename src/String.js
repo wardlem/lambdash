@@ -6,7 +6,7 @@ var _flip = require('./internal/_flip');
 var Ordering = require('./Ordering');
 var Foldable = require('./Foldable');
 
-var Str = require('./internal/_primitives').Str;
+var _String = require('./internal/_primitives').String;
 
 // Implementation for Eq
 
@@ -16,7 +16,7 @@ var Str = require('./internal/_primitives').Str;
  * @sig String -> String -> Boolean
  * @since 0.5.0
  */
-Str.eq = _is;
+_String.eq = _is;
 
 
 // Implementation for Ord
@@ -27,7 +27,7 @@ Str.eq = _is;
  * @sig String -> String -> Ordering
  * @since 0.5.0
  */
-Str.compare = _curry(function(left, right) {
+_String.compare = _curry(function(left, right) {
     return left < right ? Ordering.LT
         : left > right ? Ordering.GT
         : Ordering.EQ
@@ -44,7 +44,7 @@ Str.compare = _curry(function(left, right) {
  * @sig String -> Number
  * @since 0.5.0
  */
-Str.toInt = _curry(function(value) {
+_String.toInt = _curry(function(value) {
     if (value.length === 0) {
         throw new TypeError('Can not convert empty string to integer');
     }
@@ -58,7 +58,7 @@ Str.toInt = _curry(function(value) {
  * @sig Number -> String
  * @since 0.5.0
  */
-Str.fromInt = _curry(String.fromCharCode);
+_String.fromInt = _curry(String.fromCharCode);
 
 
 // Implementation for Functor
@@ -69,8 +69,8 @@ Str.fromInt = _curry(String.fromCharCode);
  * @sig (String -> String) -> String -> String
  * @since 0.5.0
  */
-Str.map = _curry(function(fn, str) {
-    return str.split('').map(fn).join('');
+_String.fmap = _curry(function(fn, _String) {
+    return _String.split('').map(fn).join('');
 });
 
 
@@ -82,7 +82,7 @@ Str.map = _curry(function(fn, str) {
  * @sig String -> String -> String
  * @since 0.5.0
  */
-Str.concat = _curry(function(left, right) {
+_String.concat = _curry(function(left, right) {
     return String(left) + String(right);
 });
 
@@ -95,7 +95,7 @@ Str.concat = _curry(function(left, right) {
  * @sig () -> String
  * @since 0.5.0
  */
-Str.empty = function() {
+_String.empty = function() {
     return '';
 };
 
@@ -108,7 +108,7 @@ Str.empty = function() {
  * @sig (b -> String -> b) -> b -> String
  * @since 0.5.0
  */
-Str.foldl = _curry(function(fn, init, string) {
+_String.foldl = _curry(function(fn, init, string) {
     return string.split('').reduce(fn, init);
 });
 
@@ -118,7 +118,7 @@ Str.foldl = _curry(function(fn, init, string) {
  * @sig (b -> String -> b) -> b -> String
  * @since 0.5.0
  */
-Str.foldr = _curry(function(fn, init, string) {
+_String.foldr = _curry(function(fn, init, string) {
     return string.split('').reduceRight(fn, init);
 });
 
@@ -131,8 +131,8 @@ Str.foldr = _curry(function(fn, init, string) {
  * @sig String -> Number
  * @since 0.6.0
  */
-Str.len = _curry(function(str){
-    return str.length;
+_String.len = _curry(function(_String){
+    return _String.length;
 });
 
 /**
@@ -143,37 +143,37 @@ Str.len = _curry(function(str){
  * @sig Number -> String -> String
  * @since 0.6.0
  */
-Str.nth = _curry(function(ind, str) {
+_String.nth = _curry(function(ind, _String) {
     if (ind < 0) {
-        ind = str.length + ind;
+        ind = _String.length + ind;
     }
 
-    if (ind < 0 || ind >= str.length) {
+    if (ind < 0 || ind >= _String.length) {
         throw new RangeError('String index out of bounds');
     }
 
-    return str[ind];
+    return _String[ind];
 });
 
 /**
  * Appends a string to another.
  *
- * Same as Str.concat but with the arguments flipped.
+ * Same as _String.concat but with the arguments flipped.
  *
  * @sig String -> String -> String
  * @since 0.6.0
  */
-Str.append = _flip(Str.concat);
+_String.append = _flip(_String.concat);
 
 /**
  * Prepends a string to another.
  *
- * Same as Str.concat.
+ * Same as _String.concat.
  *
  * @sig String -> String -> String
  * @since 0.6.0
  */
-Str.prepend = Str.concat;
+_String.prepend = _String.concat;
 
 
 // String functions
@@ -184,7 +184,7 @@ Str.prepend = Str.concat;
  * @sig String|RegExp -> String -> [String]
  * @since 0.6.0
  */
-Str.split = _curry(function(delim, string) {
+_String.split = _curry(function(delim, string) {
     return String.prototype.split.call(string, delim);
 });
 
@@ -195,8 +195,8 @@ Str.split = _curry(function(delim, string) {
  * @sig RegExp -> String -> [String]
  * @since 0.6.0
  */
-Str.match = _curry(function(regex, str){
-    return String.prototype.match.call(str, reqex) || [];
+_String.match = _curry(function(regex, _String){
+    return String.prototype.match.call(_String, reqex) || [];
 });
 
 /**
@@ -207,8 +207,8 @@ Str.match = _curry(function(regex, str){
  * @sig String|RegExp -> String -> String -> String
  * @since 0.6.0
  */
-Str.replace = _curry(function(find, replace, str){
-    return String.prototype.replace.call(str, find, replace);
+_String.replace = _curry(function(find, replace, _String){
+    return String.prototype.replace.call(_String, find, replace);
 });
 
 /**
@@ -219,8 +219,8 @@ Str.replace = _curry(function(find, replace, str){
  * @sig String -> String
  * @since 0.6.0
  */
-Str.toLower = _curry(function(str){
-    return String.prototype.toLowerCase.call(str);
+_String.toLower = _curry(function(_String){
+    return String.prototype.toLowerCase.call(_String);
 });
 
 /**
@@ -231,8 +231,8 @@ Str.toLower = _curry(function(str){
  * @sig String -> String
  * @since 0.6.0
  */
-Str.toUpper = _curry(function(str){
-    return String.prototype.toUpperCase.call(str);
+_String.toUpper = _curry(function(_String){
+    return String.prototype.toUpperCase.call(_String);
 });
 
 /**
@@ -243,8 +243,8 @@ Str.toUpper = _curry(function(str){
  * @sig String -> String
  * @since 0.6.0
  */
-Str.trim = _curry(function(str){
-    return String.prototype.trim.call(str);
+_String.trim = _curry(function(_String){
+    return String.prototype.trim.call(_String);
 });
 
 /**
@@ -253,7 +253,7 @@ Str.trim = _curry(function(str){
  * @sig String -> [String]
  * @since 0.6.0
  */
-Str.lines = Str.split('\n');
+_String.lines = _String.split('\n');
 
 /**
  * Splits a string by whitespace.
@@ -261,7 +261,7 @@ Str.lines = Str.split('\n');
  * @sig String -> [String]
  * @since 0.6.0
  */
-Str.words = Str.split(/\s+/);
+_String.words = _String.split(/\s+/);
 
 /**
  * Joins a foldable of strings with a newline character.
@@ -269,7 +269,7 @@ Str.words = Str.split(/\s+/);
  * @sig Foldable f => f String -> String
  * @since 0.6.0
  */
-Str.unlines = Foldable.joinWithDef('', '\n');
+_String.unlines = Foldable.joinWithDef('', '\n');
 
 /**
  * Joins a foldable of strings with a space character.
@@ -277,7 +277,7 @@ Str.unlines = Foldable.joinWithDef('', '\n');
  * @sig Foldable f => f String -> String
  * @since 0.6.0
  */
-Str.unwords = Foldable.joinWithDef('', ' ');
+_String.unwords = Foldable.joinWithDef('', ' ');
 
 /**
  * Returns an evaluatable representation of a string.
@@ -285,8 +285,8 @@ Str.unwords = Foldable.joinWithDef('', ' ');
  * @sig String -> String
  * @since 0.5.0
  */
-Str.show = _curry(function(str){
-    return '"' + String.prototype.replace.call(str, /"/g, "\\\"") + '"';
+_String.show = _curry(function(_String){
+    return '"' + String.prototype.replace.call(_String, /"/g, "\\\"") + '"';
 });
 
-module.exports = Str;
+module.exports = _String;

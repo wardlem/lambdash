@@ -5,7 +5,7 @@ var _identity = require('./internal/_identity');
 
 var Ordering = require('./Ordering');
 
-var Num = require('./internal/_primitives').Num;
+var _Number = require('./internal/_primitives').Number;
 
 // Implementation for Eq
 
@@ -14,7 +14,7 @@ var Num = require('./internal/_primitives').Num;
  *
  * @sig Number -> Number -> Boolean
  */
-Num.eq = _is;
+_Number.eq = _is;
 
 // Implementation for Ord
 
@@ -23,7 +23,7 @@ Num.eq = _is;
  *
  * @sig Number -> Number -> Ordering
  */
-Num.compare = _curry(function(left, right) {
+_Number.compare = _curry(function(left, right) {
     return Ordering.fromNum(left - right);
 });
 
@@ -35,7 +35,7 @@ Num.compare = _curry(function(left, right) {
  *
  * @sig Number -> Number
  */
-Num.toInt = function(value) {
+_Number.toInt = function(value) {
     return value << 0;
 };
 
@@ -44,7 +44,7 @@ Num.toInt = function(value) {
  *
  * @sig Number -> Number
  */
-Num.fromInt = _identity;
+_Number.fromInt = _identity;
 
 
 // implementation for Numeric
@@ -54,14 +54,14 @@ Num.fromInt = _identity;
  *
  * @sig Number -> Number
  */
-Num.toNum = _identity;
+_Number.toNum = _identity;
 
 /**
  * Identity
  *
  * @sig Number -> Number
  */
-Num.fromNum = _identity;
+_Number.fromNum = _identity;
 
 // Implementation for numeric
 
@@ -70,7 +70,7 @@ Num.fromNum = _identity;
  *
  * @sig Number -> Number -> Number
  */
-Num.add = _curry(function(a, b) {
+_Number.add = _curry(function(a, b) {
     return a + b;
 });
 
@@ -79,7 +79,7 @@ Num.add = _curry(function(a, b) {
  *
  * @sig Number -> Number -> Number
  */
-Num.sub = _curry(function(a, b) {
+_Number.sub = _curry(function(a, b) {
     return a - b;
 });
 
@@ -88,7 +88,7 @@ Num.sub = _curry(function(a, b) {
  *
  * @sig Number -> Number -> Number
  */
-Num.mul = _curry(function(a, b) {
+_Number.mul = _curry(function(a, b) {
     return a * b;
 });
 
@@ -97,7 +97,7 @@ Num.mul = _curry(function(a, b) {
  *
  * @sig Number -> Number -> Number
  */
-Num.div = _curry(function(a, b) {
+_Number.div = _curry(function(a, b) {
     return a / b;
 });
 
@@ -106,7 +106,7 @@ Num.div = _curry(function(a, b) {
  *
  * @sig Number -> Number -> Number
  */
-Num.mod = _curry(function(a, b) {
+_Number.mod = _curry(function(a, b) {
     return a % b;
 });
 
@@ -115,14 +115,14 @@ Num.mod = _curry(function(a, b) {
  *
  * @sig Number -> Number
  */
-Num.abs = _curryN(1, Math.abs);
+_Number.abs = _curryN(1, Math.abs);
 
 /**
  * Negates a number
  *
  * @sig Number -> Number
  */
-Num.negate = _curry(function(a) {
+_Number.negate = _curry(function(a) {
     return -a;
 });
 
@@ -131,7 +131,7 @@ Num.negate = _curry(function(a) {
  *
  * @sig Number -> Number
  */
-Num.reciprocal = _curry(function(a) {
+_Number.reciprocal = _curry(function(a) {
     return 1 / a;
 });
 
@@ -140,7 +140,7 @@ Num.reciprocal = _curry(function(a) {
  *
  * @sig Number -> Number
  */
-Num.sign = _curry(function(a) {
+_Number.sign = _curry(function(a) {
     return a === 0 ? 0 : a < 0 ? -1 : 1;
 });
 
@@ -149,7 +149,7 @@ Num.sign = _curry(function(a) {
  *
  * @sig Number -> String
  */
-Num.show = _curry(function(a){
+_Number.show = _curry(function(a){
     return String(a);
 });
 
@@ -158,6 +158,6 @@ Num.show = _curry(function(a){
  *
  * @sig Number -> Number -> Number
  */
-Num.pow = _curryN(2, Math.pow);
+_Number.pow = _curryN(2, Math.pow);
 
-module.exports = Num;
+module.exports = _Number;

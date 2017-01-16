@@ -2,7 +2,7 @@ var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
 var _isInteger = require('./internal/_isInteger');
 var _curry = require('./internal/_curry');
-var Int = require('./internal/_primitives').Int;
+var Int = require('./internal/_primitives').Integer;
 
 var Bounded = require('./Bounded');
 

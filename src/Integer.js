@@ -4,45 +4,44 @@ var _identity = require('./internal/_identity');
 
 var Ordering = require('./Ordering');
 
-var Int = require('./internal/_primitives').Int;
+var _Integer = require('./internal/_primitives').Integer;
 
 // Implementation for Eq
-Int.eq = _is;
+_Integer.eq = _is;
 
 // Implementation for Ord
-Int.compare = _curry(function(left, right) {
+_Integer.compare = _curry(function(left, right) {
     return Ordering.fromInt(left - right);
 });
 
 // Implementation for Enum
-Int.toInt = _identity;
-Int.fromInt = _identity;
+_Integer.toInt = _identity;
+_Integer.fromInt = _identity;
 
 // Implementation for Bounded
-Int.minBound = function(){
+_Integer.minBound = function(){
     return -2147483648;
 };
 
-Int.maxBound = function() {
+_Integer.maxBound = function() {
     return 2147483647;
 };
 
 // Implementation for Numeric
-Int.add = _curry(function(a, b){
+_Integer.add = _curry(function(a, b){
     return a + b;
 });
 
-Int.sub = _curry(function(a, b) {
+_Integer.sub = _curry(function(a, b) {
     return a - b;
 });
 
-Int.mul = _curry(function(a, b) {
+_Integer.mul = _curry(function(a, b) {
     return a * b;
 });
 
-Int.div = _curry(function(a, b) {
+_Integer.div = _curry(function(a, b) {
     return b === 0 ? NaN : (a << 0 / b << 0) << 0;
-
 });
 
-module.exports = Int;
+module.exports = _Integer;

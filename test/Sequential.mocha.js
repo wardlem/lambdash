@@ -4,7 +4,7 @@ var sumType = require('../src/sumType');
 var _curry = require('../src/internal/_curry');
 var _equal = require('../src/internal/_equal');
 
-var Arr = require('../src/Arr');
+var Arr = require('../src/Array');
 var Foldable = require('../src/Foldable');
 var Sequential = require('../src/Sequential');
 

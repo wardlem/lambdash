@@ -7,5 +7,5 @@ module.exports = _curry(function flip(fn) {
         arguments[0] = b;
         arguments[1] = tmp;
         return fn.apply(this, arguments);
-    })
+    });
 });

@@ -3,8 +3,8 @@ var assert = require('assert');
 var _curry = require('../src/internal/_curry');
 
 var Numeric = require('../src/Numeric');
-var Int = require('../src/Int');
-var Num = require('../src/Num');
+var Int = require('../src/Integer');
+var Num = require('../src/Number');
 
 var productType = require('../src/productType');
 

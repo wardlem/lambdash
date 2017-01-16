@@ -3,7 +3,7 @@ var _isFunction = require('./internal/_isFunction');
 var _moduleFor = require('./internal/_moduleFor');
 var _flip = require('./internal/_flip');
 
-var Num = require('./Num');
+var _Number = require('./Number');
 
 var Numeric = module.exports;
 
@@ -13,7 +13,7 @@ var _binOp = _curry(function(op, a, b) {
         return M[op](a, b);
     }
 
-    return M.fromNum(Num[op](M.toNum(a), M.toNum(b)));
+    return M.fromNum(_Number[op](M.toNum(a), M.toNum(b)));
 });
 
 var _unaryOp = _curry(function(op, a) {
@@ -22,7 +22,7 @@ var _unaryOp = _curry(function(op, a) {
         return M[op](a);
     }
 
-    return M.fromNum(Num[op](M.toNum(a)));
+    return M.fromNum(_Number[op](M.toNum(a)));
 });
 
 /**

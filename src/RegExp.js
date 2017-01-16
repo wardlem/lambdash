@@ -1,6 +1,6 @@
 var _curry = require('./internal/_curry');
 
-var Regex = require('./internal/_primitives').Regex;
+var _RegExp = require('./internal/_primitives').RegExp;
 
 /**
  * Point-free, curried form of regular expression's test method.
@@ -8,25 +8,25 @@ var Regex = require('./internal/_primitives').Regex;
  * @sig String -> RegExp -> Boolean
  * @since 0.6.0
  */
-Regex.test = _curry(function(str, re){
+_RegExp.test = _curry(function(str, re){
     return re.test(str);
 });
 
 /**
  * Point-free, curried form of a regular expression's exec method.
  *
- * Unlike the built in Regex.prototype.exec function, this function will return
+ * Unlike the built in _RegExp.prototype.exec function, this function will return
  * an empty array if no matches are found.
  *
  * @sig String -> RegExp -> [String]
  * @since 0.6.0
  */
-Regex.exec = _curry(function(str, re){
+_RegExp.exec = _curry(function(str, re){
     return re.exec(str) || [];
 });
 
-Regex.show = function(value) {
+_RegExp.show = function(value) {
     return value.toString();
 };
 
-module.exports = Regex;
+module.exports = _RegExp;

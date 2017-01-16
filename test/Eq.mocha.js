@@ -3,11 +3,11 @@ var assert = require('assert');
 var productType = require('../src/productType');
 var sumType = require('../src/sumType');
 
-var Bool = require('../src/Bool');
-var Num = require('../src/Num');
-var Str = require('../src/Str');
-var Obj = require('../src/Obj');
-var Arr = require('../src/Arr');
+var Bool = require('../src/Boolean');
+var Num = require('../src/Number');
+var Str = require('../src/String');
+var Obj = require('../src/Object');
+var Arr = require('../src/Array');
 
 var Eq = require('../src/Eq');
 

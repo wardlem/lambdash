@@ -7,7 +7,7 @@ var _isFunction = require('./internal/_isFunction');
 var SetOps = module.exports;
 
 /**
- * Returns a new set with all the keys from set.
+ * Returns a new set with all the keys from both sets.
  *
  * @sig SetOps s => s -> s -> s
  * @since 0.6.0

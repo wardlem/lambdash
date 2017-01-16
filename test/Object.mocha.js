@@ -47,7 +47,7 @@ describe('Obj', function(){
         });
     });
 
-    describe('#map', function(){
+    describe('#fmap', function(){
         it('should map the own values of an object', function(){
             var obj = {a:1, b:3};
 
@@ -55,7 +55,7 @@ describe('Obj', function(){
                 return v * 3;
             };
 
-            assert(Obj.eq(Obj.map(fn, obj), {a:3, b:9}));
+            assert(Obj.eq(Obj.fmap(fn, obj), {a:3, b:9}));
         });
     });
 

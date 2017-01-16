@@ -54,10 +54,10 @@ describe('Str', function(){
         });
     });
 
-    describe('#map', function(){
+    describe('#fmap', function(){
         it('should map over the characters of a string', function(){
             var fn = _.compose(Str.fromInt, _.add(1), Str.toInt);
-            assert.equal(Str.map(fn, 'abc'), 'bcd');
+            assert.equal(Str.fmap(fn, 'abc'), 'bcd');
         });
     });
 

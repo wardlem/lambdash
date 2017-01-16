@@ -5,23 +5,23 @@ var _curry = require('./internal/_curry');
 var Functor = module.exports;
 
 /**
- * Map is a structure preserving operation upon a value
+ * Maps a function over the values of a structure
  *
  * @sig Functor f => (a -> b) -> f a -> f b
- * @since 0.4.0
+ * @since 0.7.0
  * @param fn the function mapping over the structure
  * @param functor the value being mapped over
  * @return {Functor}
  * @example
  *
- *      _.map(x => x * 2, [1,2,3]);  // [2,4,6]
+ *      _.fmap(x => x * 2, [1,2,3]);  // [2,4,6]
  */
-Functor.map = _curry(function(fn, functor) {
+Functor.fmap = _curry(function(fn, functor) {
     var M = _moduleFor(functor);
-    return M.map(fn, functor);
+    return M.fmap(fn, functor);
 });
 
 Functor.member = function(value) {
     var M = _moduleFor(value);
-    return _isFunction(M.map);
+    return _isFunction(M.fmap);
 };

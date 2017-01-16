@@ -6,7 +6,7 @@ var _compose = require('./internal/_compose');
 
 var Ordering = require('./Ordering');
 
-var Bool = require('./internal/_primitives').Bool;
+var _Boolean = require('./internal/_primitives').Boolean;
 
 // Implementation for Eq
 
@@ -19,7 +19,7 @@ var Bool = require('./internal/_primitives').Bool;
  * @param {Boolean} right
  * @returns {Boolean}
  */
-Bool.eq = _curry(function(left, right) {
+_Boolean.eq = _curry(function(left, right) {
     return left === right;
 });
 
@@ -34,7 +34,7 @@ Bool.eq = _curry(function(left, right) {
  * @sig Boolean -> Boolean -> Ordering
  * @since 0.5.0
  */
-Bool.compare = _curry(function(left, right) {
+_Boolean.compare = _curry(function(left, right) {
     return Ordering.fromInt(left - right);
 });
 
@@ -49,7 +49,7 @@ Bool.compare = _curry(function(left, right) {
  * @param {Boolean} value
  * @returns {Number}
  */
-Bool.toInt = function(value) {
+_Boolean.toInt = function(value) {
     return +value;
 };
 
@@ -62,7 +62,7 @@ Bool.toInt = function(value) {
  * @param {Number} value an integer
  * @returns {boolean}
  */
-Bool.fromInt = _curry(function(value) {
+_Boolean.fromInt = _curry(function(value) {
     return value !== 0;
 });
 
@@ -75,7 +75,7 @@ Bool.fromInt = _curry(function(value) {
  * @since 0.5.0
  * @sig () -> Boolean
  */
-Bool.minBound = _always(false);
+_Boolean.minBound = _always(false);
 
 /**
  * Always returns true, the maximum value for a boolean
@@ -83,7 +83,7 @@ Bool.minBound = _always(false);
  * @since 0.5.0
  * @sig () -> Boolean
  */
-Bool.maxBound = _always(true);
+_Boolean.maxBound = _always(true);
 
 
 // Implementation for Show
@@ -94,8 +94,8 @@ Bool.maxBound = _always(true);
  * @since 0.6.0
  * @sig Boolean -> String
  */
-Bool.show = _curry(function(bool){
-    return String(bool);
+_Boolean.show = _curry(function(boolean){
+    return String(boolean);
 });
 
 
@@ -107,7 +107,7 @@ Bool.show = _curry(function(bool){
  * @sig Boolean -> Boolean -> Boolean
  * @since 0.5.0
  */
-Bool.and = _curry(function(left, right) {
+_Boolean.and = _curry(function(left, right) {
     return left && right;
 });
 
@@ -117,7 +117,7 @@ Bool.and = _curry(function(left, right) {
  * @sig Boolean -> Boolean -> Boolean
  * @since 0.5.0
  */
-Bool.or = _curry(function(left, right) {
+_Boolean.or = _curry(function(left, right) {
     return left || right;
 });
 
@@ -127,7 +127,7 @@ Bool.or = _curry(function(left, right) {
  * @sig Boolean -> Boolean -> Boolean
  * @since 0.6.0
  */
-Bool.xor = _curry(function(left, right){
+_Boolean.xor = _curry(function(left, right){
     return (left && !right) || (right && !left);
 });
 
@@ -137,8 +137,8 @@ Bool.xor = _curry(function(left, right){
  * @sig Boolean -> Boolean
  * @since 0.5.0
  */
-Bool.not = _curry(function(bool) {
-    return !bool;
+_Boolean.not = _curry(function(boolean) {
+    return !boolean;
 });
 
 /**
@@ -147,7 +147,7 @@ Bool.not = _curry(function(bool) {
  * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
  * @since 0.6.0
  */
-Bool.both = _curry(function(left, right) {
+_Boolean.both = _curry(function(left, right) {
     return function both() {
         return left.apply(this, arguments) && right.apply(this, arguments);
     }
@@ -159,7 +159,7 @@ Bool.both = _curry(function(left, right) {
  * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
  * @since 0.6.0
  */
-Bool.either = _curry(function(left, right) {
+_Boolean.either = _curry(function(left, right) {
     return function either() {
         return left.apply(this, arguments) || right.apply(this, arguments);
     }
@@ -171,8 +171,8 @@ Bool.either = _curry(function(left, right) {
  * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
  * @since 0.6.0
  */
-Bool.neither = _curry(function(left, right) {
-    return Bool.complement(Bool.either(left, right));
+_Boolean.neither = _curry(function(left, right) {
+    return _Boolean.complement(_Boolean.either(left, right));
 });
 
 /**
@@ -181,9 +181,9 @@ Bool.neither = _curry(function(left, right) {
  * @sig (*... -> Boolean) -> (*... -> Boolean) -> (*... -> Boolean)
  * @since 0.6.0
  */
-Bool.eitherExclusive = _curry(function(left, right) {
+_Boolean.eitherExclusive = _curry(function(left, right) {
     return function either() {
-        return Bool.xor(left.apply(this, arguments), right.apply(this, arguments));
+        return _Boolean.xor(left.apply(this, arguments), right.apply(this, arguments));
     }
 });
 
@@ -193,7 +193,7 @@ Bool.eitherExclusive = _curry(function(left, right) {
  * @sig (*... -> Boolean) -> (*... -> Boolean)
  * @since 0.6.0
  */
-Bool.complement = _curryN(2, _compose)(Bool.not);
+_Boolean.complement = _curryN(2, _compose)(_Boolean.not);
 
 /**
  * Creates a branching function.
@@ -218,7 +218,7 @@ Bool.complement = _curryN(2, _compose)(Bool.not);
  *      sizer(7);   // "A big one!"
  *      sizer(54);  // "A 54 pounder! What a whopper!"
  */
-Bool.condition = _condition;
+_Boolean.condition = _condition;
 
 /**
  * Always returns true
@@ -226,7 +226,7 @@ Bool.condition = _condition;
  * @since 0.5.0
  * @sig () -> Boolean
  */
-Bool.T = _always(true);
+_Boolean.T = _always(true);
 
 /**
  * Always returns false
@@ -234,6 +234,6 @@ Bool.T = _always(true);
  * @since 0.5.0
  * @sig () -> Boolean
  */
-Bool.F = _always(false);
+_Boolean.F = _always(false);
 
-module.exports = Bool;
+module.exports = _Boolean;

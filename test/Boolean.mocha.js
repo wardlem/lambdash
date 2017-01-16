@@ -192,15 +192,22 @@ describe('#bool', function(){
         });
     });
 
-    describe('T', function(){
+    describe('#T', function(){
         it('should always return true', function(){
             assert.equal(Bool.T(), true);
         });
     });
 
-    describe('F', function(){
+    describe('#F', function(){
         it('should always return false', function(){
             assert.equal(Bool.F(), false);
+        });
+    });
+
+    describe('#show', function() {
+        it('should return a string representation of the boolean value', function(){
+            assert.equal(Bool.show(true), 'true');
+            assert.equal(Bool.show(false), 'false');
         });
     });
 
@@ -223,6 +230,11 @@ describe('#bool', function(){
         it('should implement Bounded', function(){
             assert(_.Bounded.member(false));
             assert(_.Bounded.member(true));
+        });
+
+        it('should implement Show', function() {
+            assert(_.Show.member(false));
+            assert(_.Show.member(true));
         });
     });
 });

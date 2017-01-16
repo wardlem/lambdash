@@ -16,27 +16,27 @@ describe('_moduleFor', function(){
 
         var B = _moduleFor(bool);
         assert.equal(typeof B, 'function');
-        assert.equal(B.name, 'Bool');
+        assert.equal(B.name, '_Boolean');
 
         var N = _moduleFor(num);
         assert.equal(typeof N, 'function');
-        assert.equal(N.name, 'Num');
+        assert.equal(N.name, '_Number');
 
         var A = _moduleFor(arr);
         assert.equal(typeof A, 'function');
-        assert.equal(A.name, 'Arr');
+        assert.equal(A.name, '_Array');
 
         var S = _moduleFor(str);
         assert.equal(typeof S, 'function');
-        assert.equal(S.name, 'Str');
+        assert.equal(S.name, '_String');
 
         var O = _moduleFor(obj);
         assert.equal(typeof O, 'function');
-        assert.equal(O.name, 'Obj');
+        assert.equal(O.name, '_Object');
 
         var F = _moduleFor(fun);
         assert.equal(typeof F, 'function');
-        assert.equal(F.name, 'Fun');
+        assert.equal(F.name, '_Function');
     });
 
     it('should return the product constructor for a product value', function(){

@@ -14,7 +14,7 @@ var Ordering = require('./Ordering');
 var nth = require('./Sequential').nth;
 
 
-var Obj = require('./internal/_primitives').Obj;
+var _Object = require('./internal/_primitives').Object;
 
 // implementation for Eq
 
@@ -24,7 +24,7 @@ var Obj = require('./internal/_primitives').Obj;
  * @sig {String: a} -> {String: a} -> Boolean
  * @since 0.5.0
  */
-Obj.eq = _curry(function(left, right) {
+_Object.eq = _curry(function(left, right) {
     if (left === right) {
         return true;
     }
@@ -56,7 +56,7 @@ Obj.eq = _curry(function(left, right) {
  * @sig {String: a} -> {String: a} -> Ordering
  * @since 0.6.0
  */
-Obj.compare = _curry(function(left, right){
+_Object.compare = _curry(function(left, right){
     if (left === right) {
         return Ordering.EQ;
     }
@@ -88,11 +88,11 @@ Obj.compare = _curry(function(left, right){
  * @sig (a -> b) -> {String: a} -> {String: b}
  * @since 0.6.0
  */
-Obj.map = _curry(function(fn, obj) {
+_Object.fmap = _curry(function(fn, object) {
     return Foldable.foldl(function(accum, key){
-        accum[key] = fn(obj[key]);
+        accum[key] = fn(object[key]);
         return accum;
-    }, {}, Obj.ownPropNames(obj));
+    }, {}, _Object.ownPropNames(object));
 });
 
 /**
@@ -101,11 +101,11 @@ Obj.map = _curry(function(fn, obj) {
  * @sig (a -> String -> b) -> {String: a} -> {String: b}
  * @since 0.6.0
  */
-Obj.mapAssoc = _curry(function(fn, obj) {
+_Object.mapAssoc = _curry(function(fn, object) {
     return Foldable.foldl(function(accum, key){
-        accum[key] = fn(obj[key], key);
+        accum[key] = fn(object[key], key);
         return accum;
-    }, {}, Obj.ownPropNames(obj));
+    }, {}, _Object.ownPropNames(object));
 });
 
 /**
@@ -114,8 +114,8 @@ Obj.mapAssoc = _curry(function(fn, obj) {
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.concat = _curry(function(left, right){
-    var result = Obj.copy(left);
+_Object.concat = _curry(function(left, right){
+    var result = _Object.copy(left);
     for (var k in right){
         result[k] = right[k];
     }
@@ -128,7 +128,7 @@ Obj.concat = _curry(function(left, right){
  * @sig () -> {String: *}
  * @since 0.6.0
  */
-Obj.empty = function(){
+_Object.empty = function(){
     return {};
 };
 
@@ -138,7 +138,7 @@ Obj.empty = function(){
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.union = _flip(Obj.concat);
+_Object.union = _flip(_Object.concat);
 
 /**
  * Returns an object with the key values in the left for which there is no key in right.
@@ -146,7 +146,7 @@ Obj.union = _flip(Obj.concat);
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.difference = _curry(function(left, right){
+_Object.difference = _curry(function(left, right){
     var result = {};
     for (var k in left){
         if(!(k in right)){
@@ -163,7 +163,7 @@ Obj.difference = _curry(function(left, right){
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.intersection = _curry(function(left, right){
+_Object.intersection = _curry(function(left, right){
     var result = {};
     for (var k in left){
         if(k in right){
@@ -180,7 +180,7 @@ Obj.intersection = _curry(function(left, right){
  * @sig {String: a} -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.symmetricDifference = _curry(function(left, right){
+_Object.symmetricDifference = _curry(function(left, right){
     var result = {};
     var k;
     for (k in left){
@@ -202,12 +202,13 @@ Obj.symmetricDifference = _curry(function(left, right){
  * Folds an object's values from left to right with keys in sorted order.
  *
  * @sig (b -> a -> b) -> b -> {String: a} -> b
+ * @since 0.6.0
  */
-Obj.foldl = _curry(function(fn, init, obj){
-    var keys = _arrSort(Object.keys(obj));
+_Object.foldl = _curry(function(fn, init, object){
+    var keys = _arrSort(Object.keys(object));
 
     return Foldable.foldl(function(accum, key){
-        return fn(accum, obj[key]);
+        return fn(accum, object[key]);
     }, init, keys);
 });
 
@@ -215,12 +216,13 @@ Obj.foldl = _curry(function(fn, init, obj){
  * Folds an object's values from right to left with keys in sorted order.
  *
  * @sig (b -> a -> b) -> b -> {String: a} -> b
+ * @since 0.6.0
  */
-Obj.foldr = _curry(function(fn, init, obj){
-    var keys = _arrSort(Object.keys(obj));
+_Object.foldr = _curry(function(fn, init, object){
+    var keys = _arrSort(Object.keys(object));
 
     return Foldable.foldr(function(accum, key){
-        return fn(accum, obj[key]);
+        return fn(accum, object[key]);
     }, init, keys);
 });
 
@@ -228,12 +230,13 @@ Obj.foldr = _curry(function(fn, init, obj){
  * Folds an object's values and keys from left to right with keys in sorted order.
  *
  * @sig (b -> a -> String -> b) -> b -> {String: a} -> b
+ * @since 0.6.0
  */
-Obj.foldlAssoc = _curry(function(fn, init, obj){
-    var keys = _arrSort(Object.keys(obj));
+_Object.foldlAssoc = _curry(function(fn, init, object){
+    var keys = _arrSort(Object.keys(object));
 
     return Foldable.foldl(function(accum, key){
-        return fn(accum, obj[key], key);
+        return fn(accum, object[key], key);
     }, init, keys);
 });
 
@@ -241,12 +244,13 @@ Obj.foldlAssoc = _curry(function(fn, init, obj){
  * Folds an object's values and keys from right to left with keys in sorted order.
  *
  * @sig (b -> a -> String -> b) -> b -> {String: a} -> b
+ * @since 0.6.0
  */
-Obj.foldrAssoc = _curry(function(fn, init, obj){
-    var keys = _arrSort(Object.keys(obj));
+_Object.foldrAssoc = _curry(function(fn, init, object){
+    var keys = _arrSort(Object.keys(object));
 
     return Foldable.foldr(function(accum, key){
-        return fn(accum, obj[key], key);
+        return fn(accum, object[key], key);
     }, init, keys);
 });
 
@@ -256,10 +260,10 @@ Obj.foldrAssoc = _curry(function(fn, init, obj){
  * @sig {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.copy = _curry(function(obj){
+_Object.copy = _curry(function(object){
     var res = {};
-    for (var k in obj) {
-        res[k] = obj[k];
+    for (var k in object) {
+        res[k] = object[k];
     }
     return res;
 });
@@ -270,11 +274,11 @@ Obj.copy = _curry(function(obj){
  * @sig {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.copyOwn = _curry(function(obj){
+_Object.copyOwn = _curry(function(object){
     var res = {};
-    for (var k in obj) {
-        if (obj.hasOwnProperty(k)){
-            res[k] = obj[k];
+    for (var k in object) {
+        if (object.hasOwnProperty(k)){
+            res[k] = object[k];
         }
     }
     return res;
@@ -286,8 +290,8 @@ Obj.copyOwn = _curry(function(obj){
  * @sig String -> a -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.assoc = _curry(function(key, value, obj){
-    var res = Obj.copy(obj);
+_Object.assoc = _curry(function(key, value, object){
+    var res = _Object.copy(object);
 
     res[key] = value;
     return res;
@@ -299,11 +303,11 @@ Obj.assoc = _curry(function(key, value, obj){
  * @sig String -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.dissoc = _curry(function(key, obj){
+_Object.dissoc = _curry(function(key, object){
     var res = {};
-    for (var k in obj) {
+    for (var k in object) {
         if (k !== key) {
-            res[k] = obj[k];
+            res[k] = object[k];
         }
     }
 
@@ -316,8 +320,8 @@ Obj.dissoc = _curry(function(key, obj){
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
-Obj.propExists = _curry(function(key, obj){
-    return key in obj;
+_Object.propExists = _curry(function(key, object){
+    return key in object;
 });
 
 /**
@@ -326,7 +330,7 @@ Obj.propExists = _curry(function(key, obj){
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
-Obj.exists = Obj.propExists;
+_Object.exists = _Object.propExists;
 
 /**
  * Returns true if an object has an own property.
@@ -334,8 +338,8 @@ Obj.exists = Obj.propExists;
  * @sig String -> {String: a} -> Boolean
  * @since 0.6.0
  */
-Obj.ownPropExists = _curry(function(key, obj){
-    return Object.prototype.hasOwnProperty.call(obj, key);
+_Object.ownPropExists = _curry(function(key, object){
+    return Object.prototype.hasOwnProperty.call(object, key);
 });
 
 /**
@@ -350,8 +354,8 @@ Obj.ownPropExists = _curry(function(key, obj){
  * @sig String -> {String: a} -> a|undefined
  * @since 0.6.0
  */
-Obj.prop = _curry(function(key, obj){
-    return obj[key];
+_Object.prop = _curry(function(key, object){
+    return object[key];
 });
 
 /**
@@ -360,7 +364,7 @@ Obj.prop = _curry(function(key, obj){
  * @sig String -> {String: a} -> a|undefined
  * @since 0.6.0
  */
-Obj.lookup = Obj.prop;
+_Object.lookup = _Object.prop;
 
 /**
  * Returns the property associated with a key in an object if it exists or a default value if it does not exist.
@@ -368,8 +372,8 @@ Obj.lookup = Obj.prop;
  * @sig a -> String -> {String: a} -> a
  * @since 0.6.0
  */
-Obj.propOr = _curry(function(def, key, obj){
-    return Obj.exists(key, obj) ? obj[key] : def;
+_Object.propOr = _curry(function(def, key, object){
+    return _Object.exists(key, object) ? object[key] : def;
 });
 
 /**
@@ -378,8 +382,8 @@ Obj.propOr = _curry(function(def, key, obj){
  * @sig Foldable f => f String -> {String: a} -> f a
  * @since 0.6.0
  */
-Obj.props = _curry(function(props, obj){
-    return Functor.map(Obj.prop(__, obj), props);
+_Object.props = _curry(function(props, object){
+    return Functor.fmap(_Object.prop(__, object), props);
 });
 
 /**
@@ -390,11 +394,11 @@ Obj.props = _curry(function(props, obj){
  * @sig {String: a} -> [String]
  * @since 0.6.0
  */
-Obj.propNames = _curry(function(obj){
-    return _arrSort(Object.keys(Obj.copy(obj)));
+_Object.propNames = _curry(function(object){
+    return _arrSort(Object.keys(_Object.copy(object)));
 });
 
-Obj.keys = Obj.propNames;
+_Object.keys = _Object.propNames;
 
 /**
  * Returns the enumerable own keys of an object as an array.
@@ -404,8 +408,8 @@ Obj.keys = Obj.propNames;
  * @sig {String: a} -> [String]
  * @since 0.6.0
  */
-Obj.ownPropNames = _curry(function(obj){
-    return _arrSort(Object.keys(obj));
+_Object.ownPropNames = _curry(function(object){
+    return _arrSort(Object.keys(object));
 });
 
 /**
@@ -414,8 +418,8 @@ Obj.ownPropNames = _curry(function(obj){
  * @sig {String: a} -> [a]
  * @since 0.6.0
  */
-Obj.values = _curry(function(obj){
-    return Obj.props(Obj.keys(obj), obj);
+_Object.values = _curry(function(object){
+    return _Object.props(_Object.keys(object), object);
 });
 
 /**
@@ -424,8 +428,8 @@ Obj.values = _curry(function(obj){
  * @sig {String: a} -> [a]
  * @since 0.6.0
  */
-Obj.ownValues = _curry(function(obj){
-    return Obj.props(Obj.ownPropNames(obj), obj);
+_Object.ownValues = _curry(function(object){
+    return _Object.props(_Object.ownPropNames(object), object);
 });
 
 /**
@@ -435,10 +439,10 @@ Obj.ownValues = _curry(function(obj){
  * @sig {String: a} -> [[String, a]]
  * @since 0.6.0
  */
-Obj.pairs = _curry(function(obj){
-    return Functor.map(function(key){
-        return [key, obj[key]];
-    }, Obj.propNames(obj));
+_Object.pairs = _curry(function(object){
+    return Functor.fmap(function(key){
+        return [key, object[key]];
+    }, _Object.propNames(object));
 });
 
 /**
@@ -448,10 +452,10 @@ Obj.pairs = _curry(function(obj){
  * @sig {String: a} -> [[String, a]]
  * @since 0.6.0
  */
-Obj.ownPairs = _curry(function(obj){
-    return Functor.map(function(key){
-        return [key, obj[key]];
-    }, Obj.ownPropNames(obj));
+_Object.ownPairs = _curry(function(object){
+    return Functor.fmap(function(key){
+        return [key, object[key]];
+    }, _Object.ownPropNames(object));
 });
 
 /**
@@ -460,7 +464,7 @@ Obj.ownPairs = _curry(function(obj){
  * @sig Sequential s => s (s String|a) -> {String: a}
  * @since 0.6.2
  */
-Obj.fromPairs = _curry(function(pairs){
+_Object.fromPairs = _curry(function(pairs){
     return Foldable.foldl(function(accum, pair){
         accum[nth(0, pair)] = nth(1, pair);
         return accum;
@@ -473,15 +477,15 @@ Obj.fromPairs = _curry(function(pairs){
  * @sig Sequential s => s String -> s a -> {String: a}
  * @since 0.6.2
  */
-Obj.zip = _curry(function(keys, values){
+_Object.zip = _curry(function(keys, values){
     var l = Foldable.len(keys);
     var i = 0;
-    var obj = {};
+    var object = {};
     while (i < l) {
-        obj[nth(i,keys)] = nth(i,values);
+        object[nth(i,keys)] = nth(i,values);
         i += 1;
     }
-    return obj;
+    return object;
 });
 
 /**
@@ -491,13 +495,13 @@ Obj.zip = _curry(function(keys, values){
  * @sig (a -> Boolean) -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.filter = _curry(function(fn, obj){
-    return Obj.foldlAssoc(function(accum, value, key){
+_Object.filter = _curry(function(fn, object){
+    return _Object.foldlAssoc(function(accum, value, key){
         if (fn(value)){
             accum[key] = value;
         }
         return accum;
-    }, {}, obj);
+    }, {}, object);
 });
 
 /**
@@ -506,13 +510,13 @@ Obj.filter = _curry(function(fn, obj){
  * @sig (a -> String -> Boolean) -> {String: a} -> {String: a}
  * @since 0.6.0
  */
-Obj.filterAssoc = _curry(function(fn, obj){
-    return Obj.foldlAssoc(function(accum, value, key){
+_Object.filterAssoc = _curry(function(fn, object){
+    return _Object.foldlAssoc(function(accum, value, key){
         if (fn(value, key)){
             accum[key] = value;
         }
         return accum;
-    }, {}, obj);
+    }, {}, object);
 });
 
 
@@ -522,13 +526,13 @@ Obj.filterAssoc = _curry(function(fn, obj){
  * @sig {String: a} -> String
  * @since 0.5.0
  */
-Obj.show = _curry(function(obj){
-    var keys = _arrSort(Object.keys(obj));
+_Object.show = _curry(function(object){
+    var keys = _arrSort(Object.keys(object));
     var items = keys.map(function(key){
-        return '"' + key + '"' + ": " + _show(obj[key]);
+        return '"' + key + '"' + ": " + _show(object[key]);
     });
 
     return "{" + items.join(', ') + "}";
 });
 
-module.exports = Obj;
+module.exports = _Object;

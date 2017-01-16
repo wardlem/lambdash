@@ -1,16 +1,16 @@
-var _arrEqual = require('./internal/_arrayEqual');
-var _curry = require('./internal/_curry');
-var _show = require('./internal/_show');
-var _equal = require('./internal/_equal');
-var _not = require('./internal/_not');
-var __ = require('./internal/_blank');
+const _arrEqual = require('./internal/_arrayEqual');
+const _curry = require('./internal/_curry');
+const _show = require('./internal/_show');
+const _equal = require('./internal/_equal');
+const _not = require('./internal/_not');
+const __ = require('./internal/_blank');
 
-var Ord = require('./Ord');
-var Ordering = require('./Ordering');
-var Sequential = require('./Sequential');
+const Ord = require('./Ord');
+const Ordering = require('./Ordering');
+const Sequential = require('./Sequential');
 
 /**
- * Arr is the module for javascript's built-in array type.
+ * _Array is the module for javascript's built-in array type.
  *
  * @module
  * @implements Eq
@@ -21,9 +21,12 @@ var Sequential = require('./Sequential');
  * @implements Monoid
  * @implements Applicative
  * @implements Monad
+ * @implements Sequential
+ * @implements SetOps
+ * @implements SetKind
  * @implements Show
  */
-var Arr = require('./internal/_primitives').Arr;
+const _Array = require('./internal/_primitives').Array;
 
 /**
  * Returns true if two arrays are structurally equal.
@@ -37,7 +40,7 @@ var Arr = require('./internal/_primitives').Arr;
  * @param {Array} second the other array being compared for equality
  * @return {Boolean} Whether or not the two arrays are structurally equal
  */
-Arr.eq = _curry(_arrEqual);
+_Array.eq = _curry(_arrEqual);
 
 /**
  * Returns a comparison of two arrays.
@@ -55,7 +58,7 @@ Arr.eq = _curry(_arrEqual);
  * @param {Array} second the second array being compared
  * @return {Ordering} The result of the comparison
  */
-Arr.compare = _curry(function(left, right) {
+_Array.compare = _curry(function(left, right) {
     if (left === right) {
         // short-circuit
         return Ordering.EQ;
@@ -86,16 +89,16 @@ Arr.compare = _curry(function(left, right) {
  *
  * @sig (a -> b) -> Array a -> Array b
  * @since 0.4.0
- * @see Functor.map
+ * @see Functor.fmap
  * @param {Function} fn the function mapping over the array
- * @param {Array} arr the array being mapped over
+ * @param {Array} array the array being mapped over
  * @return {Array} The array with fn applied to each of its elements
  */
-Arr.map = _curry(function(fn, arr) {
+_Array.fmap = _curry(function(fn, array) {
     var res = [];
     var ind = 0;
-    while(ind < arr.length) {
-        res.push(fn(arr[ind]));
+    while(ind < array.length) {
+        res.push(fn(array[ind]));
         ind += 1;
     }
     return res;
@@ -111,11 +114,11 @@ Arr.map = _curry(function(fn, arr) {
  * @see Foldable.foldl
  * @param {Function} fn the function that calculates the accumulated value
  * @param {*} init the initial value of the accumulation
- * @param {Array} arr the array being accumulated
+ * @param {Array} _array the array being accumulated
  * @return {*} The final accumulation of the fold
  */
-Arr.foldl = _curry(function(fn, init, arr) {
-    return arr.reduce(fn, init);
+_Array.foldl = _curry(function(fn, init, array) {
+    return array.reduce(fn, init);
 });
 
 /**
@@ -128,11 +131,11 @@ Arr.foldl = _curry(function(fn, init, arr) {
  * @see Foldable.foldr
  * @param {Function} fn the function that calculates the accumulated value
  * @param {*} init the initial value of the accumulation
- * @param {Array} arr the array being accumulated
+ * @param {Array} array the array being accumulated
  * @return {*} The final accumulation of the fold
  */
-Arr.foldr = _curry(function(fn, init, arr) {
-    return arr.reduceRight(fn, init);
+_Array.foldr = _curry(function(fn, init, array) {
+    return array.reduceRight(fn, init);
 });
 
 /**
@@ -147,7 +150,7 @@ Arr.foldr = _curry(function(fn, init, arr) {
  * @param {Array} right the suffix of the concatenation
  * @returns {Array} left and right concatenated together
  */
-Arr.concat = _curry(function(left, right){
+_Array.concat = _curry(function(left, right){
     return left.concat(right);
 });
 
@@ -161,27 +164,27 @@ Arr.concat = _curry(function(left, right){
  * @see Monoid.empty
  * @returns {Array} An empty array.
  */
-Arr.empty = _curry(function empty() {
+_Array.empty = _curry(function empty() {
     return [];
 });
 
 /**
  * Applies the functions contained in one array to another array
  *
- * This function along with Arr.of implements Applicative for arrays.
+ * This function along with _Array.of implements Applicative for arrays.
  *
  * @sig Array (a -> b) -> Array a -> Array b
  * @since 0.4.0
  * @see Applicative.ap
  * @param {Function[]} applicative an array of functions
- * @param {*[]} arr an array to which each function in applicative will be applied
+ * @param {*[]} array an array to which each function in applicative will be applied
  * @return {*[]}
  */
-Arr.ap = _curry(function(applicative, arr){
+_Array.ap = _curry(function(applicative, array){
     var result = [];
     var ind = 0;
     while (ind < applicative.length) {
-        result = result.concat(Arr.map(applicative[ind], arr));
+        result = result.concat(_Array.fmap(applicative[ind], array));
         ind += 1;
     }
 
@@ -191,7 +194,7 @@ Arr.ap = _curry(function(applicative, arr){
 /**
  * Returns an array of the value supplied
  *
- * This function along with Arr.ap implements Applicative for arrays.
+ * This function along with _Array.ap implements Applicative for arrays.
  *
  * @sig a -> Array a
  * @since 0.4.0
@@ -199,7 +202,7 @@ Arr.ap = _curry(function(applicative, arr){
  * @param value a value that will be wrapped in an array
  * @returns {*[]} An array with the provided value as its only element
  */
-Arr.of = _curry(function of(value) {
+_Array.of = _curry(function of(value) {
     return [value];
 });
 
@@ -212,10 +215,10 @@ Arr.of = _curry(function of(value) {
  * @sig Array (Array a) -> Array a
  * @since 0.4.0
  * @see Monad.flatten
- * @param {Array[]} arr The array of arrays being flattened
+ * @param {Array[]} array The array of arrays being flattened
  * @return {Array}
  */
-Arr.flatten = Arr.foldl(Arr.concat, []);
+_Array.flatten = _Array.foldl(_Array.concat, []);
 
 /**
  * Applies an array of values to a function
@@ -223,15 +226,15 @@ Arr.flatten = Arr.foldl(Arr.concat, []);
  * @sig (* -> *) -> Array *  -> *
  * @since 0.4.0
  * @param {Function} fn a function the array will be applied to
- * @param {Array} arr an array that will be applied to the function
+ * @param {Array} array an array that will be applied to the function
  * @return {*}
  * @example
  *
  *      _.applyTo((a,b) => a + b, [1,2]);  // 3
  *      _.applyTo((a,b) => a + b)([1,2]);  // 3
  */
-Arr.applyTo = _curry(function(fn, arr) {
-    return fn.apply(this, arr);
+_Array.applyTo = _curry(function(fn, array) {
+    return fn.apply(this, array);
 });
 
 /**
@@ -242,31 +245,31 @@ Arr.applyTo = _curry(function(fn, arr) {
  * @sig Number -> Array a -> a
  * @since 0.5.0
  * @param {Number} n a valid index in the array
- * @param {Array} arr an array
+ * @param {Array} array an array
  * @return {*} The value in the array at the given index
  * @example
  *
  *      _.nth(2)([1,2,3,4]);          // 3
  *      _.nth(2, ["a","b","c","d"]);  // "c"
  */
-Arr.nth = _curry(function(n, arr) {
-    if (n >= arr.length || n < 0) {
+_Array.nth = _curry(function(n, array) {
+    if (n >= array.length || n < 0) {
         throw new RangeError('Index out of bounds');
     }
 
-    return arr[n];
+    return array[n];
 });
 
 /**
  * Returns the length of an array.
  *
- * @sig Arr a -> Number
+ * @sig _Array a -> Number
  * @since 0.5.0
- * @param {Array} arr
+ * @param {Array} array
  * @return {Number}
  */
-Arr.len = _curry(function(arr) {
-    return arr.length;
+_Array.len = _curry(function(array) {
+    return array.length;
 });
 
 /**
@@ -276,12 +279,12 @@ Arr.len = _curry(function(arr) {
  * @since 0.5.0
  * @param {Number} start The start index of the subsection
  * @param {Number} end The end index of the subsection
- * @param {Array} arr The array being sliced
+ * @param {Array} array The array being sliced
  * @return {Array}
  *
  */
-Arr.slice = _curry(function(start, end, arr) {
-    return Array.prototype.slice.call(arr, start, end);
+_Array.slice = _curry(function(start, end, array) {
+    return Array.prototype.slice.call(array, start, end);
 });
 
 /**
@@ -291,12 +294,12 @@ Arr.slice = _curry(function(start, end, arr) {
  *
  * @sig Array a -> Array a
  * @since 0.5.0
- * @param {Array} arr The array to reverse
+ * @param {Array} array The array to reverse
  * @return {Array}
  *
  */
-Arr.reverse = _curry(function(arr) {
-    return Array.prototype.reverse.call(Array.prototype.slice.call(arr));
+_Array.reverse = _curry(function(array) {
+    return Array.prototype.reverse.call(Array.prototype.slice.call(array));
 });
 
 /**
@@ -310,20 +313,20 @@ Arr.reverse = _curry(function(arr) {
  *
  * @example
  *
- *      var arr = ["c","r","c","s"];
- *      var caracas = _.intersperse("a", arr);
+ *      var array = ["c","r","c","s"];
+ *      var caracas = _.intersperse("a", array);
  *      // caracas is ["c", "a", "r", "a", "c", "a", "s"]
  */
-Arr.intersperse = _curry(function(value, arr) {
-    if (!arr.length) {
+_Array.intersperse = _curry(function(value, array) {
+    if (!array.length) {
         return [];
     }
 
-    var res = [arr[0]];
+    var res = [array[0]];
     var ind = 1;
-    while (ind < arr.length) {
+    while (ind < array.length) {
         res.push(value);
-        res.push(arr[ind]);
+        res.push(array[ind]);
         ind += 1;
     }
 
@@ -338,10 +341,10 @@ Arr.intersperse = _curry(function(value, arr) {
  * @sig a -> Array a -> Boolean
  * @since 0.6.0
  */
-Arr.exists = _curry(function(key, arr){
+_Array.exists = _curry(function(key, array){
     var ind = 0;
-    while(ind < arr.length) {
-        if (_equal(key, arr[ind])){
+    while(ind < array.length) {
+        if (_equal(key, array[ind])){
             return true;
         }
 
@@ -359,12 +362,12 @@ Arr.exists = _curry(function(key, arr){
  * @sig a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.insert = _curry(function(key, arr){
-    if (Arr.exists(key, arr)){
-        return arr;
+_Array.insert = _curry(function(key, array){
+    if (_Array.exists(key, array)){
+        return array;
     }
 
-    return Arr.concat(arr, [key]);
+    return _Array.concat(array, [key]);
 
 });
 
@@ -376,18 +379,17 @@ Arr.insert = _curry(function(key, arr){
  * @sig a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.remove = _curry(function(key, arr){
+_Array.remove = _curry(function(key, array){
     var ind = 0;
-    while(ind < arr.length) {
-        if (_equal(key, arr[ind])){
-            arr = Arr.concat(Arr.slice(0, ind, arr), Arr.slice(ind+1, arr.length, arr));
+    while(ind < array.length) {
+        if (_equal(key, array[ind])){
+            array = _Array.concat(_Array.slice(0, ind, array), _Array.slice(ind+1, array.length, array));
         } else {
             ind += 1;
         }
-
     }
 
-    return arr;
+    return array;
 });
 
 /**
@@ -396,8 +398,8 @@ Arr.remove = _curry(function(key, arr){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.union = _curry(function(left, right){
-    return Sequential.unique(Arr.concat(left,right));
+_Array.union = _curry(function(left, right){
+    return Sequential.unique(_Array.concat(left,right));
 });
 
 /**
@@ -406,8 +408,8 @@ Arr.union = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.difference = _curry(function(left, right){
-    return Sequential.filter(_not(Arr.exists(__, right)), Sequential.unique(left));
+_Array.difference = _curry(function(left, right){
+    return Sequential.filter(_not(_Array.exists(__, right)), Sequential.unique(left));
 });
 
 /**
@@ -416,8 +418,8 @@ Arr.difference = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.intersection = _curry(function(left, right){
-    return Sequential.filter(Arr.exists(__, right), Sequential.unique(left));
+_Array.intersection = _curry(function(left, right){
+    return Sequential.filter(_Array.exists(__, right), Sequential.unique(left));
 });
 
 /**
@@ -426,8 +428,8 @@ Arr.intersection = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-Arr.symmetricDifference = _curry(function(left, right){
-    return Arr.concat(Arr.difference(left,right), Arr.difference(right,left));
+_Array.symmetricDifference = _curry(function(left, right){
+    return _Array.concat(_Array.difference(left,right), _Array.difference(right,left));
 });
 
 /**
@@ -438,8 +440,8 @@ Arr.symmetricDifference = _curry(function(left, right){
  * @sig Array a -> String
  * @since 0.5.0
  */
-Arr.show = _curry(function(arr) {
-    var items = Arr.map(_show, arr);
+_Array.show = _curry(function(array) {
+    var items = _Array.fmap(_show, array);
     return "[" + items.join(',') + "]";
 });
 
@@ -452,8 +454,8 @@ Arr.show = _curry(function(arr) {
  * @sig * -> Array
  * @since 0.6.3
  */
-Arr.fromArrayLike = _curry(function(arrLike){
+_Array.fromArrayLike = _curry(function(arrLike){
     return Array.prototype.slice.call(arrLike);
 });
 
-module.exports = Arr;
+module.exports = _Array;

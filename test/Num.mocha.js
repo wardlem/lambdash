@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-var Num = require('../src/Num');
+var Num = require('../src/Number');
 
 describe('Num', function() {
     describe('#member', function() {

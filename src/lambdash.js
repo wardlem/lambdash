@@ -1,13 +1,14 @@
 // Modules for Built-in Types
-var Bool = require('./Bool');
-var Num = require('./Num');
-var Int = require('./Int');
-var Str = require('./Str');
-var Arr = require('./Arr');
-var Obj = require('./Obj');
-var Regex = require('./Regex');
-var DT = require('./DT');
-var Fun = require('./Fun');
+var Bool = require('./Boolean');
+var Num = require('./Number');
+var Int = require('./Integer');
+var Str = require('./String');
+var Arr = require('./Array');
+var Obj = require('./Object');
+var Regex = require('./RegExp');
+var DT = require('./Date');
+var _Set = require('./Set');
+var Fun = require('./Function');
 var Unit = require('./Unit');
 var Any = require('./Any');
 
@@ -25,7 +26,7 @@ var Sequential = require('./Sequential');
 var Applicative = require('./Applicative');
 var Monad = require('./Monad');
 var SetOps = require('./SetOps');
-var Set = require('./Set');
+var SetKind = require('./SetKind');
 var Associative = require('./Associative');
 var Show = require('./Show');
 
@@ -51,15 +52,16 @@ var Type = {
 var lambdash = module.exports;
 
 lambdash.Any = Any;
-lambdash.Bool = Bool;
-lambdash.Num = Num;
-lambdash.Int = Int;
-lambdash.Str = Str;
-lambdash.Arr = Arr;
-lambdash.Obj = Obj;
-lambdash.Regex = Regex;
-lambdash.DT = DT;
-lambdash.Fun = Fun;
+lambdash.Bool = lambdash.Boolean = Bool;
+lambdash.Num = lambdash.Number = Num;
+lambdash.Int = lambdash.Integer = Int;
+lambdash.Str = lambdash.String = Str;
+lambdash.Arr = lambdash.Array = Arr;
+lambdash.Obj = lambdash.Object = Obj;
+lambdash.Regex = lambdash.RegExp = Regex;
+lambdash.DT = lambdash.Date = DT;
+lambdash.Set = _Set;
+lambdash.Fun = lambdash.Function = Fun;
 lambdash.Unit = Unit;
 
 lambdash.Eq = Eq;
@@ -75,7 +77,7 @@ lambdash.Sequential = Sequential;
 lambdash.Applicative = Applicative;
 lambdash.Monad = Monad;
 lambdash.SetOps = SetOps;
-lambdash.Set = Set;
+lambdash.SetKind = SetKind;
 lambdash.Associative = Associative;
 lambdash.Show = Show;
 
@@ -126,7 +128,7 @@ lambdash.pow = Numeric.pow;
 lambdash.powBy = Numeric.powBy;
 
 // Functor
-lambdash.map = Functor.map;
+lambdash.fmap = Functor.fmap;
 
 // Semigroup
 lambdash.concat = Semigroup.concat;
@@ -137,7 +139,7 @@ lambdash.empty = Monoid.empty;
 lambdash.isEmpty = Bool.condition(
     [Monoid.member, Monoid.isEmpty],
     [Foldable.member, Foldable.isEmpty],
-    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#isEmpty can only be called on a value that implements monoid or foldable")]
+    [Bool.T, Fun.alwaysThrow(TypeError, "lambdash#isEmpty can only be called on a value that implements monoid or foldable")]
 );
 lambdash.cycleN = Monoid.cycleN;
 
@@ -154,7 +156,7 @@ lambdash.toArray = Foldable.toArray;
 lambdash.len = Bool.condition(
     [Type.hasModuleMethod('len'), Type.useModuleMethod('len')],
     [Foldable.member, Foldable.len],
-    [Bool.T, Fun.alwaysThrow(TypeError, "lamdash#len called on invalid value")]
+    [Bool.T, Fun.alwaysThrow(TypeError, "lambdash#len called on invalid value")]
 );
 lambdash.contains = Foldable.contains;
 lambdash.notContains = Foldable.notContains;
@@ -215,9 +217,9 @@ lambdash.intersection = SetOps.intersection;
 lambdash.symmetricDifference = SetOps.symmetricDifference;
 
 // Set
-lambdash.exists = Set.exists;
-lambdash.insert = Set.insert;
-lambdash.remove = Set.remove;
+lambdash.exists = SetKind.exists;
+lambdash.insert = SetKind.insert;
+lambdash.remove = SetKind.remove;
 
 // Associative
 lambdash.assoc = Associative.assoc;
