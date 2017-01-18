@@ -28,6 +28,7 @@ var Monad = require('./Monad');
 var SetOps = require('./SetOps');
 var SetKind = require('./SetKind');
 var Associative = require('./Associative');
+var AssocFoldable = require('./AssocFoldable');
 var Show = require('./Show');
 
 // Auxiliary types
@@ -79,6 +80,7 @@ lambdash.Monad = Monad;
 lambdash.SetOps = SetOps;
 lambdash.SetKind = SetKind;
 lambdash.Associative = Associative;
+lambdash.AssocFoldable = AssocFoldable
 lambdash.Show = Show;
 
 lambdash.Type = Type;
@@ -229,13 +231,15 @@ lambdash.lookupAll = Associative.lookupAll;
 lambdash.lookupOr = Associative.lookupOr;
 lambdash.update = Associative.update;
 lambdash.updateOr = Associative.updateOr;
-lambdash.keys = Associative.keys;
-lambdash.values = Associative.values;
-lambdash.mapAssoc = Associative.mapAssoc;
-lambdash.foldlAssoc = Associative.foldlAssoc;
-lambdash.foldrAssoc = Associative.foldrAssoc;
-lambdash.filterAssoc = Associative.filterAssoc;
-lambdash.pairs = Associative.pairs;
+
+// AssocFoldable
+lambdash.keys = AssocFoldable.keys;
+lambdash.values = AssocFoldable.values;
+lambdash.mapAssoc = AssocFoldable.mapAssoc;
+lambdash.foldlAssoc = AssocFoldable.foldlAssoc;
+lambdash.foldrAssoc = AssocFoldable.foldrAssoc;
+lambdash.filterAssoc = AssocFoldable.filterAssoc;
+lambdash.pairs = AssocFoldable.pairs;
 
 // Show
 lambdash.show = Show.show;

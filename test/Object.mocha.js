@@ -10,7 +10,7 @@ var assertEqual = function(left, right){
     }
 };
 
-describe('Obj', function(){
+describe('Object', function(){
     describe('#eq', function(){
         it('should return true if two objects have all the same keys and values, false otherwise', function(){
             assert.equal(Obj.eq({},{}),true);
@@ -118,7 +118,7 @@ describe('Obj', function(){
     });
 
     describe('#foldl', function(){
-        it('should fold an object with keys sorted', function(){
+        it('should fold an object into a single value', function(){
             var obj = {c: 'C', a: 'A', b: 'B'};
 
             var res = Obj.foldl(function(accum, v){
@@ -126,12 +126,12 @@ describe('Obj', function(){
             }, 'Z', obj);
 
             assert.equal(typeof res, 'string');
-            assert.equal(res, 'ZABC');
+            assert.equal(res, 'ZCAB');
         });
     });
 
     describe('#foldr', function(){
-        it('should fold an object with keys sorted', function(){
+        it('should fold an object into a single value', function(){
             var obj = {c: 'C', a: 'A', b: 'B'};
 
             var res = Obj.foldr(function(accum, v){
@@ -139,12 +139,12 @@ describe('Obj', function(){
             }, 'Z', obj);
 
             assert.equal(typeof res, 'string');
-            assert.equal(res, 'ZCBA');
+            assert.equal(res, 'ZBAC');
         });
     });
 
     describe('#foldlAssoc', function(){
-        it('should fold an object with keys sorted', function(){
+        it('should fold an object into a single value', function(){
             var obj = {c: 'C', a: 'A', b: 'B'};
 
             var res = Obj.foldlAssoc(function(accum, v, k){
@@ -152,12 +152,12 @@ describe('Obj', function(){
             }, 'Z', obj);
 
             assert.equal(typeof res, 'string');
-            assert.equal(res, 'ZAaBbCc');
+            assert.equal(res, 'ZCcAaBb');
         });
     });
 
     describe('#foldr', function(){
-        it('should fold an object with keys sorted', function(){
+        it('should fold an object into a single value', function(){
             var obj = {c: 'C', a: 'A', b: 'B'};
 
             var res = Obj.foldrAssoc(function(accum, v, k){
@@ -165,7 +165,7 @@ describe('Obj', function(){
             }, 'Z', obj);
 
             assert.equal(typeof res, 'string');
-            assert.equal(res, 'ZCcBbAa');
+            assert.equal(res, 'ZBbAaCc');
         });
     });
 

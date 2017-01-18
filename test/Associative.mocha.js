@@ -164,26 +164,6 @@ describe('Associative', function(){
         });
     });
 
-    describe('#keys', function(){
-        it('should return all the keys of a container as an array', function(){
-            assertEqual(Associative.keys({a:1,b:2,c:3}), ['a','b','c']);
-        });
-    });
-
-    describe('#values', function(){
-        it('should return all the values of a container as an array', function(){
-            assertEqual(Associative.values({a:1,b:2,c:3}), [1,2,3]);
-        });
-    });
-
-    describe('#pairs', function(){
-        it('should return all the key value pairs in a container as an array of arrays', function(){
-            var obj = {a:1,b:2,c:3};
-
-            assertEqual(Associative.pairs(obj), [['a',1],['b',2],['c',3]]);
-        })
-    });
-
     describe('#member', function(){
         it('shoudl return true if a value implements Associative', function(){
             assert.equal(Associative.member({}), true);

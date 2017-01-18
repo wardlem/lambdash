@@ -2,7 +2,7 @@ var assert = require('assert');
 
 var Num = require('../src/Number');
 
-describe('Num', function() {
+describe('Number', function() {
     describe('#member', function() {
         it('should return whether or not a value is a member of number', function(){
             assert.equal(Num.member(0), true);

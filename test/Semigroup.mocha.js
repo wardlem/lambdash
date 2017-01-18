@@ -33,7 +33,7 @@ describe('Semigroup', function(){
             }
 
             assertEqual(Semigroup.concatAll(arr), [1,2,3,4,5,6]);
-            assertEqual(Semigroup.concatAll(obj), [1,2,3,4,5,6]);
+            assertEqual(Semigroup.concatAll(obj), [1,2,5,6,3,4]);
         });
 
         it('should throw an exception if the foldable is empty', function(){

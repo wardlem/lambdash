@@ -9,7 +9,7 @@ var assertEqual = function(left, right){
     }
 };
 
-describe('Str', function(){
+describe('String', function(){
     describe('#eq', function(){
         it('should return true if two strings are equal, false otherwise', function(){
             assert.equal(Str.eq('',''), true);

@@ -164,6 +164,12 @@ _Map.intersection = _curry(function intersection(left, right) {
     return newMap;
 });
 
+/**
+ * Returns a map with the keys that are in right or left, but not both
+ *
+ * @sig (Map k v) -> (Map k v) -> (Map k v)
+ * @since 0.7.0
+ */
 _Map.symmetricDifference = _curry(function symmetricDifference(left, right) {
     return _Map.concat(_Map.difference(left, right), _Map.difference(right, left));
 });

@@ -3,7 +3,7 @@ var assert = require('assert');
 var _ = require('../src/lambdash');
 var DT = _.DT;
 
-describe('DT', function(){
+describe('Date', function(){
     describe('#member', function(){
         it('should return true only for a datetime object', function(){
             assert(DT.member(new Date()));

@@ -199,13 +199,13 @@ _Object.symmetricDifference = _curry(function(left, right){
 });
 
 /**
- * Folds an object's values from left to right with keys in sorted order.
+ * Folds an object's values from left to right.
  *
  * @sig (b -> a -> b) -> b -> {String: a} -> b
  * @since 0.6.0
  */
 _Object.foldl = _curry(function(fn, init, object){
-    var keys = _arrSort(Object.keys(object));
+    var keys = Object.keys(object);
 
     return Foldable.foldl(function(accum, key){
         return fn(accum, object[key]);
@@ -213,13 +213,13 @@ _Object.foldl = _curry(function(fn, init, object){
 });
 
 /**
- * Folds an object's values from right to left with keys in sorted order.
+ * Folds an object's values from right to left.
  *
  * @sig (b -> a -> b) -> b -> {String: a} -> b
  * @since 0.6.0
  */
 _Object.foldr = _curry(function(fn, init, object){
-    var keys = _arrSort(Object.keys(object));
+    var keys = Object.keys(object);
 
     return Foldable.foldr(function(accum, key){
         return fn(accum, object[key]);
@@ -233,7 +233,7 @@ _Object.foldr = _curry(function(fn, init, object){
  * @since 0.6.0
  */
 _Object.foldlAssoc = _curry(function(fn, init, object){
-    var keys = _arrSort(Object.keys(object));
+    var keys = Object.keys(object);
 
     return Foldable.foldl(function(accum, key){
         return fn(accum, object[key], key);
@@ -247,7 +247,7 @@ _Object.foldlAssoc = _curry(function(fn, init, object){
  * @since 0.6.0
  */
 _Object.foldrAssoc = _curry(function(fn, init, object){
-    var keys = _arrSort(Object.keys(object));
+    var keys = Object.keys(object);
 
     return Foldable.foldr(function(accum, key){
         return fn(accum, object[key], key);
@@ -389,13 +389,11 @@ _Object.props = _curry(function(props, object){
 /**
  * Returns the enumerable keys of an object as an array.
  *
- * The keys are sorted.
- *
  * @sig {String: a} -> [String]
  * @since 0.6.0
  */
 _Object.propNames = _curry(function(object){
-    return _arrSort(Object.keys(_Object.copy(object)));
+    return Object.keys(_Object.copy(object));
 });
 
 _Object.keys = _Object.propNames;
@@ -409,7 +407,7 @@ _Object.keys = _Object.propNames;
  * @since 0.6.0
  */
 _Object.ownPropNames = _curry(function(object){
-    return _arrSort(Object.keys(object));
+    return Object.keys(object);
 });
 
 /**

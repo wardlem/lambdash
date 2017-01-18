@@ -3,7 +3,7 @@ var assert = require('assert');
 var _ = require('../src/lambdash');
 var Bool = _.Bool;
 
-describe('#bool', function(){
+describe('Boolean', function(){
     describe('#member', function(){
         it('should return true if the given value is a boolean', function(){
             assert(Bool.member(true));
