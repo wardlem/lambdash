@@ -144,4 +144,23 @@ describe('ArrayBuffer', () => {
             assert.equal(res, "ArrayBuffer(0x01,0x04,0x05)");
         });
     });
+
+    describe('@implements', () => {
+        const arr = _ArrayBuffer.of();
+
+        [
+            "Eq",
+            "Ord",
+            "Functor",
+            "Foldable",
+            "Semigroup",
+            "Monoid",
+            "Sequential",
+            "Show"
+        ].forEach((name) => {
+            it(`implements ${name}`, () => {
+                assert(_[name].member(arr));
+            });
+        })
+    });
 });
