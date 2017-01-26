@@ -1,13 +1,15 @@
-var _primitives = require('./_primitives');
-var _isModule = require('./_isModule');
-var _isSubModule = require('./_isSubModule');
+const _primitives = require('./_primitives');
+const _isModule = require('./_isModule');
+const _isSubModule = require('./_isSubModule');
+const _Buffer = require('./_Buffer');
+const _isTypedArray = require('./_isTypedArray');
 
 function moduleFor(value) {
     if (value == null) {
         return _primitives.Unit;
     }
 
-    var C = value.constructor;
+    const C = value.constructor;
 
     if (_isModule(C)) {
         if (_isSubModule(C)) {
@@ -16,6 +18,7 @@ function moduleFor(value) {
         return C;
     }
 
+    // TODO: consider using Object.prototype.toString.call(value)
     switch(C){
         case Number:
             return _primitives.Number;
@@ -38,7 +41,14 @@ function moduleFor(value) {
             return _primitives.Map;
         case Set:
             return _primitives.Set;
+        case _Buffer:
+            return _primitives.Uint8Array;
+        case ArrayBuffer:
+            return _primitives.ArrayBuffer;
         default:
+            if (_isTypedArray(value)) {
+                return _primitives[C.name];
+            };
             // not a plain javascript object
             return C;
     }

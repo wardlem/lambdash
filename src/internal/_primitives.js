@@ -1,26 +1,29 @@
 // This is here to avoid a problem with circular dependencies
 // Each primitive will register itself in the _primitives object
-var _slice = require('./_slice');
-var _isBoolean = require('./_isBoolean');
-var _isNumber = require('./_isNumber');
-var _isInteger = require('./_isInteger');
-var _isString = require('./_isString');
-var _isArray = require('./_isArray');
-var _isObject = require('./_isObject');
-var _isPlainObject = require('./_isPlainObject');
-var _isFunction = require('./_isFunction');
-var _isRegExp = require('./_isRegExp');
-var _isDate = require('./_isDate');
-var _isDefined = require('./_isDefined');
-var _isUnit = require('./_isUnit');
-var _isMap = require('./_isMap');
-var _isSet = require('./_isSet');
-var _curry = require('./_curry');
+const _slice = require('./_slice');
+const _makeFunction = require('./_makeFunction');
+const _isBoolean = require('./_isBoolean');
+const _isNumber = require('./_isNumber');
+const _isInteger = require('./_isInteger');
+const _isString = require('./_isString');
+const _isArray = require('./_isArray');
+const _isObject = require('./_isObject');
+const _isPlainObject = require('./_isPlainObject');
+const _isFunction = require('./_isFunction');
+const _isRegExp = require('./_isRegExp');
+const _isDate = require('./_isDate');
+const _isDefined = require('./_isDefined');
+const _isUnit = require('./_isUnit');
+const _isMap = require('./_isMap');
+const _isSet = require('./_isSet');
+const _isTypedArray = require('./_isTypedArray');
+const _isArrayBuffer = require('./_isArrayBuffer');
+const _curry = require('./_curry');
 
 
-var _primitives = module.exports;
+const _primitives = module.exports;
 
-var _assert = _curry(function(test, msg, value){
+const _assert = _curry(function(test, msg, value){
     if (!test(value)) {
         throw new TypeError(msg);
     }
@@ -139,6 +142,7 @@ _Date.member = _isDate;
 _Date.assert = _assert(_isDate, "Invalid value for Date");
 _primitives.Date = _Date;
 
+
 function Unit(value) {
     if (arguments.length === 0)
     {
@@ -150,3 +154,41 @@ function Unit(value) {
 Unit.member = _isUnit;
 Unit.assert = _assert(_isUnit, "Invalid value for Unit");
 _primitives.Unit = Unit;
+
+
+function _TypedArray(value) {
+    return _TypedArray.assert(value);
+}
+
+_TypedArray.member = _isTypedArray;
+_TypedArray.assert = _assert(_isTypedArray, "Invalid value for TypedArray");
+_primitives.TypedArray = _TypedArray;
+
+[
+    Int8Array,
+    Uint8Array,
+    Uint8ClampedArray,
+    Int16Array,
+    Uint16Array,
+    Int32Array,
+    Uint32Array,
+    Float32Array,
+    Float64Array,
+].forEach((c) => {
+    const assertTypedArray = _assert(_isTypedArray[`is${c.name}`], `Invalid value for ${c.name}`);
+    const _ViewType = _makeFunction(c.name, function(value) {
+        return assertTypedArray(value);
+    });
+
+    _ViewType.member = _isTypedArray[`is${c.name}`];
+    _ViewType.assert = assertTypedArray;
+    _primitives[c.name] = _ViewType;
+});
+
+function _ArrayBuffer(value) {
+    return _ArrayBuffer.assert(value);
+}
+
+_ArrayBuffer.member = _isArrayBuffer;
+_ArrayBuffer.assert = _assert(_isArrayBuffer, "Invalid value for ArrayBuffer");
+_primitives.ArrayBuffer = _ArrayBuffer;

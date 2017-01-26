@@ -1,43 +1,46 @@
 // Modules for Built-in Types
-var Bool = require('./Boolean');
-var Num = require('./Number');
-var Int = require('./Integer');
-var Str = require('./String');
-var Arr = require('./Array');
-var Obj = require('./Object');
-var Regex = require('./RegExp');
-var DT = require('./Date');
-var _Set = require('./Set');
-var Fun = require('./Function');
-var Unit = require('./Unit');
-var Any = require('./Any');
+const Bool = require('./Boolean');
+const Num = require('./Number');
+const Int = require('./Integer');
+const Str = require('./String');
+const Arr = require('./Array');
+const Obj = require('./Object');
+const Regex = require('./RegExp');
+const DT = require('./Date');
+const _Set = require('./Set');
+const Fun = require('./Function');
+const Unit = require('./Unit');
+const Any = require('./Any');
+const _ArrayBuffer = require('./ArrayBuffer');
+const _TypedArray = require('./TypedArray');
+
 
 // Type Classes
-var Eq = require('./Eq');
-var Bounded = require('./Bounded');
-var Enum = require('./Enum');
-var Ord = require('./Ord');
-var Numeric = require('./Numeric');
-var Functor = require('./Functor');
-var Semigroup = require('./Semigroup');
-var Monoid = require('./Monoid');
-var Foldable = require('./Foldable');
-var Sequential = require('./Sequential');
-var Applicative = require('./Applicative');
-var Monad = require('./Monad');
-var SetOps = require('./SetOps');
-var SetKind = require('./SetKind');
-var Associative = require('./Associative');
-var AssocFoldable = require('./AssocFoldable');
-var Show = require('./Show');
+const Eq = require('./Eq');
+const Bounded = require('./Bounded');
+const Enum = require('./Enum');
+const Ord = require('./Ord');
+const Numeric = require('./Numeric');
+const Functor = require('./Functor');
+const Semigroup = require('./Semigroup');
+const Monoid = require('./Monoid');
+const Foldable = require('./Foldable');
+const Sequential = require('./Sequential');
+const Applicative = require('./Applicative');
+const Monad = require('./Monad');
+const SetOps = require('./SetOps');
+const SetKind = require('./SetKind');
+const Associative = require('./Associative');
+const AssocFoldable = require('./AssocFoldable');
+const Show = require('./Show');
 
 // Auxiliary types
-var Ordering = require('./Ordering');
+const Ordering = require('./Ordering');
 
 // Blank
-var __ = require('./internal/_blank');
+const __ = require('./internal/_blank');
 
-var Type = {
+const Type = {
     product: require('./productType'),
     sum: require('./sumType'),
     enumerated: require('./enumeratedType'),
@@ -50,7 +53,7 @@ var Type = {
     isSubModule: require('./internal/_isSubModule')
 };
 
-var lambdash = module.exports;
+const lambdash = module.exports;
 
 lambdash.Any = Any;
 lambdash.Bool = lambdash.Boolean = Bool;
@@ -64,6 +67,17 @@ lambdash.DT = lambdash.Date = DT;
 lambdash.Set = _Set;
 lambdash.Fun = lambdash.Function = Fun;
 lambdash.Unit = Unit;
+lambdash.ArrayBuffer = _ArrayBuffer;
+lambdash.TypedArray = _TypedArray;
+lambdash.Int8Array = _TypedArray.Int8Array,
+lambdash.Uint8Array = _TypedArray.Uint8Array,
+lambdash.Uint8ClampedArray = _TypedArray.Uint8ClampedArray,
+lambdash.Int16Array = _TypedArray.Int16Array,
+lambdash.Uint16Array = _TypedArray.Uint16Array,
+lambdash.Int32Array = _TypedArray.Int32Array,
+lambdash.Uint32Array = _TypedArray.Uint32Array,
+lambdash.Float32Array = _TypedArray.Float32Array,
+lambdash.Float64Array = _TypedArray.Float64Array,
 
 lambdash.Eq = Eq;
 lambdash.Bounded = Bounded;

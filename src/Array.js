@@ -64,21 +64,15 @@ _Array.compare = _curry(function(left, right) {
         return Ordering.EQ;
     }
 
-    var len = Math.min(left.length, right.length);
-
-    var ind = 0;
-    while(ind < len) {
-        var ordering = Ord.compare(left[ind], right[ind]);
+    const len = Math.min(left.length, right.length);
+    for (let ind = 0; ind < len; ind++) {
+        const ordering = Ord.compare(left[ind], right[ind]);
         if (!Ordering.isEQ(ordering)) {
             return ordering;
         }
-
-        ind += 1;
     }
 
-    return left.length < right.length ? Ordering.LT
-        : left.length > right.length ? Ordering.GT
-        : Ordering.EQ;
+    return Ordering.fromNum(left.length - right.length);
 });
 
 
