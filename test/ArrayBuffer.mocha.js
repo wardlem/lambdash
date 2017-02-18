@@ -3,8 +3,8 @@ const assert = require('assert');
 const _ = require('../src/lambdash');
 const _ArrayBuffer = _.ArrayBuffer;
 
-const assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+const assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
@@ -74,7 +74,7 @@ describe('ArrayBuffer', () => {
             const fn = (a, b) => a + b;
 
             const res = _ArrayBuffer.foldl(fn, 'start', arr);
-            assertEqual(res, "start123");
+            assertEqual(res, 'start123');
         });
     });
 
@@ -84,7 +84,7 @@ describe('ArrayBuffer', () => {
             const fn = (a, b) => a + b;
 
             const res = _ArrayBuffer.foldr(fn, 'start', arr);
-            assertEqual(res, "start321");
+            assertEqual(res, 'start321');
         });
     });
 
@@ -103,11 +103,11 @@ describe('ArrayBuffer', () => {
             try {
                 _ArrayBuffer.nth(-1, arr);
             } catch (e) {
-                assert (e instanceof RangeError);
+                assert(e instanceof RangeError);
                 return;
             }
 
-            throw(new Error('Should have thrown'));
+            throw (new Error('Should have thrown'));
         });
 
         it('throws a RangeError if the index is greater than or equal to the size of the buffer', () => {
@@ -116,11 +116,11 @@ describe('ArrayBuffer', () => {
             try {
                 _ArrayBuffer.nth(3, arr);
             } catch (e) {
-                assert (e instanceof RangeError);
+                assert(e instanceof RangeError);
                 return;
             }
 
-            throw(new Error('Should have thrown'));
+            throw (new Error('Should have thrown'));
         });
     });
 
@@ -141,13 +141,13 @@ describe('ArrayBuffer', () => {
             const arr = _ArrayBuffer.of(1,4,5);
 
             const res = _ArrayBuffer.show(arr);
-            assert.equal(res, "ArrayBuffer(0x01,0x04,0x05)");
+            assert.equal(res, 'ArrayBuffer(0x01,0x04,0x05)');
         });
     });
 
     describe('#hash', () => {
         it('hashes a buffer and returns an integer', () => {
-            const values = _.fmap((c) => c.charCodeAt(0), "node.js".split(''));
+            const values = _.fmap((c) => c.charCodeAt(0), 'node.js'.split(''));
             const buffer = Uint8Array.from(values).buffer;
 
             const hash = _ArrayBuffer.hash(buffer);
@@ -266,19 +266,19 @@ describe('ArrayBuffer', () => {
         const arr = _ArrayBuffer.of();
 
         [
-            "Eq",
-            "Ord",
-            "Functor",
-            "Foldable",
-            "Semigroup",
-            "Monoid",
-            "Sequential",
-            "Show",
-            "Serializable"
+            'Eq',
+            'Ord',
+            'Functor',
+            'Foldable',
+            'Semigroup',
+            'Monoid',
+            'Sequential',
+            'Show',
+            'Serializable',
         ].forEach((name) => {
             it(`implements ${name}`, () => {
                 assert(_[name].member(arr));
             });
-        })
+        });
     });
 });

@@ -4,7 +4,7 @@ var Functor = require('../src/Functor');
 var Arr = require('../src/Array');
 var Int = require('../src/Integer');
 
-describe('Functor', function(){
+describe('Functor', function() {
     describe('#fmap', function() {
         it('should map over a functor value', function() {
             var arr = [1,3,5,7];
@@ -16,13 +16,13 @@ describe('Functor', function(){
         });
     });
 
-    describe('#member', function(){
-        it('should return true for a value that implements function false otherwise', function(){
+    describe('#member', function() {
+        it('should return true for a value that implements function false otherwise', function() {
             assert(Functor.member([]));
             assert(Functor.member(null));
             assert(Functor.member(undefined));
             assert(!Functor.member(false));
             assert(!Functor.member(1));
-        })
+        });
     });
 });

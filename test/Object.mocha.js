@@ -4,15 +4,15 @@ var _ = require('../src/lambdash');
 
 var Obj = _.Obj;
 
-var assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+var assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
 
-describe('Object', function(){
-    describe('#eq', function(){
-        it('should return true if two objects have all the same keys and values, false otherwise', function(){
+describe('Object', function() {
+    describe('#eq', function() {
+        it('should return true if two objects have all the same keys and values, false otherwise', function() {
             assert.equal(Obj.eq({},{}),true);
             assert.equal(Obj.eq({a:1,b:2},{a:1,b:2}),true);
             assert.equal(Obj.eq({a:1,b:2},{b:2,a:1}),true);
@@ -27,8 +27,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#compare', function(){
-        it('should return an ordering based on the keys and values in the object', function(){
+    describe('#compare', function() {
+        it('should return an ordering based on the keys and values in the object', function() {
             assert.equal(Obj.compare({},{}), _.EQ);
             assert.equal(Obj.compare({a:1,b:2},{a:1,b:2}), _.EQ);
             assert.equal(Obj.compare({a:1,b:2},{b:2,a:1}), _.EQ);
@@ -47,11 +47,11 @@ describe('Object', function(){
         });
     });
 
-    describe('#fmap', function(){
-        it('should map the own values of an object', function(){
+    describe('#fmap', function() {
+        it('should map the own values of an object', function() {
             var obj = {a:1, b:3};
 
-            var fn = function(v){
+            var fn = function(v) {
                 return v * 3;
             };
 
@@ -59,11 +59,11 @@ describe('Object', function(){
         });
     });
 
-    describe('#mapAssoc', function(){
-        it('should map the own values of an object with the keys', function(){
+    describe('#mapAssoc', function() {
+        it('should map the own values of an object with the keys', function() {
             var obj = {a:1, b:3};
 
-            var fn = function(v, k){
+            var fn = function(v, k) {
                 return k + ':' + v * 3;
             };
 
@@ -71,57 +71,57 @@ describe('Object', function(){
         });
     });
 
-    describe('#concat', function(){
-        it('should join two objects together with a right value bias', function(){
-            assert.equal(Obj.eq(Obj.concat({a:1},{b:2}), {a:1,b:2}), true)
-            assert.equal(Obj.eq(Obj.concat({a:1},{a:2}), {a:2}), true)
-            assert.equal(Obj.eq(Obj.concat({a:1,b:2,c:3},{c:4,d:5}), {a:1,b:2,c:4,d:5}), true)
+    describe('#concat', function() {
+        it('should join two objects together with a right value bias', function() {
+            assert.equal(Obj.eq(Obj.concat({a:1},{b:2}), {a:1,b:2}), true);
+            assert.equal(Obj.eq(Obj.concat({a:1},{a:2}), {a:2}), true);
+            assert.equal(Obj.eq(Obj.concat({a:1,b:2,c:3},{c:4,d:5}), {a:1,b:2,c:4,d:5}), true);
         });
     });
 
-    describe('#empty', function(){
-        it('should always return an empty object', function(){
+    describe('#empty', function() {
+        it('should always return an empty object', function() {
             assertEqual(Obj.empty(), {});
         });
     });
 
-    describe('#union', function(){
-        it('should join two objects together with a left value bias', function(){
+    describe('#union', function() {
+        it('should join two objects together with a left value bias', function() {
             assert.equal(Obj.eq(Obj.union({a:1},{b:2}), {a:1,b:2}), true);
             assert.equal(Obj.eq(Obj.union({a:1},{a:2}), {a:1}), true);
-            assert.equal(Obj.eq(Obj.union({a:1,b:2,c:3},{c:4,d:5}), {a:1,b:2,c:3,d:5}), true)
+            assert.equal(Obj.eq(Obj.union({a:1,b:2,c:3},{c:4,d:5}), {a:1,b:2,c:3,d:5}), true);
         });
     });
 
-    describe('#difference', function(){
-        it('should return an object with all keys removed from the left that do not exist in the right', function(){
+    describe('#difference', function() {
+        it('should return an object with all keys removed from the left that do not exist in the right', function() {
             assertEqual(Obj.difference({a:1,b:2},{c:3}), {a:1,b:2});
             assertEqual(Obj.difference({a:1,b:2},{b:3,d:4}), {a:1});
             assertEqual(Obj.difference({a:1,b:2},{b:3,a:4}), {});
         });
     });
 
-    describe('#intersection', function(){
-        it('should return an object with all keys in both the left and right and values of the left', function(){
+    describe('#intersection', function() {
+        it('should return an object with all keys in both the left and right and values of the left', function() {
             assertEqual(Obj.intersection({a:1,b:2},{c:3}), {});
             assertEqual(Obj.intersection({a:1,b:2},{b:3,d:4}), {b:2});
             assertEqual(Obj.intersection({a:1,b:2},{b:3,a:4}), {a:1, b:2});
         });
     });
 
-    describe('#symmetricDifference', function(){
-        it('should return an object with all keys that exist in one but not both of left and right', function(){
+    describe('#symmetricDifference', function() {
+        it('should return an object with all keys that exist in one but not both of left and right', function() {
             assertEqual(Obj.symmetricDifference({a:1,b:2},{c:3}), {a:1,b:2,c:3});
             assertEqual(Obj.symmetricDifference({a:1,b:2},{b:3,d:4}), {a:1,d:4});
             assertEqual(Obj.symmetricDifference({a:1,b:2},{b:3,a:4}), {});
         });
     });
 
-    describe('#foldl', function(){
-        it('should fold an object into a single value', function(){
+    describe('#foldl', function() {
+        it('should fold an object into a single value', function() {
             var obj = {c: 'C', a: 'A', b: 'B'};
 
-            var res = Obj.foldl(function(accum, v){
+            var res = Obj.foldl(function(accum, v) {
                 return accum + v;
             }, 'Z', obj);
 
@@ -130,11 +130,11 @@ describe('Object', function(){
         });
     });
 
-    describe('#foldr', function(){
-        it('should fold an object into a single value', function(){
+    describe('#foldr', function() {
+        it('should fold an object into a single value', function() {
             var obj = {c: 'C', a: 'A', b: 'B'};
 
-            var res = Obj.foldr(function(accum, v){
+            var res = Obj.foldr(function(accum, v) {
                 return accum + v;
             }, 'Z', obj);
 
@@ -143,11 +143,11 @@ describe('Object', function(){
         });
     });
 
-    describe('#foldlAssoc', function(){
-        it('should fold an object into a single value', function(){
+    describe('#foldlAssoc', function() {
+        it('should fold an object into a single value', function() {
             var obj = {c: 'C', a: 'A', b: 'B'};
 
-            var res = Obj.foldlAssoc(function(accum, v, k){
+            var res = Obj.foldlAssoc(function(accum, v, k) {
                 return accum + v + k;
             }, 'Z', obj);
 
@@ -156,11 +156,11 @@ describe('Object', function(){
         });
     });
 
-    describe('#foldr', function(){
-        it('should fold an object into a single value', function(){
+    describe('#foldr', function() {
+        it('should fold an object into a single value', function() {
             var obj = {c: 'C', a: 'A', b: 'B'};
 
-            var res = Obj.foldrAssoc(function(accum, v, k){
+            var res = Obj.foldrAssoc(function(accum, v, k) {
                 return accum + v + k;
             }, 'Z', obj);
 
@@ -169,8 +169,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#copy', function(){
-        it('should create a new object identical to another', function(){
+    describe('#copy', function() {
+        it('should create a new object identical to another', function() {
             var obj = {a:1, b:2, c:3};
 
             var res = Obj.copy(obj);
@@ -180,8 +180,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#assoc', function(){
-        it('should create a new object with a value updated', function(){
+    describe('#assoc', function() {
+        it('should create a new object with a value updated', function() {
             var obj = {a:1, b:2, c:3};
 
             var res1 = Obj.assoc('d', 4)(obj);
@@ -198,8 +198,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#dissoc', function(){
-        it('should create a new object with a value updated', function(){
+    describe('#dissoc', function() {
+        it('should create a new object with a value updated', function() {
             var obj = {a:1, b:2, c:3};
 
             var res1 = Obj.dissoc('d')(obj);
@@ -216,9 +216,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#propExists', function(){
-        it('should return whether or not an object has a value', function(){
-            function C(a){
+    describe('#propExists', function() {
+        it('should return whether or not an object has a value', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -232,9 +232,9 @@ describe('Object', function(){
 
     });
 
-    describe('#ownPropExists', function(){
-        it('should return whether or not an object has an own value', function(){
-            function C(a){
+    describe('#ownPropExists', function() {
+        it('should return whether or not an object has an own value', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -247,8 +247,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#prop', function(){
-        it('should return the given property of an object', function(){
+    describe('#prop', function() {
+        it('should return the given property of an object', function() {
             var obj = {a:1};
 
             assert.equal(Obj.prop('a')(obj),1);
@@ -256,8 +256,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#propOr', function(){
-        it('should return the given property of an object or a default value if it does not exist', function(){
+    describe('#propOr', function() {
+        it('should return the given property of an object or a default value if it does not exist', function() {
             var obj = {a:1};
 
             assert.equal(Obj.propOr(5, 'a')(obj),1);
@@ -265,8 +265,8 @@ describe('Object', function(){
         });
     });
 
-    describe('#props', function(){
-        it('should return an array of properties if given an array', function(){
+    describe('#props', function() {
+        it('should return an array of properties if given an array', function() {
             var obj = {a:1, c:3};
 
             var p = Obj.props(['a', 'b', 'c'])(obj);
@@ -278,9 +278,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#propNames', function(){
-        it('should return all the keys of an object in sorted order', function(){
-            function C(a){
+    describe('#propNames', function() {
+        it('should return all the keys of an object in sorted order', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -292,9 +292,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#ownKeys', function(){
-        it('should return all the own keys of an object in sorted order', function(){
-            function C(a){
+    describe('#ownKeys', function() {
+        it('should return all the own keys of an object in sorted order', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -306,9 +306,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#values', function(){
-        it('should return all the enumerable values of an object', function(){
-            function C(a){
+    describe('#values', function() {
+        it('should return all the enumerable values of an object', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -320,9 +320,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#ownValues', function(){
-        it('should return all the enumerable own values of an object', function(){
-            function C(a){
+    describe('#ownValues', function() {
+        it('should return all the enumerable own values of an object', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -334,9 +334,9 @@ describe('Object', function(){
         });
     });
 
-    describe('#pairs', function(){
-        it('should return an array of arrays of key value pairs', function(){
-            function C(a){
+    describe('#pairs', function() {
+        it('should return an array of arrays of key value pairs', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -345,12 +345,12 @@ describe('Object', function(){
             var obj = new C(1);
 
             assertEqual(Obj.pairs(obj), [['a', 1], ['b', 2]]);
-        })
+        });
     });
 
-    describe('#ownPairs', function(){
-        it('should return an array of arrays of key value pairs', function(){
-            function C(a){
+    describe('#ownPairs', function() {
+        it('should return an array of arrays of key value pairs', function() {
+            function C(a) {
                 this.a = a;
             }
 
@@ -362,27 +362,27 @@ describe('Object', function(){
         });
     });
 
-    describe('#fromPairs', function(){
-        it('should create an object from pairs', function(){
+    describe('#fromPairs', function() {
+        it('should create an object from pairs', function() {
             assertEqual(Obj.fromPairs([['a', 1],['b', 2]]), {a:1,b:2});
         });
 
     });
 
-    describe('#zip', function(){
-        it('should create an object from a list of keys and a list of values', function(){
+    describe('#zip', function() {
+        it('should create an object from a list of keys and a list of values', function() {
             assertEqual(Obj.zip(['a','b','c'], [1,2,3]), {a:1,b:2,c:3});
         });
     });
 
-    describe('#filter', function(){
-        it('should filter all keys from an object whose values do not pass a predicate', function(){
+    describe('#filter', function() {
+        it('should filter all keys from an object whose values do not pass a predicate', function() {
             var obj = {
                 a: 1,
                 b: 2,
                 c: 0,
                 d: 4,
-                e: 5
+                e: 5,
             };
 
             var res = Obj.filter(_.gt(_,2), obj);
@@ -392,23 +392,23 @@ describe('Object', function(){
                 b: 2,
                 c: 0,
                 d: 4,
-                e: 5
+                e: 5,
             });
             assertEqual(res, {d:4,e:5});
         });
     });
 
-    describe('#filterAssoc', function(){
-        it('should filter all keys from an object whose values do not pass a predicate', function(){
+    describe('#filterAssoc', function() {
+        it('should filter all keys from an object whose values do not pass a predicate', function() {
             var obj = {
                 a: 1,
                 b: 2,
                 c: 0,
                 d: 4,
-                e: 5
+                e: 5,
             };
 
-            var res = Obj.filterAssoc(function(v,k){
+            var res = Obj.filterAssoc(function(v,k) {
                 return _.gt(v,2) || _.eq(k, 'a');
             }, obj);
 
@@ -417,14 +417,14 @@ describe('Object', function(){
                 b: 2,
                 c: 0,
                 d: 4,
-                e: 5
+                e: 5,
             });
             assertEqual(res, {d:4,e:5,a:1});
         });
     });
 
-    describe('#show', function(){
-        it('should return a string representation of an object', function(){
+    describe('#show', function() {
+        it('should return a string representation of an object', function() {
             var obj = {a:1, b:'B', c: []};
 
             assertEqual(Obj.show(obj), '{"a": 1, "b": "B", "c": []}');

@@ -72,8 +72,8 @@ Ratio.sign = function(a) {
 };
 
 describe('Numeric', function() {
-    describe('#add',function(){
-        it('should add two implementing values together', function(){
+    describe('#add',function() {
+        it('should add two implementing values together', function() {
             assert.equal(Numeric.add(1,2), 3);
             assert.equal(Numeric.add(1)(2), 3);
 
@@ -83,8 +83,8 @@ describe('Numeric', function() {
         });
     });
 
-    describe('#sub',function(){
-        it('should subtract two implementing values together', function(){
+    describe('#sub',function() {
+        it('should subtract two implementing values together', function() {
             assert.equal(Numeric.sub(1,2), -1);
             assert.equal(Numeric.sub(1)(2), -1);
 
@@ -96,8 +96,8 @@ describe('Numeric', function() {
 
     });
 
-    describe('#subBy',function(){
-        it('should subtract two implementing values together with reversed arguments', function(){
+    describe('#subBy',function() {
+        it('should subtract two implementing values together with reversed arguments', function() {
             assert.equal(Numeric.subBy(1,2), 1);
             assert.equal(Numeric.subBy(1)(2), 1);
 
@@ -108,7 +108,7 @@ describe('Numeric', function() {
     });
 
     describe('#mul', function() {
-        it('should multiply two implementing values together', function(){
+        it('should multiply two implementing values together', function() {
             assert.equal(Numeric.mul(3,2), 6);
             assert.equal(Numeric.mul(-4)(2), -8);
 
@@ -119,7 +119,7 @@ describe('Numeric', function() {
     });
 
     describe('#div', function() {
-        it('should divide two implementing values', function(){
+        it('should divide two implementing values', function() {
             assert.equal(Numeric.div(3,2), 1.5);
             assert.equal(Numeric.div(-4)(2), -2);
 
@@ -130,7 +130,7 @@ describe('Numeric', function() {
     });
 
     describe('#divBy', function() {
-        it('should divide two implementing values together with switched precedence', function(){
+        it('should divide two implementing values together with switched precedence', function() {
             assert.equal(Numeric.divBy(8,2), 0.25);
             assert.equal(Numeric.divBy(-4)(2), -0.5);
 
@@ -141,7 +141,7 @@ describe('Numeric', function() {
     });
 
     describe('#mod', function() {
-        it('should return the modulus of two numbers', function(){
+        it('should return the modulus of two numbers', function() {
             assert.equal(Numeric.mod(3,2), 1);
             assert.equal(Numeric.mod(-7)(4), -3);
 
@@ -152,7 +152,7 @@ describe('Numeric', function() {
     });
 
     describe('#modBy', function() {
-        it('should return the modulus of two numbers with parameters reversed', function(){
+        it('should return the modulus of two numbers with parameters reversed', function() {
             assert.equal(Numeric.modBy(2,3), 1);
             assert.equal(Numeric.modBy(-4)(7), 3);
 
@@ -163,7 +163,7 @@ describe('Numeric', function() {
     });
 
     describe('#abs', function() {
-        it('should return the absolute value of an implementing value', function(){
+        it('should return the absolute value of an implementing value', function() {
             assert.equal(Numeric.abs(2), 2);
             assert.equal(Numeric.abs(-2), 2);
             assert.equal(Numeric.abs(-8928342), 8928342);
@@ -211,7 +211,7 @@ describe('Numeric', function() {
     });
 
     describe('#reciprocal', function() {
-        it('should return the reciprocal of an implementing value', function(){
+        it('should return the reciprocal of an implementing value', function() {
             assert.equal(Numeric.reciprocal(4), 0.25);
             assert.equal(Numeric.reciprocal(0.25), 4);
 
@@ -219,7 +219,7 @@ describe('Numeric', function() {
             var ratio2 = Numeric.reciprocal(Ratio(5,7));
 
             assert.equal(Ratio.toNum(ratio1), 2);
-            assert.equal(Ratio.toNum(ratio2), 7/5);
+            assert.equal(Ratio.toNum(ratio2), 7 / 5);
         });
     });
 

@@ -4,23 +4,23 @@ var _ = require('../src/lambdash');
 var Fun = _.Fun;
 var Arr = _.Arr;
 
-describe('Fun', function(){
+describe('Fun', function() {
 
     it('should assert its parameter is a function', function() {
-        var fn = function(){};
+        var fn = function() {};
         var notFn = 1;
 
         try {
             var _fn = Fun(fn);
             assert.equal(fn, _fn);
-        } catch(e) {
+        } catch (e) {
             assert(false);
         }
 
         try {
             Fun(notFn);
             assert(false);
-        } catch(e) {
+        } catch (e) {
             assert(e instanceof TypeError);
             assert(e.message.indexOf('Fun') !== -1);
         }
@@ -28,7 +28,7 @@ describe('Fun', function(){
 
     describe('#member', function() {
         it('should return whether or not a value is a function', function() {
-            assert(Fun.member(function(){}));
+            assert(Fun.member(function() {}));
             assert(!Fun.member(1));
         });
     });
@@ -78,7 +78,7 @@ describe('Fun', function(){
     });
 
     describe('#always', function() {
-        it ('should create a function that always returns the passed in value', function(){
+        it('should create a function that always returns the passed in value', function() {
             var always1 = Fun.always(1);
 
             assert.equal(typeof always1, 'function');
@@ -88,7 +88,7 @@ describe('Fun', function(){
     });
 
     describe('#alwaysThrow', function() {
-        it ('should always throw the provided exception when called', function() {
+        it('should always throw the provided exception when called', function() {
 
             var msg = 'You did something wrong';
             var thr = Fun.alwaysThrow(TypeError, msg);
@@ -103,8 +103,8 @@ describe('Fun', function(){
         });
     });
 
-    describe('#thunk', function(){
-        it('should create a function from another function with arguments pre-applied', function(){
+    describe('#thunk', function() {
+        it('should create a function from another function with arguments pre-applied', function() {
             var fn = function(a, b) {
                 return a + b;
             };
@@ -117,17 +117,17 @@ describe('Fun', function(){
         });
     });
 
-    describe('#identity', function(){
-        it('should always return the value it is given', function(){
+    describe('#identity', function() {
+        it('should always return the value it is given', function() {
             assert.equal(Fun.identity(1), 1);
             assert(Arr.eq(Fun.identity([1,2,3]), [1,2,3]));
             assert.equal(Fun.identity(null), null);
         });
     });
 
-    describe('#curry', function(){
-        it('should create a function from another function', function(){
-            var fn = function(a,b,c){return a + b + c};
+    describe('#curry', function() {
+        it('should create a function from another function', function() {
+            var fn = function(a,b,c) {return a + b + c;};
 
             var c3 = Fun.curry(fn);
             assert.equal(typeof c3, 'function');
@@ -159,9 +159,9 @@ describe('Fun', function(){
         });
     });
 
-    describe('#curryN', function(){
-        it('should create a function from another function', function(){
-            var fn = function(a,b,c){return a + b + (c || 'z')};
+    describe('#curryN', function() {
+        it('should create a function from another function', function() {
+            var fn = function(a,b,c) {return a + b + (c || 'z');};
 
             var c3 = Fun.curryN(3, fn);
             assert.equal(typeof c3, 'function');
@@ -206,8 +206,8 @@ describe('Fun', function(){
     });
 
     describe('#make', function() {
-        it ('should create a new named function', function(){
-            var name = "Test";
+        it('should create a new named function', function() {
+            var name = 'Test';
             var test = function(a, b, c) {
                 return (a + b) / c;
             };
@@ -221,13 +221,13 @@ describe('Fun', function(){
         });
     });
 
-    describe('#thisify', function(){
-        it('should create a function with an implicit this as the last parameter', function(){
+    describe('#thisify', function() {
+        it('should create a function with an implicit this as the last parameter', function() {
             var obj = {
-                a: 'apple'
+                a: 'apple',
             };
 
-            var fn = Fun.curry(function(suffix, obj){
+            var fn = Fun.curry(function(suffix, obj) {
                 return obj.a + suffix;
             });
 
@@ -236,23 +236,23 @@ describe('Fun', function(){
             assert.equal(obj.fn(' starts with a'), 'apple starts with a');
         });
 
-        it('should be able to hand being given too many arguments', function(){
+        it('should be able to hand being given too many arguments', function() {
             var obj = {
-                a: 'apple'
+                a: 'apple',
             };
 
-            var fn = Fun.curry(function(suffix, obj){
+            var fn = Fun.curry(function(suffix, obj) {
                 return obj.a + suffix;
             });
 
             obj.fn = Fun.thisify(fn);
 
             assert.equal(obj.fn(' starts with a', 'whatever'), 'apple starts with a');
-        })
+        });
 
     });
 
-    describe('#liftN', function(){
+    describe('#liftN', function() {
         it('should lift a regular function into an applicative one', function() {
             var fn = function(a, b) {
                 return a + b;
@@ -282,7 +282,7 @@ describe('Fun', function(){
         });
     });
 
-    describe('#lift', function(){
+    describe('#lift', function() {
         it('should lift a regular function into an applicative one', function() {
             var fn = function(a, b) {
                 return a + b;
@@ -311,13 +311,13 @@ describe('Fun', function(){
             assert.equal(result[3], 8);
         });
 
-        describe('#apply', function(){
-            it('should apply an array to a function', function(){
-                var fn1 = function(a,b){
+        describe('#apply', function() {
+            it('should apply an array to a function', function() {
+                var fn1 = function(a,b) {
                     return a + b;
                 };
 
-                var fn2 = function(a,b){
+                var fn2 = function(a,b) {
                     return a * b;
                 };
 
@@ -327,33 +327,33 @@ describe('Fun', function(){
                 assert.equal(ap(fn2), 18);
             });
 
-            it('should work with a foldable as well', function(){
-                var List = function List(){};
+            it('should work with a foldable as well', function() {
+                var List = function List() {};
                 List = _.Type.sum(List, {Cons: {hd: null, tl: List}, Nil: []});
 
-                List.foldl = _.curry(function(fn, accum, list){
+                List.foldl = _.curry(function(fn, accum, list) {
                     return List.case({
-                        "Nil": accum,
-                        "Cons": function(hd, tl) {
+                        Nil: accum,
+                        Cons: function(hd, tl) {
                             return List.foldl(fn, fn(accum, hd), tl);
-                        }
+                        },
                     }, list);
                 });
 
                 List.foldr = _.curry(function(fn, accum, list) {
                     return List.case({
-                        "Nil": accum,
-                        "Cons": function(hd, tl) {
+                        Nil: accum,
+                        Cons: function(hd, tl) {
                             return fn(List.foldr(fn, accum, tl), hd);
-                        }
+                        },
                     }, list);
                 });
 
-                var fn1 = Fun.curry(function(a,b){
+                var fn1 = Fun.curry(function(a,b) {
                     return a + b;
                 });
 
-                var fn2 = Fun.curry(function(a,b){
+                var fn2 = Fun.curry(function(a,b) {
                     return a * b;
                 });
 
@@ -365,11 +365,11 @@ describe('Fun', function(){
             });
         });
 
-        describe('#flip', function(){
-            it ('should reorder the first two parameters of a function', function(){
+        describe('#flip', function() {
+            it('should reorder the first two parameters of a function', function() {
                 var fn = function(a,b,c) {
                     return a + b + c;
-                }
+                };
 
                 var flipped = Fun.flip(fn);
 

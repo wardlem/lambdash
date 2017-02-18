@@ -3,9 +3,9 @@ var assert = require('assert');
 var _ = require('../src/lambdash');
 var Applicative = _.Applicative;
 
-describe('Applicative', function(){
-    describe('#ap', function(){
-        it('should call the value of one applicative with the value of another as an argument', function(){
+describe('Applicative', function() {
+    describe('#ap', function() {
+        it('should call the value of one applicative with the value of another as an argument', function() {
             var ap = [_.add(1)];
             var v = [2,3];
 
@@ -17,8 +17,8 @@ describe('Applicative', function(){
             assert.equal(result[1], 4);
         });
 
-        it('should throw a TypeError if the type of the values does not implement Applicative', function(){
-            var NotApp = _.Type.product("NotApp", {value: null});
+        it('should throw a TypeError if the type of the values does not implement Applicative', function() {
+            var NotApp = _.Type.product('NotApp', {value: null});
 
             assert(!Applicative.member(NotApp));
 
@@ -30,14 +30,14 @@ describe('Applicative', function(){
                 assert(false);
             } catch (e) {
                 assert(e instanceof TypeError);
-                assert(e.message.indexOf("does not implement Applicative") > -1);
+                assert(e.message.indexOf('does not implement Applicative') > -1);
             }
         });
     });
 
-    describe('#member', function(){
-        it('should return true if a value is a member of Applicative false otherwise', function(){
-            var Ap = _.Type.product("Ap", {value: null});
+    describe('#member', function() {
+        it('should return true if a value is a member of Applicative false otherwise', function() {
+            var Ap = _.Type.product('Ap', {value: null});
 
             Ap.fmap = function(fn, ap) {
                 return Ap(fn, ap);
@@ -47,14 +47,14 @@ describe('Applicative', function(){
 
             assert(!Applicative.member(Ap(1)));
 
-            Ap.ap = function(left, right){
+            Ap.ap = function(left, right) {
                 return Ap(left.value(right.value));
             };
 
             assert(Applicative.member(Ap(1)));
         });
 
-        it('should return false if the value is undefined or null', function(){
+        it('should return false if the value is undefined or null', function() {
             assert(!Applicative.member(null));
             assert(!Applicative.member(undefined));
         });

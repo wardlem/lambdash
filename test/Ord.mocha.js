@@ -51,17 +51,17 @@ describe('Ord', function() {
             assert.equal(Ord.compare([1,2,3,4,5,6],[1,2,3,4,5,6,7]), LT);
         });
 
-        it('should use a default sort for functions', function(){
-            var fn1 = function(a){return a};
-            var fn2 = function(b){return b};
+        it('should use a default sort for functions', function() {
+            var fn1 = function(a) {return a;};
+            var fn2 = function(b) {return b;};
 
             assert.equal(Ord.compare(fn1,fn2), Ord.compare(String(fn1),String(fn2)));
             assert.equal(Ord.compare(fn2,fn1), Ord.compare(String(fn2),String(fn1)));
         });
     });
 
-    describe('#gt', function(){
-        it('should return whether or not the first value is greater than the second', function(){
+    describe('#gt', function() {
+        it('should return whether or not the first value is greater than the second', function() {
             assert.equal(Ord.gt(1,1), false);
             assert.equal(Ord.gt(1,2), false);
             assert.equal(Ord.gt(2,1), true);
@@ -72,8 +72,8 @@ describe('Ord', function() {
         });
     });
 
-    describe('#lt', function(){
-        it('should return whether or not the first value is greater than the second', function(){
+    describe('#lt', function() {
+        it('should return whether or not the first value is greater than the second', function() {
             assert.equal(Ord.lt(1,1), false);
             assert.equal(Ord.lt(1,2), true);
             assert.equal(Ord.lt(2,1), false);
@@ -84,8 +84,8 @@ describe('Ord', function() {
         });
     });
 
-    describe('#gte', function(){
-        it('should return whether or not the first value is greater than the second', function(){
+    describe('#gte', function() {
+        it('should return whether or not the first value is greater than the second', function() {
             assert.equal(Ord.gte(1,1), true);
             assert.equal(Ord.gte(1,2), false);
             assert.equal(Ord.gte(2,1), true);
@@ -96,8 +96,8 @@ describe('Ord', function() {
         });
     });
 
-    describe('#lte', function(){
-        it('should return whether or not the first value is greater than the second', function(){
+    describe('#lte', function() {
+        it('should return whether or not the first value is greater than the second', function() {
             assert.equal(Ord.lte(1,1), true);
             assert.equal(Ord.lte(1,2), true);
             assert.equal(Ord.lte(2,1), false);
@@ -109,7 +109,7 @@ describe('Ord', function() {
     });
 
     describe('#min', function() {
-        it('should return the lesser value of two', function(){
+        it('should return the lesser value of two', function() {
             assert.equal(Ord.min(1,1), 1);
             assert.equal(Ord.min(1,2), 1);
             assert.equal(Ord.min(2,1), 1);
@@ -121,7 +121,7 @@ describe('Ord', function() {
     });
 
     describe('#max', function() {
-        it('should return the lesser value of two', function(){
+        it('should return the lesser value of two', function() {
             assert.equal(Ord.max(1,1), 1);
             assert.equal(Ord.max(1,2), 2);
             assert.equal(Ord.max(2,1), 2);

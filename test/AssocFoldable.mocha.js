@@ -2,8 +2,8 @@ var assert = require('assert');
 var _ = require('../src/lambdash');
 var AssocFoldable = _.AssocFoldable;
 
-var assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+var assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
@@ -21,7 +21,7 @@ ArrayMap.exists = function(key, map) {
     }
 
     return false;
-}
+};
 
 ArrayMap.assoc = function(key, value, map) {
     var ind = 0;
@@ -37,25 +37,25 @@ ArrayMap.assoc = function(key, value, map) {
 
     result.push([key, value]);
     return ArrayMap(result);
-}
+};
 
 ArrayMap.dissoc = function(key, map) {
     var ind = 0;
     var data = map.data;
     while (ind < data.length) {
         if (_.eq(data[ind][0], key)) {
-            return ArrayMap(_.concat(_.take(ind, data), _.drop(ind+1, data)));
+            return ArrayMap(_.concat(_.take(ind, data), _.drop(ind + 1, data)));
         }
         ind += 1;
     }
 
     return map;
-}
+};
 
 ArrayMap.lookup = function(key, map) {
     var ind = 0;
     var data = map.data;
-    while(ind < data.length) {
+    while (ind < data.length) {
         if (_.eq(data[ind][0], key)) {
             return data[ind][1];
         }
@@ -63,12 +63,12 @@ ArrayMap.lookup = function(key, map) {
     }
 
     return undefined;
-}
+};
 
 ArrayMap.foldlAssoc = function(fn, init, map) {
     var ind = 0;
     var data = map.data;
-    while(ind < data.length) {
+    while (ind < data.length) {
         init = fn(init, data[ind][1], data[ind][0]);
         ind += 1;
     }
@@ -79,7 +79,7 @@ ArrayMap.foldlAssoc = function(fn, init, map) {
 ArrayMap.foldrAssoc = function(fn, init, map) {
     var data = map.data;
     var ind = data.length - 1;
-    while(ind >= 0) {
+    while (ind >= 0) {
         init = fn(init, data[ind][1], data[ind][0]);
         ind += 1;
     }
@@ -87,24 +87,24 @@ ArrayMap.foldrAssoc = function(fn, init, map) {
     return init;
 };
 
-ArrayMap.empty = function(){
+ArrayMap.empty = function() {
     return ArrayMap([]);
-}
+};
 
-describe('AssocFoldable', function(){
+describe('AssocFoldable', function() {
     describe('#foldlAssoc', function() {
-        it ('folds an assocative container from left to right', function() {
+        it('folds an assocative container from left to right', function() {
             const fn = (accum, v, k) => accum + v + k;
             const obj = {a: 1, b: 2, c: 3};
-            assertEqual(AssocFoldable.foldlAssoc(fn, "p", obj), "p1a2b3c");
+            assertEqual(AssocFoldable.foldlAssoc(fn, 'p', obj), 'p1a2b3c');
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             const fn = (accum, v, k) => accum + v + k;
 
             try {
                 AssocFoldable.foldlAssoc(fn, 1, 1);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -114,18 +114,18 @@ describe('AssocFoldable', function(){
     });
 
     describe('#foldrAssoc', function() {
-        it ('folds an assocative container from right to left', function() {
+        it('folds an assocative container from right to left', function() {
             const fn = (accum, v, k) => accum + v + k;
             const obj = {a: 1, b: 2, c: 3};
-            assertEqual(AssocFoldable.foldrAssoc(fn, "p", obj), "p3c2b1a");
+            assertEqual(AssocFoldable.foldrAssoc(fn, 'p', obj), 'p3c2b1a');
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             const fn = (accum, v, k) => accum + v + k;
 
             try {
                 AssocFoldable.foldrAssoc(fn, 1, 1);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -134,16 +134,16 @@ describe('AssocFoldable', function(){
         });
     });
 
-    describe('#keys', function(){
-        it('returns all the keys of a container as an array', function(){
+    describe('#keys', function() {
+        it('returns all the keys of a container as an array', function() {
             assertEqual(AssocFoldable.keys({a:1,b:2,c:3}), ['a','b','c']);
             assertEqual(AssocFoldable.keys(ArrayMap([['a', 1],['b', 2],['c', 3]])), ['a','b','c']);
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             try {
                 AssocFoldable.keys(1);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -152,16 +152,16 @@ describe('AssocFoldable', function(){
         });
     });
 
-    describe('#values', function(){
-        it('returns all the values of a container as an array', function(){
+    describe('#values', function() {
+        it('returns all the values of a container as an array', function() {
             assertEqual(AssocFoldable.values({a:1,b:2,c:3}), [1,2,3]);
             assertEqual(AssocFoldable.values(ArrayMap([['a', 1],['b', 2],['c', 3]])), [1,2,3]);
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             try {
                 AssocFoldable.values(1);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -170,18 +170,18 @@ describe('AssocFoldable', function(){
         });
     });
 
-    describe('#pairs', function(){
-        it('returns all the key value pairs in a container as an array of arrays', function(){
+    describe('#pairs', function() {
+        it('returns all the key value pairs in a container as an array of arrays', function() {
             var obj = {a:1,b:2,c:3};
             var map = ArrayMap([['a', 1],['b', 2],['c', 3]]);
             assertEqual(AssocFoldable.pairs(obj), [['a',1],['b',2],['c',3]]);
             assertEqual(AssocFoldable.pairs(map), [['a',1],['b',2],['c',3]]);
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             try {
                 AssocFoldable.pairs(1);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -190,8 +190,8 @@ describe('AssocFoldable', function(){
         });
     });
 
-    describe('#filterAssoc', function(){
-        it('filters an associative container by value and key', function(){
+    describe('#filterAssoc', function() {
+        it('filters an associative container by value and key', function() {
             var obj = {a:1,b:2,c:3};
             var map = ArrayMap([['a', 1],['b', 2],['c', 3]]);
             var fn1 = (v, k) => v === 3 || k === 'a';
@@ -203,12 +203,12 @@ describe('AssocFoldable', function(){
             assertEqual(AssocFoldable.filterAssoc(fn2, map), ArrayMap([['a',1],['b',2]]));
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             var fn = (v, k) => v === 3 || k === 'a';
 
             try {
                 AssocFoldable.filterAssoc(fn, false);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -218,7 +218,7 @@ describe('AssocFoldable', function(){
     });
 
     describe('#mapAssoc', function() {
-        it ('applies a function to each value of an associative container', function() {
+        it('applies a function to each value of an associative container', function() {
             var obj = {a:1,b:2,c:3};
             var map = ArrayMap([['a', 1],['b', 2],['c', 3]]);
 
@@ -228,12 +228,12 @@ describe('AssocFoldable', function(){
             assertEqual(AssocFoldable.mapAssoc(fn, map), ArrayMap([['a', 'A2'],['b', 'B3'],['c','C4']]));
         });
 
-        it ('throws a TypeError if the value does not implement foldable', function() {
+        it('throws a TypeError if the value does not implement foldable', function() {
             var fn = (v, k) => k.toUpperCase() + (v + 1);
 
             try {
                 AssocFoldable.mapAssoc(fn, false);
-            } catch(e) {
+            } catch (e) {
                 assert(e instanceof TypeError);
                 return;
             }
@@ -242,12 +242,12 @@ describe('AssocFoldable', function(){
         });
     });
 
-    describe('#member', function(){
-        it('returns true if a value implements AssocFoldable', function(){
+    describe('#member', function() {
+        it('returns true if a value implements AssocFoldable', function() {
             assert.equal(AssocFoldable.member({}), true);
             assert.equal(AssocFoldable.member(ArrayMap.empty()), true);
             assert.equal(AssocFoldable.member(false), false);
             assert.equal(AssocFoldable.member(1), false);
-        })
+        });
     });
 });

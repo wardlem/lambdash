@@ -13,7 +13,7 @@ var _curry = _.curry;
 var List = function List() {
     var l = List.Nil;
     var argsInd = arguments.length - 1;
-    while(argsInd >= 0) {
+    while (argsInd >= 0) {
         l = List.Cons(arguments[argsInd], l);
         argsInd -= 1;
     }
@@ -26,28 +26,28 @@ List.member = function(v) {
 
 List = sumType(List, {Cons: {head: null, tail: List}, Nil: []});
 
-List.foldl = _curry(function(fn, init, l){
+List.foldl = _curry(function(fn, init, l) {
     return List.case({
-        "Nil": init,
-        "Cons": function(hd, tl) {
-            return List.foldl(fn, fn(init, hd), tl)
-        }
+        Nil: init,
+        Cons: function(hd, tl) {
+            return List.foldl(fn, fn(init, hd), tl);
+        },
     }, l);
 });
 
-List.foldr = _curry(function(fn, init, l){
+List.foldr = _curry(function(fn, init, l) {
     return List.case({
-        "Nil": init,
-        "Cons": function(hd, tl) {
+        Nil: init,
+        Cons: function(hd, tl) {
             return fn(List.foldr(fn, init, tl), hd);
-        }
+        },
     }, l);
 });
 
-describe('Foldable', function(){
+describe('Foldable', function() {
 
-    describe('#foldl', function(){
-        it('should fold an implementing value from left to right', function(){
+    describe('#foldl', function() {
+        it('should fold an implementing value from left to right', function() {
             var arr = [1,2,3];
 
             var fn = function(accum, value) {
@@ -66,8 +66,8 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#foldr', function(){
-        it('should fold an implementing value from right to left', function(){
+    describe('#foldr', function() {
+        it('should fold an implementing value from right to left', function() {
             var arr = [1,2,3];
 
             var fn = function(accum, value) {
@@ -89,7 +89,7 @@ describe('Foldable', function(){
     describe('#foldMap', function() {
         it('should map and concatenate a monoid', function() {
             var foldable = [1,2,3];
-            var fn = function(n){return String(n + 1)};
+            var fn = function(n) {return String(n + 1);};
 
             assert.equal(Foldable.foldMap(fn, foldable), '234');
 
@@ -106,7 +106,7 @@ describe('Foldable', function(){
 
         it('should throw an exception when the structure is empty', function() {
             try {
-                var fn = function(n){return n};
+                var fn = function(n) {return n;};
                 Foldable.foldMap(fn, []);
                 assert(false);
             } catch (e) {
@@ -118,7 +118,7 @@ describe('Foldable', function(){
     describe('#foldMapDef', function() {
         it('should map and concatenate a monoid', function() {
             var foldable = [1,2,3];
-            var fn = function(n){return String(n + 1)};
+            var fn = function(n) {return String(n + 1);};
             var empty = '';
 
             assert.equal(Foldable.foldMapDef(fn, empty, foldable), '234');
@@ -230,7 +230,7 @@ describe('Foldable', function(){
     });
 
     describe('#all', function() {
-        it('should return true if and only if all values in the structure satisfy a predicate', function(){
+        it('should return true if and only if all values in the structure satisfy a predicate', function() {
             var test = function(v) {
                 return v > 1;
             };
@@ -243,7 +243,7 @@ describe('Foldable', function(){
     });
 
     describe('#any', function() {
-        it('should return true if and only if any values in the structure satisfy a predicate', function(){
+        it('should return true if and only if any values in the structure satisfy a predicate', function() {
             var test = function(v) {
                 return v < 2;
             };
@@ -255,15 +255,15 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#countWith', function(){
-        it('should count all the items in a foldable that match a predicate', function(){
+    describe('#countWith', function() {
+        it('should count all the items in a foldable that match a predicate', function() {
             var arr = [1,1,2,3,4,4,5];
             assert.equal(_.countWith(_.gt(_,2), arr), 4);
         });
     });
 
-    describe('#count', function(){
-        it('should count all the items in a foldable that are equal to a value', function(){
+    describe('#count', function() {
+        it('should count all the items in a foldable that are equal to a value', function() {
             var arr = [1,1,2,3,4,4,5];
             assert.equal(_.count(4, arr), 2);
         });
@@ -286,7 +286,7 @@ describe('Foldable', function(){
     });
 
     describe('#maximum', function() {
-        it('should return the greatest value in a structure', function(){
+        it('should return the greatest value in a structure', function() {
             assert.equal(Foldable.maximum([1,5,3,7,2,-6]), 7);
             assert.equal(Foldable.maximum([2,-2]), 2);
         });
@@ -302,7 +302,7 @@ describe('Foldable', function(){
     });
 
     describe('#minimum', function() {
-        it('should return the least value in a structure', function(){
+        it('should return the least value in a structure', function() {
             assert.equal(Foldable.minimum([1,5,3,-7,2,-6]), -7);
             assert.equal(Foldable.minimum([-2,2]), -2);
 
@@ -319,7 +319,7 @@ describe('Foldable', function(){
     });
 
     describe('#sum', function() {
-        it('should return the sum of the values in a structure', function(){
+        it('should return the sum of the values in a structure', function() {
             assert.equal(Foldable.sum([1,2,3,4,5]), 15);
             assert.equal(Foldable.sum(List(1,2,3,4,5)), 15);
         });
@@ -335,7 +335,7 @@ describe('Foldable', function(){
     });
 
     describe('#product', function() {
-        it('should return the product of the values in a structure', function(){
+        it('should return the product of the values in a structure', function() {
             assert.equal(Foldable.product([1,2,3,4,5]), 120);
             assert.equal(Foldable.product(List(1,2,3,4,5)), 120);
         });
@@ -350,8 +350,8 @@ describe('Foldable', function(){
         });
     });
 
-    describe('#member', function(){
-        it('should return true for a value that implements Foldable, false otherwise', function(){
+    describe('#member', function() {
+        it('should return true for a value that implements Foldable, false otherwise', function() {
             assert(Foldable.member([]));
             assert(Foldable.member(List()));
             assert(!Foldable.member(1));

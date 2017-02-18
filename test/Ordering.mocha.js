@@ -4,8 +4,8 @@ var Ordering = require('../src/Ordering');
 var _always = require('../src/internal/_always');
 
 describe('Ordering', function() {
-    describe('#compare', function(){
-        it('should return a comparison of two comparison', function(){
+    describe('#compare', function() {
+        it('should return a comparison of two comparison', function() {
             assert.equal(Ordering.compare(Ordering.LT, Ordering.LT), Ordering.EQ);
             assert.equal(Ordering.compare(Ordering.LT, Ordering.EQ), Ordering.LT);
             assert.equal(Ordering.compare(Ordering.LT, Ordering.GT), Ordering.LT);
@@ -61,11 +61,11 @@ describe('Ordering', function() {
     });
 
     describe('#case', function() {
-        it('should execute a function based on the value', function(){
+        it('should execute a function based on the value', function() {
             var caseFn = Ordering.case({
-                "LT": _always('less'),
-                "EQ": _always('equal'),
-                "GT": _always('greater')
+                LT: _always('less'),
+                EQ: _always('equal'),
+                GT: _always('greater'),
             });
 
             assert.equal(caseFn(Ordering.LT), 'less');

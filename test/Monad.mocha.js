@@ -4,17 +4,17 @@ var _ = require('../src/lambdash');
 var Monad = _.Monad;
 var Arr = _.Arr;
 
-describe('Monad', function(){
-    describe('#flatten', function(){
-        it('should flatten a monadic value', function(){
+describe('Monad', function() {
+    describe('#flatten', function() {
+        it('should flatten a monadic value', function() {
             var arr = [[1,2,3], [4,5,6], [9,8,7]];
 
             assert(Arr.eq(Monad.flatten(arr), [1,2,3,4,5,6,9,8,7]));
         });
 
-        it('should throw a TypeError if the value does not implement Monad', function(){
+        it('should throw a TypeError if the value does not implement Monad', function() {
             try {
-                Monad.flatten(function(x){return x}, null);
+                Monad.flatten(function(x) {return x;}, null);
                 assert(false);
             } catch (e) {
                 assert(e instanceof TypeError);
@@ -23,7 +23,7 @@ describe('Monad', function(){
     });
 
     describe('#chain', function() {
-        it('should flat map a monadic value', function(){
+        it('should flat map a monadic value', function() {
             var fn = function(value) {
                 return [value, value + 1];
             };
@@ -39,7 +39,7 @@ describe('Monad', function(){
     });
 
     describe('#composeM', function() {
-        it('should composeM several functions into one', function(){
+        it('should composeM several functions into one', function() {
             var fn1 = function(value) {
                 return [value, value + 1];
             };
@@ -68,7 +68,7 @@ describe('Monad', function(){
     });
 
     describe('#pipeM', function() {
-        it('should composeM several functions into one', function(){
+        it('should composeM several functions into one', function() {
             var fn1 = function(value) {
                 return [value, value + 1];
             };
@@ -94,8 +94,8 @@ describe('Monad', function(){
 
     });
 
-    describe('#member', function(){
-        it('should return true if a value implements Monad, false otherwise', function(){
+    describe('#member', function() {
+        it('should return true if a value implements Monad, false otherwise', function() {
             assert(Monad.member([]));
             assert(!Monad.member(null));
             assert(!Monad.member(undefined));

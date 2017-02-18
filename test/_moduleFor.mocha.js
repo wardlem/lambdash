@@ -5,14 +5,14 @@ var _slice = require('../src/internal/_slice');
 var productType = require('../src/productType');
 var sumType = require('../src/sumType');
 
-describe('_moduleFor', function(){
-    it('should return the right module for builtin types', function(){
+describe('_moduleFor', function() {
+    it('should return the right module for builtin types', function() {
         var bool = false;
         var num = 1;
         var arr = [];
-        var str = "ok";
+        var str = 'ok';
         var obj = {};
-        var fun = function(){};
+        var fun = function() {};
 
         var B = _moduleFor(bool);
         assert.equal(typeof B, 'function');
@@ -39,7 +39,7 @@ describe('_moduleFor', function(){
         assert.equal(F.name, '_Function');
     });
 
-    it('should return the product constructor for a product value', function(){
+    it('should return the product constructor for a product value', function() {
         var Point = productType('Point', {x: null, y: null});
 
         var p = Point(1,2);
@@ -65,5 +65,5 @@ describe('_moduleFor', function(){
 
         assert.equal(_moduleFor(a), Sum);
         assert.equal(_moduleFor(b), Sum);
-    })
+    });
 });

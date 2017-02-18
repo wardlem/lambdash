@@ -4,24 +4,24 @@ var _ = require('../src/lambdash');
 
 var sumType = _.Type.sum;
 
-var assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+var assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
 
-describe('#sumType', function(){
+describe('#sumType', function() {
     var Test = sumType('Test', {
         A: {a:_.Any},
         B: {b:_.Int},
-        C: {}
+        C: {},
     });
 
     var A = Test.A,
         B = Test.B,
-        C = Test.C
+        C = Test.C;
 
-    it('should create a type that can be one of several product types', function(){
+    it('should create a type that can be one of several product types', function() {
         assert(typeof Test === 'function');
         assert(typeof Test.A === 'function');
         assert(typeof Test.B === 'function');
@@ -55,15 +55,15 @@ describe('#sumType', function(){
 
     });
 
-    describe('#match', function(){
-        it('should match against its instances by name', function(){
+    describe('#match', function() {
+        it('should match against its instances by name', function() {
             var a = A('whatever');
             var b = B(1);
 
             var _case = Test.case({
-                A: function(v){assert(arguments.length === 1); assert(v === 'whatever'); return '_A_';},
-                B: function(v){assert(arguments.length === 1); assert(v === 1); return '_B_'},
-                C: function(){assert(arguments.length === 0); return '_C_'}
+                A: function(v) {assert(arguments.length === 1); assert(v === 'whatever'); return '_A_';},
+                B: function(v) {assert(arguments.length === 1); assert(v === 1); return '_B_';},
+                C: function() {assert(arguments.length === 0); return '_C_';},
             });
 
             assert.equal(_case(a), '_A_');
@@ -71,7 +71,7 @@ describe('#sumType', function(){
             assert.equal(_case(C), '_C_');
 
             _case = Test.case({
-                _: function(){return 'ok'}
+                _: function() {return 'ok';},
             });
 
             assert.equal(_case(a),'ok');
@@ -80,7 +80,7 @@ describe('#sumType', function(){
 
             _case = Test.case({
                 A: '_A_',
-                _: 'ok'
+                _: 'ok',
             });
 
             assert.equal(_case(a),'_A_');
@@ -88,10 +88,10 @@ describe('#sumType', function(){
             assert.equal(_case(C), 'ok');
         });
 
-        it('should throw an exception if a case is missing', function(){
+        it('should throw an exception if a case is missing', function() {
             var _case = Test.case({
                 A: 'ok',
-                C: 'ok'
+                C: 'ok',
             });
 
             try {
@@ -102,11 +102,11 @@ describe('#sumType', function(){
             }
         });
 
-        it('should throw an exception if the given value is not a member of the type', function(){
+        it('should throw an exception if the given value is not a member of the type', function() {
             var _case = Test.case({
                 A: 'ok',
                 B: 'ok',
-                C: 'ok'
+                C: 'ok',
             });
 
             try {
@@ -118,8 +118,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#eq', function(){
-        it('should return true if two values are structurally equal', function(){
+    describe('#eq', function() {
+        it('should return true if two values are structurally equal', function() {
             assert.equal(Test.eq(A(1),A('whatever')), false);
             assert.equal(Test.eq(A(1),A(1)), true);
             assert.equal(Test.eq(A(1),B(1)),false);
@@ -128,7 +128,7 @@ describe('#sumType', function(){
             assert.equal(Test.eq(B(1),B(1)),true);
         });
 
-        it('should throw an exception if the right or left value is not a member of the type', function(){
+        it('should throw an exception if the right or left value is not a member of the type', function() {
             try {
                 Test.eq(1, A('whatever'));
                 assert(false);
@@ -145,8 +145,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#unapply', function(){
-        it('should forward to the instances unapply function', function(){
+    describe('#unapply', function() {
+        it('should forward to the instances unapply function', function() {
             var a = A('ok');
             var b = B(1);
 
@@ -154,9 +154,9 @@ describe('#sumType', function(){
             var ranB = false;
             var ranC = false;
 
-            Test.unapply(function(v){assert(v === 'ok'); ranA = true},a);
-            Test.unapply(function(v){assert(v === 1); ranB = true}, b);
-            Test.unapply(function(){ranC = true}, C);
+            Test.unapply(function(v) {assert(v === 'ok'); ranA = true;},a);
+            Test.unapply(function(v) {assert(v === 1); ranB = true;}, b);
+            Test.unapply(function() {ranC = true;}, C);
 
             assert(ranA);
             assert(ranB);
@@ -164,8 +164,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#set', function(){
-        it('should forward to the instances set method', function(){
+    describe('#set', function() {
+        it('should forward to the instances set method', function() {
             var a = A('ok');
             var b = B(1);
 
@@ -180,8 +180,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#patch', function(){
-        it('should forward to the instances patch method', function(){
+    describe('#patch', function() {
+        it('should forward to the instances patch method', function() {
             var a = A('ok');
             var b = B(1);
 
@@ -196,8 +196,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#toJSON', function(){
-        it('should convert a sum value to JSON and mark the type', function(){
+    describe('#toJSON', function() {
+        it('should convert a sum value to JSON and mark the type', function() {
             var a = A('ok');
             var b = B(1);
 
@@ -215,8 +215,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#fromJSON', function(){
-        it('should create a sum value frorm a plain old javascript object', function(){
+    describe('#fromJSON', function() {
+        it('should create a sum value frorm a plain old javascript object', function() {
             var aJSON = {__tag__: 'A', data: {a:'ok'}};
             var bJSON = {__tag__: 'B', data: {b: 1}};
             var cJSON = {__tag__: 'C', data: {}};
@@ -232,7 +232,7 @@ describe('#sumType', function(){
 
             try {
                 var d = Test.fromJSON(dJSON);
-                assert(false)
+                assert(false);
             } catch (e) {
                 assert(e instanceof TypeError);
             }
@@ -246,8 +246,8 @@ describe('#sumType', function(){
         });
     });
 
-    describe('#show', function(){
-        it('should create a string representation of a sum', function(){
+    describe('#show', function() {
+        it('should create a string representation of a sum', function() {
             var a = A('ok');
             var b = B(1);
 

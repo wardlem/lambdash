@@ -2,7 +2,7 @@ var assert = require('assert');
 
 var _charRange = require('../src/internal/_charRange');
 
-describe('_charRange', function(){
+describe('_charRange', function() {
     it('should create a range of characters', function() {
         var range = _charRange('A', 3);
         assert(Array.isArray(range));

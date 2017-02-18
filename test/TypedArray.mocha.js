@@ -12,8 +12,8 @@ const _Uint32Array = _.Uint32Array;
 const _Float32Array = _.Float32Array;
 const _Float64Array = _.Float64Array;
 
-var assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+var assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
@@ -94,7 +94,7 @@ describe('TypedArray', () => {
             assert(res1 instanceof Uint8Array);
             assert(res2 instanceof Uint32Array);
 
-            assert(u8_1.buffer.byteLength !== u32_1.buffer.byteLength)
+            assert(u8_1.buffer.byteLength !== u32_1.buffer.byteLength);
         });
     });
 
@@ -119,22 +119,22 @@ describe('TypedArray', () => {
     describe('#foldl', () => {
         it('folds a typed array from left to right', () => {
             const i16_1 = Int16Array.of(0x01, 0x02, 0x03);
-            const fn = (accum, value) => accum + "0x0" + value.toString(16);
+            const fn = (accum, value) => accum + '0x0' + value.toString(16);
 
-            const res = _Int16Array.foldl(fn, "start", i16_1);
+            const res = _Int16Array.foldl(fn, 'start', i16_1);
 
-            assertEqual(res, "start0x010x020x03");
+            assertEqual(res, 'start0x010x020x03');
         });
     });
 
     describe('#foldr', () => {
         it('folds a typed array from right to left', () => {
             const i16_1 = Int16Array.of(0x01, 0x02, 0x03);
-            const fn = (accum, value) => accum + "0x0" + value.toString(16);
+            const fn = (accum, value) => accum + '0x0' + value.toString(16);
 
-            const res = _Int16Array.foldr(fn, "start", i16_1);
+            const res = _Int16Array.foldr(fn, 'start', i16_1);
 
-            assertEqual(res, "start0x030x020x01");
+            assertEqual(res, 'start0x030x020x01');
         });
     });
 
@@ -156,10 +156,10 @@ describe('TypedArray', () => {
                 assert(e instanceof RangeError);
                 return;
             }
-            throw(new Error('should have thrown'));
+            throw (new Error('should have thrown'));
         });
 
-        it ('throws a RangeError if the index is greater than or equal to the length of the array', () => {
+        it('throws a RangeError if the index is greater than or equal to the length of the array', () => {
             const i32_1 = Int32Array.of(0x01, 0x05, 0x0A);
 
             try {
@@ -169,7 +169,7 @@ describe('TypedArray', () => {
                 return;
             }
 
-            throw(new Error('should have thrown'));
+            throw (new Error('should have thrown'));
         });
     });
 
@@ -242,7 +242,7 @@ describe('TypedArray', () => {
             const i32_1 = Int32Array.of(0x01, 0x05, 0x0A);
             const str = _Int32Array.show(i32_1);
 
-            assertEqual(str, "Int32Array(0x01,0x05,0x0A)");
+            assertEqual(str, 'Int32Array(0x01,0x05,0x0A)');
         });
     });
 
@@ -375,7 +375,7 @@ describe('TypedArray', () => {
             assert.equal(_Int32Array.serializeByteLength(i32), 20);
             assert.equal(_Float32Array.serializeByteLength(f32), 12);
             assert.equal(_Float64Array.serializeByteLength(f64), 20);
-        })
+        });
     });
 
     describe('#deserializeBE', () => {
@@ -560,27 +560,27 @@ describe('TypedArray', () => {
     });
 
     describe('#hash', () => {
-        
+
     });
 
     describe('@implements', () => {
         const u8 = new Uint8Array(0);
 
         [
-            "Eq",
-            "Ord",
-            "Functor",
-            "Foldable",
-            "Semigroup",
-            "Monoid",
-            "Sequential",
-            "Show",
-            "Serializable",
-            "Hashable"
+            'Eq',
+            'Ord',
+            'Functor',
+            'Foldable',
+            'Semigroup',
+            'Monoid',
+            'Sequential',
+            'Show',
+            'Serializable',
+            'Hashable',
         ].forEach((name) => {
             it(`implements ${name}`, () => {
                 assert(_[name].member(u8));
             });
-        })
+        });
     });
 });

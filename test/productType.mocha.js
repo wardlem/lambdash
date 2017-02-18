@@ -4,15 +4,15 @@ var _ = require('../src/lambdash');
 
 var productType = _.Type.product;
 
-var assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+var assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
 
-describe('productType', function(){
+describe('productType', function() {
     var Test = productType('Test', {i: _.Int, a: _.Any});
-    it('should create a new type from a definition', function(){
+    it('should create a new type from a definition', function() {
 
         assert.equal(typeof Test, 'function');
         assert.equal(Test.name, 'Test');
@@ -33,10 +33,10 @@ describe('productType', function(){
         }
     });
 
-    describe('#unapply', function(){
-        it('should apply a product type as an array to a function', function(){
+    describe('#unapply', function() {
+        it('should apply a product type as an array to a function', function() {
             var t = Test(1,'ok');
-            Test.unapply(function(i,a){
+            Test.unapply(function(i,a) {
                 assert.equal(arguments.length, 2);
                 assert.equal(i,1);
                 assert.equal(a,'ok');
@@ -44,8 +44,8 @@ describe('productType', function(){
         });
     });
 
-    describe('#eq', function(){
-        it('should return true if two product types are equal, false otherwise', function(){
+    describe('#eq', function() {
+        it('should return true if two product types are equal, false otherwise', function() {
             var t1 = Test(1,'ok');
             var t2 = Test(1, 'ok');
             var t3 = Test(2, 'ok');
@@ -59,13 +59,13 @@ describe('productType', function(){
         });
     });
 
-    describe('#fromObject, #fromJSON', function(){
-        it('should create a product type from a plain old javascript object', function(){
+    describe('#fromObject, #fromJSON', function() {
+        it('should create a product type from a plain old javascript object', function() {
             var obj = {
                 i: 4,
                 a: 'ok',
-                q: 'whatever'
-            }
+                q: 'whatever',
+            };
 
             var t = Test.fromObject(obj);
             assertEqual(t, Test(4,'ok'));
@@ -76,8 +76,8 @@ describe('productType', function(){
         });
     });
 
-    describe('#toObject, #toJSON', function(){
-        it('should convert a product to plain old javascript object', function(){
+    describe('#toObject, #toJSON', function() {
+        it('should convert a product to plain old javascript object', function() {
             var t = Test(1,'ok');
 
             var obj = Test.toObject(t);
@@ -97,8 +97,8 @@ describe('productType', function(){
         });
     });
 
-    describe('#set', function(){
-        it('should update a single tag in a product type', function(){
+    describe('#set', function() {
+        it('should update a single tag in a product type', function() {
             var t1 = Test(1,'ok');
 
             var t2 = Test.set('i',2,t1);
@@ -107,7 +107,7 @@ describe('productType', function(){
             assertEqual(t2, Test(2,'ok'));
         });
 
-        it('should also attach individual setters to the product type', function(){
+        it('should also attach individual setters to the product type', function() {
             assert(typeof Test.setI === 'function');
             assert(typeof Test.setA === 'function');
 
@@ -120,8 +120,8 @@ describe('productType', function(){
         });
     });
 
-    describe('#patch', function(){
-        it('should update multiple tag values at the same time', function(){
+    describe('#patch', function() {
+        it('should update multiple tag values at the same time', function() {
             var t1 = Test(1,'ok');
             var t2 = Test.patch({i:2},t1);
             var t3 = Test.patch({a:'changed'},t1);
@@ -141,21 +141,21 @@ describe('productType', function(){
         });
     });
 
-    describe('#show',function(){
-        it('should return a string representation of a product type value', function(){
+    describe('#show',function() {
+        it('should return a string representation of a product type value', function() {
             var t = Test(1,'abacus');
-            assert.equal(Test.show(t), "Test(1,\"abacus\")")
+            assert.equal(Test.show(t), 'Test(1,"abacus")');
         });
-    })
+    });
 
-    describe('#member', function(){
-        it('should return true if a value is an instance of a product type, false otherwise', function(){
+    describe('#member', function() {
+        it('should return true if a value is an instance of a product type, false otherwise', function() {
             assert.equal(Test.member(Test(1,'ok')),true);
             assert.equal(Test.member(Test(2034,'whatever')), true);
             assert.equal(Test.member(1),false);
             assert.equal(Test.member(null),false);
             assert.equal(Test.member(undefined),false);
-            assert.equal(Test.member({}),false)
+            assert.equal(Test.member({}),false);
         });
-    })
+    });
 });

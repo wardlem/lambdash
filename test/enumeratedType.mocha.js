@@ -10,24 +10,24 @@ var Ordering = require('../src/Ordering');
 
 var enumeratedType = require('../src/enumeratedType');
 
-var DAYS = enumeratedType("DAYS", [
-    "SUNDAY",
-    "MONDAY",
-    "TUESDAY",
-    "WEDNESDAY",
-    "THURSDAY",
-    "FRIDAY",
-    "SATURDAY"
+var DAYS = enumeratedType('DAYS', [
+    'SUNDAY',
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
 ]);
 
-describe('enumeratedType', function(){
+describe('enumeratedType', function() {
 
-    it('should accept a function as the first parameter', function(){
+    it('should accept a function as the first parameter', function() {
         var Constr = function Constr(int) {
             return Constr.fromInt(int);
         };
 
-        var Constr2 = enumeratedType(Constr, ["A", "B", "C"]);
+        var Constr2 = enumeratedType(Constr, ['A', 'B', 'C']);
 
         assert(Constr === Constr2);
         assert(Constr.A);
@@ -35,16 +35,16 @@ describe('enumeratedType', function(){
         assert(Constr.C);
     });
 
-    it('should throw an exception if called without an array as the second parameter', function(){
+    it('should throw an exception if called without an array as the second parameter', function() {
         try {
-            var ENUM = enumeratedType("ENUM", {});
+            var ENUM = enumeratedType('ENUM', {});
             assert(false);
         } catch (e) {
             assert(e instanceof TypeError);
         }
     });
 
-    it('should create a sum type that is convertible to and from an integer value', function(){
+    it('should create a sum type that is convertible to and from an integer value', function() {
         assert.equal(DAYS.toInt(DAYS.TUESDAY), 2);
         assert.equal(DAYS.fromInt(5), DAYS.FRIDAY);
     });

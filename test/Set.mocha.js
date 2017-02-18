@@ -3,8 +3,8 @@ const assert = require('assert');
 const _ = require('../src/lambdash');
 const _Set = _.Set;
 
-const assertEqual = function(left, right){
-    if (!_.eq(left,right)){
+const assertEqual = function(left, right) {
+    if (!_.eq(left,right)) {
         assert.fail(left, right, undefined, 'eq');
     }
 };
@@ -36,10 +36,10 @@ describe('Set', function() {
     });
 
     describe('#fmap', function() {
-        it ('returns a new set with each item in the original altered by a function', function() {
+        it('returns a new set with each item in the original altered by a function', function() {
             const set = new Set([1,2,3]);
             const res = _Set.fmap(_.pipe(_.add(1), _.show), set);
-            assertEqual(res, new Set(["2", "3", "4"]));
+            assertEqual(res, new Set(['2', '3', '4']));
         });
     });
 
@@ -76,7 +76,7 @@ describe('Set', function() {
     });
 
     describe('#empty', function() {
-        it('always returns an empty set', function(){
+        it('always returns an empty set', function() {
             const empty = _Set.empty();
 
             assert.equal(empty.size, 0);
@@ -85,7 +85,7 @@ describe('Set', function() {
     });
 
     describe('#ap', function() {
-        it('applys the functions in one set to the values in another set', function(){
+        it('applys the functions in one set to the values in another set', function() {
             const fns = new Set([_.add(1), _.mul(3)]);
             const values = new Set([1,2,3]);
             const expected = new Set([2,3,4,3,6,9]);
@@ -116,7 +116,7 @@ describe('Set', function() {
     });
 
     describe('#union', function() {
-        it ('creates a set with the values of two other sets', function() {
+        it('creates a set with the values of two other sets', function() {
             const set1 = new Set([1,2,3]);
             const set2 = new Set([3,4,5]);
 
@@ -146,7 +146,7 @@ describe('Set', function() {
     });
 
     describe('#symmetricDifference', function() {
-        it ('returns a set of all values in either of two sets, but not in both', function() {
+        it('returns a set of all values in either of two sets, but not in both', function() {
             const set1 = new Set([1,2,3]);
             const set2 = new Set([2,3,5]);
 
@@ -191,25 +191,25 @@ describe('Set', function() {
             const set = new Set([2,3,4]);
             const shown = _Set.show(set);
 
-            assert.equal(shown, "Set(2,3,4)");
+            assert.equal(shown, 'Set(2,3,4)');
         });
     });
 
-    describe('@implements', function(){
+    describe('@implements', function() {
         const set = new Set();
-        it('implements Eq', function(){
+        it('implements Eq', function() {
             assert(_.Eq.member(set));
         });
 
-        it('implements Functor', function(){
+        it('implements Functor', function() {
             assert(_.Functor.member(set));
         });
 
-        it('implements Foldable', function(){
+        it('implements Foldable', function() {
             assert(_.Foldable.member(set));
         });
 
-        it('implements Semigroup', function(){
+        it('implements Semigroup', function() {
             assert(_.Semigroup.member(set));
         });
 

@@ -12,7 +12,7 @@ var Arr = require('../src/Array');
 var Eq = require('../src/Eq');
 
 describe('Eq', function() {
-    describe('#eq', function(){
+    describe('#eq', function() {
         it('should return whether or not two booleans are equal', function() {
             assert.equal(Eq.eq(false, false), true);
             assert.equal(Eq.eq(false, true), false);
@@ -88,20 +88,20 @@ describe('Eq', function() {
         });
     });
 
-    describe('#neq', function(){
-        it('should return the inverse of eq', function(){
+    describe('#neq', function() {
+        it('should return the inverse of eq', function() {
             assert(Eq.neq(1,2));
-            assert(Eq.neq("a", "b"));
-            assert(!Eq.neq("a", "a"));
+            assert(Eq.neq('a', 'b'));
+            assert(!Eq.neq('a', 'a'));
         });
     });
 
-    describe('#member', function(){
-        it('should return true if a value is a member of Eq, false otherwise', function(){
+    describe('#member', function() {
+        it('should return true if a value is a member of Eq, false otherwise', function() {
             assert(Eq.member(1));
             assert(Eq.member([]));
             assert(Eq.member({}));
-            assert(!Eq.member(function(){}));
+            assert(!Eq.member(function() {}));
         });
     });
 
