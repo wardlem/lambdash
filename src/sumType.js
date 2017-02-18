@@ -7,7 +7,7 @@ var _ucfirst = require('./internal/_ucfirst');
 var productType = require('./productType');
 
 
-function sumType(name, definition) {
+function sumType(name, definition, proto = null) {
     if (!_isObject(definition)) {
         throw new TypeError('The second parameter to sumType must be an object');
     }
@@ -29,24 +29,22 @@ function sumType(name, definition) {
         throw new TypeError('Invalid value for ' + name);
     };
 
+    Sum.prototype = Object.create(proto);
+    Sum.prototype.constructor = Sum;
+
     names.forEach(function(name) {
         var def = definition[name];
         if (!_isObject(def)) {
             def = [];
         }
 
-        var Product = productType(name, def);
-
-        Product.prototype = Object.create(Sum.prototype);
-        Product.prototype.constructor = Product;
+        var Product = productType(name, def, Sum.prototype);
 
         require('./internal/_subModule')(Sum, Product);
 
-
         Sum[name] = Object.keys(def).length ? Product : Product();
-
+        Sum.prototype['is' + _ucfirst(name)] = function() {return Sum['is' + _ucfirst(name)](this);};
         Sum['is' + _ucfirst(name)] = Product.member;
-
     });
 
     Sum.case = _curry(function(cases, value) {
