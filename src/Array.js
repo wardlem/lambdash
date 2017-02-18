@@ -8,8 +8,8 @@ const __ = require('./internal/_blank');
 const Ord = require('./Ord');
 const Ordering = require('./Ordering');
 const Sequential = require('./Sequential');
-const Semigroup = require('./Semigroup');
-const Serializable = require('./Serializable');
+const Hashable = require('./Hashable');
+const _Int32Array = require('./internal/_primitives').Int32Array;
 
 /**
  * _Array is the module for javascript's built-in array type.
@@ -441,8 +441,30 @@ _Array.show = _curry(function(array) {
     return '[' + items.join(',') + ']';
 });
 
-_Array.serialize = _curry(function(array) {
-    return Semigroup.concatAll(_Array.map(Serializable.encode, array));
+/**
+ * Hashes an array with an initial seed
+ *
+ * All items in the array must implement Hashable
+ *
+ * @sig Hashable a => Array a -> Integer
+ * @since 0.7.0
+ */
+_Array.hashWithSeed = _curry(function(seed, array) {
+    let parts = _Array.fmap(Hashable.hashWithSeed(seed), array);
+    return _Int32Array.hashWithSeed(seed, Int32Array.from(parts));
+});
+
+/**
+ * Hashes an array with the default seed
+ *
+ * All items in the array must implement Hashable
+ *
+ * @sig Hashable a => Array a -> Integer
+ * @since 0.7.0
+ */
+_Array.hash = _curry(function(array) {
+    let parts = _Array.fmap(Hashable.hash, array);
+    return _Int32Array.hash(Int32Array.from(parts));
 });
 
 /**

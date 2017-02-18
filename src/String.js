@@ -4,6 +4,7 @@ var _flip = require('./internal/_flip');
 
 var Ordering = require('./Ordering');
 var Foldable = require('./Foldable');
+const _Uint8Array = require('./internal/_primitives')._Uint8Array;
 
 var _String = require('./internal/_primitives').String;
 
@@ -68,8 +69,8 @@ _String.fromInt = _curry(String.fromCharCode);
  * @sig (String -> String) -> String -> String
  * @since 0.5.0
  */
-_String.fmap = _curry(function(fn, _String) {
-    return _String.split('').map(fn).join('');
+_String.fmap = _curry(function(fn, string) {
+    return string.split('').map(fn).join('');
 });
 
 
@@ -130,8 +131,8 @@ _String.foldr = _curry(function(fn, init, string) {
  * @sig String -> Number
  * @since 0.6.0
  */
-_String.len = _curry(function(_String) {
-    return _String.length;
+_String.len = _curry(function(string) {
+    return string.length;
 });
 
 /**
@@ -142,16 +143,16 @@ _String.len = _curry(function(_String) {
  * @sig Number -> String -> String
  * @since 0.6.0
  */
-_String.nth = _curry(function(ind, _String) {
+_String.nth = _curry(function(ind, string) {
     if (ind < 0) {
-        ind = _String.length + ind;
+        ind = string.length + ind;
     }
 
-    if (ind < 0 || ind >= _String.length) {
+    if (ind < 0 || ind >= string.length) {
         throw new RangeError('String index out of bounds');
     }
 
-    return _String[ind];
+    return string[ind];
 });
 
 /**
@@ -194,8 +195,8 @@ _String.split = _curry(function(delim, string) {
  * @sig RegExp -> String -> [String]
  * @since 0.6.0
  */
-_String.match = _curry(function(regex, _String) {
-    return String.prototype.match.call(_String, regex) || [];
+_String.match = _curry(function(regex, string) {
+    return String.prototype.match.call(string, regex) || [];
 });
 
 /**
@@ -206,8 +207,8 @@ _String.match = _curry(function(regex, _String) {
  * @sig String|RegExp -> String -> String -> String
  * @since 0.6.0
  */
-_String.replace = _curry(function(find, replace, _String) {
-    return String.prototype.replace.call(_String, find, replace);
+_String.replace = _curry(function(find, replace, string) {
+    return String.prototype.replace.call(string, find, replace);
 });
 
 /**
@@ -218,8 +219,8 @@ _String.replace = _curry(function(find, replace, _String) {
  * @sig String -> String
  * @since 0.6.0
  */
-_String.toLower = _curry(function(_String) {
-    return String.prototype.toLowerCase.call(_String);
+_String.toLower = _curry(function(string) {
+    return String.prototype.toLowerCase.call(string);
 });
 
 /**
@@ -230,8 +231,8 @@ _String.toLower = _curry(function(_String) {
  * @sig String -> String
  * @since 0.6.0
  */
-_String.toUpper = _curry(function(_String) {
-    return String.prototype.toUpperCase.call(_String);
+_String.toUpper = _curry(function(string) {
+    return String.prototype.toUpperCase.call(string);
 });
 
 /**
@@ -242,8 +243,8 @@ _String.toUpper = _curry(function(_String) {
  * @sig String -> String
  * @since 0.6.0
  */
-_String.trim = _curry(function(_String) {
-    return String.prototype.trim.call(_String);
+_String.trim = _curry(function(string) {
+    return String.prototype.trim.call(string);
 });
 
 /**
@@ -279,13 +280,33 @@ _String.unlines = Foldable.joinWithDef('', '\n');
 _String.unwords = Foldable.joinWithDef('', ' ');
 
 /**
+ * Hash a string with a provided seed
+ *
+ * @sig Integer -> String -> Integer
+ * @since 0.7.0
+ */
+_String.hashWithSeed = _curry(function(seed, string) {
+    return _Uint8Array.hashWithSeed(seed, Uint8Array.from(string.split('').map(c => c.charCodeAt(0))));
+});
+
+/**
+ * Hash a string with a provided seed
+ *
+ * @sig String -> Integer
+ * @since 0.7.0
+ */
+_String.hash = _curry(function(string) {
+    return _Uint8Array.hash(Uint8Array.from(string.split('').map(c => c.charCodeAt(0))));
+});
+
+/**
  * Returns an evaluatable representation of a string.
  *
  * @sig String -> String
  * @since 0.5.0
  */
-_String.show = _curry(function(_String) {
-    return '"' + String.prototype.replace.call(_String, /"/g, '\\"') + '"';
+_String.show = _curry(function(string) {
+    return '"' + String.prototype.replace.call(string, /"/g, '\\"') + '"';
 });
 
 module.exports = _String;

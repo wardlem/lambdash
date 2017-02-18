@@ -2,6 +2,8 @@ const _curry = require('./internal/_curry');
 const _Array = require('./Array');
 const _equal = require('./internal/_equal');
 const _flip = require('./internal/_flip');
+const _Int32Array = require('./internal/_primitives').Int32Array;
+const Hashable = require('./Hashable');
 
 /**
  * _Map is the module for javascript's built in Map type.
@@ -170,4 +172,38 @@ _Map.intersection = _curry(function intersection(left, right) {
  */
 _Map.symmetricDifference = _curry(function symmetricDifference(left, right) {
     return _Map.concat(_Map.difference(left, right), _Map.difference(right, left));
+});
+
+/**
+ * Hashes a map with a provided seed
+ *
+ * @sig (Hashable k, Hashable v) => Integer -> (Map k v) -> Integer
+ * @since 0.7.0
+ */
+_Map.hasWithSeed = _curry(function hashWithSeed(seed, map) {
+    const values = [];
+
+    for (let [key, value] of map.entries()) {
+        values.push(Hashable.hashWithSeed(seed, key));
+        values.push(Hashable.hashWithSeed(seed, value));
+    }
+
+    return _Int32Array.hashWithSeed(seed, Int32Array.of(values));
+});
+
+/**
+ * Hashes a map with a default seed
+ *
+ * @sig (Hashable k, Hashable v) => (Map k v) -> Integer
+ * @since 0.7.0
+ */
+_Map.hash = _curry(function hash(map) {
+    const values = [];
+
+    for (let [key, value] of map.entries()) {
+        values.push(Hashable.hash(key));
+        values.push(Hashable.hash(value));
+    }
+
+    return _Int32Array.hash(Int32Array.of(values));
 });

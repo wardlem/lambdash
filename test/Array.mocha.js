@@ -1,7 +1,7 @@
 var assert = require('assert');
 
 var _ = require('../src/lambdash');
-var Arr = _.Arr;
+var Arr = _.Array;
 
 var assertEqual = function(left, right){
     if (!_.eq(left,right)){
@@ -40,13 +40,13 @@ describe('Array', function(){
         });
     });
 
-    describe('#compare', function(){
-        it('should return _.EQ if two arrays are referentially equal', function(){
+    describe('#compare', function() {
+        it('should return _.EQ if two arrays are referentially equal', function() {
             var arr = [1,2,3];
             assert.equal(Arr.compare(arr, arr), _.EQ);
         });
 
-        it('should return _.EQ if two arrays are structurally equal', function(){
+        it('should return _.EQ if two arrays are structurally equal', function() {
             var left = [1,2,3];
             var right = [1,2,3];
 

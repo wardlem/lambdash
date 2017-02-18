@@ -8,18 +8,20 @@ var _slice = require('./internal/_slice');
 var _arrayEqual = require('./internal/_arrayEqual');
 var _ucfirst = require('./internal/_ucfirst');
 var _moduleFor = require('./internal/_moduleFor');
+var _thisify = require('./internal/_thisify');
+var _flip = require('./internal/_flip');
 
 var Show = require('./Show');
 var Obj = require('./internal/_primitives').Object;
 
-var productType = module.exports = function productType(name, definition) {
+var productType = module.exports = function productType(name, definition, proto = null) {
 
     var tags = Object.keys(definition);
 
     var constraints = tags.map(function(tag) {
         var c = definition[tag];
         return c != null && _isFunction(c.member) ? c.member
-            :  _isFunction(c) ? c
+            :  _isFunction(c) ? (v) => v instanceof c
             :  _isDefined;
     });
 
@@ -29,11 +31,7 @@ var productType = module.exports = function productType(name, definition) {
         });
     }
 
-    var makeProduct = _curryN(tags.length, function() {
-        var args = arguments;
-        if (arguments.length !== tags.length) {
-            throw new TypeError('Invalid number of parameters for product type ' + name);
-        }
+    var makeProduct = _curryN(tags.length, function(...args) {
         var descriptors = tags.reduce(function(accum, tag, ind) {
             if (!constraints[ind](args[ind])) {
                 throw new TypeError('Invalid value for tag ' + tag + ' in ' + name);
@@ -140,7 +138,23 @@ var productType = module.exports = function productType(name, definition) {
         return value instanceof Product;
     };
 
+    Product.prototype = Object.create(proto);
+    Product.prototype.constructor = Product;
 
+    Object.assign(Product.prototype, {
+        unapply: _thisify(Product.apply),
+        eq: _thisify(_flip(Product.eq)),
+        toString: () => {
+            let [...values] = this;
+            return `${name}(${values.join(',')})`;
+        },
+        [Symbol.iterator]: function* () {
+            for (let tag of tags) {
+                yield this[tag];
+            }
+        },
+        patch: _thisify(Product.patch),
+    });
 
     require('./internal/_module')(Product);
 

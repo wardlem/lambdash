@@ -1,5 +1,5 @@
 var _curry = require('./internal/_curry');
-
+var _String = require('./internal/_primitives').String;
 var _RegExp = require('./internal/_primitives').RegExp;
 
 /**
@@ -28,5 +28,15 @@ _RegExp.exec = _curry(function(str, re) {
 _RegExp.show = function(value) {
     return value.toString();
 };
+
+/**
+ * @since 0.7.0
+ */
+_RegExp.hashWithSeed = _curry((seed, re) => _String.hashWithSeed(seed, re.toString()));
+
+/**
+ * @since 0.7.0
+ */
+_RegExp.hashWithSeed = _curry((re) => _String.hashWithSeed(re.toString()));
 
 module.exports = _RegExp;

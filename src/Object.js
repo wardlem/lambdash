@@ -10,6 +10,8 @@ var Functor = require('./Functor');
 var Foldable = require('./Foldable');
 var Ord = require('./Ord');
 var Ordering = require('./Ordering');
+var Hashable = require('./Hashable');
+var _Int32Array = require('./internal/_primitives')._Int32Array;
 var nth = require('./Sequential').nth;
 
 
@@ -516,6 +518,39 @@ _Object.filterAssoc = _curry(function(fn, object) {
     }, {}, object);
 });
 
+/**
+ * Hash an object with a provided seed.
+ *
+ * @sig (Hashable a) => Integer -> {String: a} -> Integer
+ * @since 0.7.0
+ */
+_Object.hashWithSeed = _curry(function(seed, object) {
+    const values = [];
+    const keys = Object.keys(object);
+    keys.forEach((key) => {
+        values.push(Hashable.hashWithSeed(seed, key));
+        values.push(Hashable.hashWithSeed(seed, object[key]));
+    });
+
+    return _Int32Array.hashWithSeed(seed, Int32Array.from(values));
+});
+
+/**
+ * Hash an object with a default seed.
+ *
+ * @sig (Hashable a) => {String: a} -> Integer
+ * @since 0.7.0
+ */
+_Object.hash = _curry(function(object) {
+    const values = [];
+    const keys = Object.keys(object);
+    keys.forEach((key) => {
+        values.push(Hashable.hash(key));
+        values.push(Hashable.hash(object[key]));
+    });
+
+    return _Int32Array.hash(Int32Array.from(values));
+});
 
 /**
  * Returns a string representation of an object.

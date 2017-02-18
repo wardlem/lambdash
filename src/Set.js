@@ -1,6 +1,8 @@
 const _curry = require('./internal/_curry');
 const _show = require('./internal/_show');
 const Foldable = require('./Foldable');
+const _Int32Array = require('./internal/_primitives').Int32Array;
+const Hashable = require('./Hashable');
 
 /**
  * _Set is the module for javascript's built in Set type.
@@ -207,6 +209,38 @@ _Set.remove = _curry(function(key, set) {
 _Set.show = _curry(function(set) {
     var items = _Set.fmap(_show, set);
     return 'Set(' + Foldable.joinWith(',', items) + ')';
+});
+
+/**
+ * Hashes a map with a provided seed
+ *
+ * @sig (Hashable k, Hashable v) => Integer -> (Map k v) -> Integer
+ * @since 0.7.0
+ */
+_Set.hasWithSeed = _curry(function hashWithSeed(seed, set) {
+    const values = [];
+
+    for (let value of set) {
+        values.push(Hashable.hashWithSeed(seed, value));
+    }
+
+    return _Int32Array.hashWithSeed(seed, Int32Array.of(values));
+});
+
+/**
+ * Hashes a map with a default seed
+ *
+ * @sig (Hashable k, Hashable v) => (Map k v) -> Integer
+ * @since 0.7.0
+ */
+_Set.hash = _curry(function hash(set) {
+    const values = [];
+
+    for (let value of set) {
+        values.push(Hashable.hash(value));
+    }
+
+    return _Int32Array.hash(Int32Array.of(values));
 });
 
 module.exports = _Set;
