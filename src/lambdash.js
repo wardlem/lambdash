@@ -46,6 +46,7 @@ const Type = {
     product: require('./productType'),
     sum: require('./sumType'),
     enumerated: require('./enumeratedType'),
+    union: require('./unionType'),
     module: require('./internal/_module'),
     subModule: require('./internal/_subModule'),
     moduleFor: require('./internal/_moduleFor'),
@@ -236,7 +237,7 @@ lambdash.difference = SetOps.difference;
 lambdash.intersection = SetOps.intersection;
 lambdash.symmetricDifference = SetOps.symmetricDifference;
 
-// Set
+// SetKind
 lambdash.exists = SetKind.exists;
 lambdash.insert = SetKind.insert;
 lambdash.remove = SetKind.remove;
@@ -258,6 +259,10 @@ lambdash.foldlAssoc = AssocFoldable.foldlAssoc;
 lambdash.foldrAssoc = AssocFoldable.foldrAssoc;
 lambdash.filterAssoc = AssocFoldable.filterAssoc;
 lambdash.pairs = AssocFoldable.pairs;
+
+// Hashable
+lambdash.hashWithSeed = Hashable.hashWithSeed;
+lambdash.hash = Hashable.hash;
 
 // Show
 lambdash.show = Show.show;
