@@ -1,6 +1,4 @@
 const _curry = require('./internal/_curry');
-const _Array = require('./Array');
-const _equal = require('./internal/_equal');
 const _show = require('./internal/_show');
 const Foldable = require('./Foldable');
 
@@ -27,7 +25,7 @@ const _Set = require('./internal/_primitives').Set;
  * Uses strict javascript equality, the same as the native Set type uses,
  * rather than structural equality.
  */
-_Set.eq = _curry(function eq(left, right){
+_Set.eq = _curry(function eq(left, right) {
     if (left === right) {
         return true;
     }
@@ -36,7 +34,7 @@ _Set.eq = _curry(function eq(left, right){
         return false;
     }
 
-    for (value of left) {
+    for (let value of left) {
         if (!right.has(value)) {
             return false;
         }
@@ -54,7 +52,7 @@ _Set.eq = _curry(function eq(left, right){
 _Set.fmap = _curry(function map(fn, set) {
     const newSet = new Set();
 
-    set.forEach(value => { newSet.add(fn(value)) });
+    set.forEach(value => { newSet.add(fn(value)); });
 
     return newSet;
 });
@@ -69,7 +67,7 @@ _Set.fmap = _curry(function map(fn, set) {
  * @since 0.7.0
  */
 _Set.foldl = _curry(function(fn, init, set) {
-    for (value of set) {
+    for (let value of set) {
         init = fn(init, value);
     }
 
@@ -99,7 +97,7 @@ _Set.foldr = _curry(function(fn, init, set) {
 _Set.concat = _curry(function concat(left, right) {
     const newSet = new Set(left);
 
-    right.forEach(value => { newSet.add(value) });
+    right.forEach(value => { newSet.add(value); });
 
     return newSet;
 });
@@ -120,10 +118,10 @@ _Set.empty = _curry(function empty() {
  * @sig (Set (a -> b)) -> (Set a) -> (Set b)
  * @since 0.7.0
  */
-_Set.ap = _curry(function ap(applicative, set){
+_Set.ap = _curry(function ap(applicative, set) {
     let result = new Set();
 
-    for (fn of applicative) {
+    for (let fn of applicative) {
         result = _Set.concat(result, _Set.fmap(fn, set));
     }
 
@@ -165,7 +163,7 @@ _Set.union = _Set.concat;
 _Set.difference = _curry(function(left, right) {
     const result = new Set();
 
-    for (value of left) {
+    for (let value of left) {
         if (!right.has(value)) {
             result.add(value);
         }
@@ -177,7 +175,7 @@ _Set.difference = _curry(function(left, right) {
 _Set.intersection = _curry(function(left, right) {
     const result = new Set();
 
-    for (value of left) {
+    for (let value of left) {
         if (right.has(value)) {
             result.add(value);
         }
@@ -208,7 +206,7 @@ _Set.remove = _curry(function(key, set) {
 
 _Set.show = _curry(function(set) {
     var items = _Set.fmap(_show, set);
-    return "Set(" + Foldable.joinWith(',', items) + ")";
+    return 'Set(' + Foldable.joinWith(',', items) + ')';
 });
 
 module.exports = _Set;

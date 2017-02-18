@@ -6,5 +6,5 @@ module.exports = function _hasModuleMethod(method) {
         var target = arguments[arguments.length - 1];
         var M = _moduleFor(target);
         return _isFunction(M[method]);
-    }
+    };
 };

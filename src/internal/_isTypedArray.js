@@ -15,5 +15,5 @@ module.exports = function _isTypedArray(value) {
 ].forEach((c) => {
     module.exports[`is${c.name}`] = function(value) {
         return value instanceof c;
-    }
-})
+    };
+});

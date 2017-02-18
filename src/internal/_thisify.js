@@ -8,7 +8,7 @@ module.exports = function(fn) {
         var count = fn.length - 1;
         var appInd = applied.length;
 
-        while(appInd < count) {
+        while (appInd < count) {
             applied[appInd] = __;
             appInd += 1;
         }

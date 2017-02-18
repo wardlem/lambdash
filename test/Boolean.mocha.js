@@ -1,7 +1,13 @@
-var assert = require('assert');
+const assert = require('assert');
 
-var _ = require('../src/lambdash');
-var Bool = _.Bool;
+const _ = require('../src/lambdash');
+const Bool = _.Boolean;
+
+const assertEqual = function(left, right){
+    if (!_.eq(left,right)){
+        assert.fail(left, right, undefined, 'eq');
+    }
+};
 
 describe('Boolean', function(){
     describe('#member', function(){
@@ -211,6 +217,50 @@ describe('Boolean', function(){
         });
     });
 
+    describe('#serializeBE, #serializeLE', () => {
+        it('serializes a boolean into a Uint8Array', () => {
+            assertEqual(Bool.serializeBE(false), Uint8Array.of(0x00));
+            assertEqual(Bool.serializeBE(true), Uint8Array.of(0x01));
+            assertEqual(Bool.serializeLE(false), Uint8Array.of(0x00));
+            assertEqual(Bool.serializeLE(true), Uint8Array.of(0x01));
+        });
+    });
+
+    describe('#deserializeBE, #deserializeLE', () => {
+        it('deserializes a Uint8Array into a Boolean', () => {
+            const falseSerialized = Uint8Array.of(0x00);
+            const trueSerialized = Uint8Array.of(0x01);
+
+            assertEqual(Bool.deserializeBE(falseSerialized), false);
+            assertEqual(Bool.deserializeBE(trueSerialized), true);
+            assertEqual(Bool.deserializeLE(falseSerialized), false);
+            assertEqual(Bool.deserializeLE(trueSerialized), true);
+        });
+    });
+
+    describe('#serializeByteLength, #deserializeByteLengthBE, #deserializeByteLengthLE', () => {
+        it('always returns 1', () => {
+            const u8s = Uint8Array.of(1);
+            assert.equal(Bool.serializeByteLength(false), 1);
+            assert.equal(Bool.deserializeByteLengthBE(u8s), 1);
+            assert.equal(Bool.deserializeByteLengthLE(u8s), 1);
+        });
+    });
+
+    describe('#hash', () => {
+        it('converts a boolean to a hashed integer', () => {
+            const trueHash = Bool.hash(true);
+            const falseHash = Bool.hash(false);
+
+            assert(_.Integer.member(trueHash));
+            assert(_.Integer.member(falseHash));
+
+            assert.equal(trueHash, Bool.hash(true));
+            assert.equal(falseHash, Bool.hash(false));
+            assert(trueHash !== falseHash)
+        });
+    });
+
     describe('@implements', function(){
         it('should implement Eq', function(){
             assert(_.Eq.member(false));
@@ -235,6 +285,16 @@ describe('Boolean', function(){
         it('should implement Show', function() {
             assert(_.Show.member(false));
             assert(_.Show.member(true));
+        });
+
+        it('should implement Serializable', function() {
+            assert(_.Serializable.member(false));
+            assert(_.Serializable.member(true));
+        });
+
+        it('should implement Hashable', function() {
+            assert(_.Hashable.member(false));
+            assert(_.Hashable.member(true));
         });
     });
 });

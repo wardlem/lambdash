@@ -33,6 +33,8 @@ const SetKind = require('./SetKind');
 const Associative = require('./Associative');
 const AssocFoldable = require('./AssocFoldable');
 const Show = require('./Show');
+const Serializable = require('./Serializable');
+const Hashable = require('./Hashable');
 
 // Auxiliary types
 const Ordering = require('./Ordering');
@@ -50,7 +52,7 @@ const Type = {
     hasModuleMethod: require('./internal/_hasModuleMethod'),
     useModuleMethod: require('./internal/_useModuleMethod'),
     isModule: require('./internal/_isModule'),
-    isSubModule: require('./internal/_isSubModule')
+    isSubModule: require('./internal/_isSubModule'),
 };
 
 const lambdash = module.exports;
@@ -94,8 +96,10 @@ lambdash.Monad = Monad;
 lambdash.SetOps = SetOps;
 lambdash.SetKind = SetKind;
 lambdash.Associative = Associative;
-lambdash.AssocFoldable = AssocFoldable
+lambdash.AssocFoldable = AssocFoldable;
 lambdash.Show = Show;
+lambdash.Serializable = Serializable;
+lambdash.Hashable = Hashable;
 
 lambdash.Type = Type;
 
@@ -155,7 +159,7 @@ lambdash.empty = Monoid.empty;
 lambdash.isEmpty = Bool.condition(
     [Monoid.member, Monoid.isEmpty],
     [Foldable.member, Foldable.isEmpty],
-    [Bool.T, Fun.alwaysThrow(TypeError, "lambdash#isEmpty can only be called on a value that implements monoid or foldable")]
+    [Bool.T, Fun.alwaysThrow(TypeError, 'lambdash#isEmpty can only be called on a value that implements monoid or foldable')]
 );
 lambdash.cycleN = Monoid.cycleN;
 
@@ -172,7 +176,7 @@ lambdash.toArray = Foldable.toArray;
 lambdash.len = Bool.condition(
     [Type.hasModuleMethod('len'), Type.useModuleMethod('len')],
     [Foldable.member, Foldable.len],
-    [Bool.T, Fun.alwaysThrow(TypeError, "lambdash#len called on invalid value")]
+    [Bool.T, Fun.alwaysThrow(TypeError, 'lambdash#len called on invalid value')]
 );
 lambdash.contains = Foldable.contains;
 lambdash.notContains = Foldable.notContains;
@@ -340,5 +344,5 @@ Object.defineProperty(lambdash, '@@functional/blank', {
     value: true,
     configurable: false,
     enumerable: false,
-    writable: false
+    writable: false,
 });

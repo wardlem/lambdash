@@ -9,7 +9,7 @@ function __curryN(n, applied, fn) {
         var argsInd = 0;
         var totalApplied = 0;
 
-        while(appInd < applied.length || argsInd < arguments.length) {
+        while (appInd < applied.length || argsInd < arguments.length) {
 
             if (appInd >= applied.length ||
                 (applied[appInd] != null && applied[appInd]['@@functional/blank'] === true && argsInd < arguments.length)
@@ -26,12 +26,12 @@ function __curryN(n, applied, fn) {
             }
         }
 
-        //console.log('n ', n);
-        //console.log('arguments ', arguments);
-        //console.log('applied ', applied);
-        //console.log('combined ', combined);
-        //console.log('totalApplied ', totalApplied);
-        //console.log('');
+        // console.log('n ', n);
+        // console.log('arguments ', arguments);
+        // console.log('applied ', applied);
+        // console.log('combined ', combined);
+        // console.log('totalApplied ', totalApplied);
+        // console.log('');
 
         return totalApplied >= n ? fn.apply(this, combined) : __curryN(n - totalApplied, combined, fn);
 

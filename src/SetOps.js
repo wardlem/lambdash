@@ -45,4 +45,4 @@ SetOps.member = function(value) {
         && _isFunction(M.difference)
         && _isFunction(M.intersection)
         && _isFunction(M.symmetricDifference);
-}
+};

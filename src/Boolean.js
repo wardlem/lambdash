@@ -3,7 +3,7 @@ var _curryN = require('./internal/_curryN');
 var _always = require('./internal/_always');
 var _condition = require('./internal/_condition');
 var _compose = require('./internal/_compose');
-
+var Hashable = require('./Hashable');
 var Ordering = require('./Ordering');
 
 var _Boolean = require('./internal/_primitives').Boolean;
@@ -94,10 +94,58 @@ _Boolean.maxBound = _always(true);
  * @since 0.6.0
  * @sig Boolean -> String
  */
-_Boolean.show = _curry(function(boolean){
+_Boolean.show = _curry(function(boolean) {
     return String(boolean);
 });
 
+// Implementation for Serializable
+
+/**
+ * Serializes a boolean into a Uint8Array
+ *
+ * @since 0.7.0
+ * @sig Boolean -> Uint8Array
+ */
+_Boolean.serializeBE = _curry(function(boolean) {
+    const val = _Boolean.toInt(boolean);
+    return Uint8Array.of(val);
+});
+
+/**
+ * Serializes a boolean into a Uint8Array
+ *
+ * @since 0.7.0
+ * @sig Boolean -> Uint8Array
+ */
+_Boolean.serializeLE = _Boolean.serializeBE;
+
+/**
+ * Deserializes a boolean from a Uint8Array
+ *
+ * @since 0.7.0
+ * @sig Uint8Array -> Boolean
+ */
+_Boolean.deserializeBE = _curry(function(source) {
+    return _Boolean.fromInt(source[0]);
+});
+
+/**
+ * Deserializes a boolean from a Uint8Array
+ *
+ * @since 0.7.0
+ * @sig Uint8Array -> Boolean
+ */
+_Boolean.deserializeLE = _Boolean.deserializeBE;
+
+const serializeByteLength = _curryN(1, _always(1));
+_Boolean.serializeByteLength = serializeByteLength;
+_Boolean.deserializeByteLengthBE = serializeByteLength;
+_Boolean.deserializeByteLengthLE = serializeByteLength;
+
+_Boolean.hash = _compose(Hashable.hash, _Boolean.serializeLE);
+_Boolean.hashWithSeed = _curry(function(seed, boolean) {
+    return Hashable.hashWithSeed(seed, _Boolean.serializeLE(boolean));
+});
 
 // Logic
 
@@ -127,7 +175,7 @@ _Boolean.or = _curry(function(left, right) {
  * @sig Boolean -> Boolean -> Boolean
  * @since 0.6.0
  */
-_Boolean.xor = _curry(function(left, right){
+_Boolean.xor = _curry(function(left, right) {
     return (left && !right) || (right && !left);
 });
 
@@ -150,7 +198,7 @@ _Boolean.not = _curry(function(boolean) {
 _Boolean.both = _curry(function(left, right) {
     return function both() {
         return left.apply(this, arguments) && right.apply(this, arguments);
-    }
+    };
 });
 
 /**
@@ -162,7 +210,7 @@ _Boolean.both = _curry(function(left, right) {
 _Boolean.either = _curry(function(left, right) {
     return function either() {
         return left.apply(this, arguments) || right.apply(this, arguments);
-    }
+    };
 });
 
 /**
@@ -184,7 +232,7 @@ _Boolean.neither = _curry(function(left, right) {
 _Boolean.eitherExclusive = _curry(function(left, right) {
     return function either() {
         return _Boolean.xor(left.apply(this, arguments), right.apply(this, arguments));
-    }
+    };
 });
 
 /**

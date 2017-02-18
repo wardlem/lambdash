@@ -3,6 +3,6 @@ module.exports = function module(mod) {
         value: true,
         configurable: false,
         writable: false,
-        enumerable: false
+        enumerable: false,
     });
 };

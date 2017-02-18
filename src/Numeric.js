@@ -3,7 +3,7 @@ var _isFunction = require('./internal/_isFunction');
 var _moduleFor = require('./internal/_moduleFor');
 var _flip = require('./internal/_flip');
 
-var _Number = require('./Number');
+var _Number = require('./internal/_primitives').Number;
 
 var Numeric = module.exports;
 

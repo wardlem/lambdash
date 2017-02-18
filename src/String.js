@@ -1,6 +1,5 @@
 var _is = require('./internal/_is');
 var _curry = require('./internal/_curry');
-var _identity = require('./internal/_identity');
 var _flip = require('./internal/_flip');
 
 var Ordering = require('./Ordering');
@@ -30,7 +29,7 @@ _String.eq = _is;
 _String.compare = _curry(function(left, right) {
     return left < right ? Ordering.LT
         : left > right ? Ordering.GT
-        : Ordering.EQ
+        : Ordering.EQ;
 });
 
 
@@ -131,7 +130,7 @@ _String.foldr = _curry(function(fn, init, string) {
  * @sig String -> Number
  * @since 0.6.0
  */
-_String.len = _curry(function(_String){
+_String.len = _curry(function(_String) {
     return _String.length;
 });
 
@@ -195,8 +194,8 @@ _String.split = _curry(function(delim, string) {
  * @sig RegExp -> String -> [String]
  * @since 0.6.0
  */
-_String.match = _curry(function(regex, _String){
-    return String.prototype.match.call(_String, reqex) || [];
+_String.match = _curry(function(regex, _String) {
+    return String.prototype.match.call(_String, regex) || [];
 });
 
 /**
@@ -207,7 +206,7 @@ _String.match = _curry(function(regex, _String){
  * @sig String|RegExp -> String -> String -> String
  * @since 0.6.0
  */
-_String.replace = _curry(function(find, replace, _String){
+_String.replace = _curry(function(find, replace, _String) {
     return String.prototype.replace.call(_String, find, replace);
 });
 
@@ -219,7 +218,7 @@ _String.replace = _curry(function(find, replace, _String){
  * @sig String -> String
  * @since 0.6.0
  */
-_String.toLower = _curry(function(_String){
+_String.toLower = _curry(function(_String) {
     return String.prototype.toLowerCase.call(_String);
 });
 
@@ -231,7 +230,7 @@ _String.toLower = _curry(function(_String){
  * @sig String -> String
  * @since 0.6.0
  */
-_String.toUpper = _curry(function(_String){
+_String.toUpper = _curry(function(_String) {
     return String.prototype.toUpperCase.call(_String);
 });
 
@@ -243,7 +242,7 @@ _String.toUpper = _curry(function(_String){
  * @sig String -> String
  * @since 0.6.0
  */
-_String.trim = _curry(function(_String){
+_String.trim = _curry(function(_String) {
     return String.prototype.trim.call(_String);
 });
 
@@ -285,8 +284,8 @@ _String.unwords = Foldable.joinWithDef('', ' ');
  * @sig String -> String
  * @since 0.5.0
  */
-_String.show = _curry(function(_String){
-    return '"' + String.prototype.replace.call(_String, /"/g, "\\\"") + '"';
+_String.show = _curry(function(_String) {
+    return '"' + String.prototype.replace.call(_String, /"/g, '\\"') + '"';
 });
 
 module.exports = _String;

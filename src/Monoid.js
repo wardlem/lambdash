@@ -1,8 +1,6 @@
 var _moduleFor = require('./internal/_moduleFor');
-var _curryN = require('./internal/_curryN');
 var _curry = require('./internal/_curry');
 var _isFunction = require('./internal/_isFunction');
-var _slice = require('./internal/_slice');
 var _equal = require('./internal/_equal');
 
 var Semigroup = require('./Semigroup');

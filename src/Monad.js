@@ -45,7 +45,7 @@ Monad.flatten = _curry(function(monad) {
  *
  *      _.chain(n => [n + 1], [1,2,3]);  // [2,3,4]
  */
-Monad.chain = _curry(function(fn, monad){
+Monad.chain = _curry(function(fn, monad) {
     var M = _moduleFor(monad);
     if (_isFunction(M.chain)) {
         return M.chain(fn, monad);
@@ -72,7 +72,7 @@ Monad.chain = _curry(function(fn, monad){
  *      _.composeM(fn2, fn1)([1,2,3]);  // [4,6,8]
  */
 Monad.composeM = function() {
-    //_checkCompose(arguments);
+    // _checkCompose(arguments);
     var argsInd = 0;
     var args = [];
     while (argsInd < arguments.length) {
@@ -103,7 +103,7 @@ Monad.composeM = function() {
  *      _.pipeM(fn2, fn1)([1,2,3]);  // [3,5,7]
  */
 Monad.pipeM = function() {
-    //_checkPipe(arguments);
+    // _checkPipe(arguments);
     return Monad.composeM.apply(this, _arrReverse(arguments));
 };
 

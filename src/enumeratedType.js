@@ -5,7 +5,6 @@ var _curry = require('./internal/_curry');
 var _is = require('./internal/_is');
 
 var sumType = require('./sumType');
-var Enum = require('./Enum');
 var Ordering = require('./Ordering');
 
 var enumeratedType = function(name, definition) {
@@ -40,7 +39,7 @@ var enumeratedType = function(name, definition) {
 
     Enumeration.fromInt = function(e) {
         if (e < 0 || e > maxValue) {
-            throw new RangeError(name + "#fromInt called with value out of range");
+            throw new RangeError(name + '#fromInt called with value out of range');
         }
 
         return Enumeration[definition[e]];

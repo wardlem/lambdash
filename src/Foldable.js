@@ -4,18 +4,15 @@ var _moduleFor = require('./internal/_moduleFor');
 var _not = require('./internal/_not');
 var _equal = require('./internal/_equal');
 var _identity = require('./internal/_identity');
-var _compose = require('./internal/_compose');
 var _alwaysThrow = require('./internal/_alwaysThrow');
-var _ = require('./internal/_blank');
 
 var Ord = require('./Ord');
 var Monoid = require('./Monoid');
-var Functor = require('./Functor');
 var Numeric = require('./Numeric');
 
 var Foldable = module.exports;
 
-var _fold = _curry(function(_f, fn, init, foldable){
+var _fold = _curry(function(_f, fn, init, foldable) {
 
     var M = _moduleFor(foldable);
     if (_isFunction(M[_f])) {
@@ -125,7 +122,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
 Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
     return Foldable.foldr(function(accum, value) {
         return Monoid.concat(fn(value), accum);
-    }, empty, foldable)
+    }, empty, foldable);
 });
 
 /**
@@ -171,9 +168,9 @@ Foldable.join = Foldable.foldMap(_identity);
  *
  *      _.joinWith(',', ['first', 'second', 'third']); // 'first,second,third'
  */
-Foldable.joinWith = _curry(function(sep, foldable){
+Foldable.joinWith = _curry(function(sep, foldable) {
     var ind = 0;
-    return Foldable.foldMap(function(v){
+    return Foldable.foldMap(function(v) {
         if (ind === 0) {
             ind += 1;
             return v;
@@ -230,9 +227,9 @@ Foldable.joinDef = Foldable.foldMapDef(_identity);
  *      _.joinWith2(',', '', ['first', 'second', 'third']); // 'first,second,third'
  *      _.joinWith2(',', '', []);                           // ''
  */
-Foldable.joinWithDef = _curry(function(empty, sep, foldable){
+Foldable.joinWithDef = _curry(function(empty, sep, foldable) {
     var ind = 0;
-    return Foldable.foldMapDef(function(v){
+    return Foldable.foldMapDef(function(v) {
         if (ind === 0) {
             ind += 1;
             return v;
@@ -249,7 +246,7 @@ Foldable.joinWithDef = _curry(function(empty, sep, foldable){
  * @param {Foldable} foldable the structure being converted to an array
  * @return {Array}
  */
-Foldable.toArray = Foldable.foldMapDef(function(v){return [v]}, []);
+Foldable.toArray = Foldable.foldMapDef(function(v) {return [v];}, []);
 
 /**
  * Counts the elements in a foldable value
@@ -278,7 +275,7 @@ Foldable.len = Foldable.foldl(function(count, x) {return count + 1;}, 0);
  *      _.Foldable.isEmpty([1,2,3]);  // false
  *      _.Foldable.isEmpty('');       // true
  */
-Foldable.isEmpty = _curry(function(foldable) { return Foldable.len(foldable) === 0});
+Foldable.isEmpty = _curry(function(foldable) { return Foldable.len(foldable) === 0;});
 
 /**
  * The inverse of Foldable.isEmpty function
@@ -397,7 +394,7 @@ Foldable.any = _curry(function(fn, foldable) {
 Foldable.countWith = _curry(function(fn, foldable) {
     return Foldable.foldl(function(accum, value) {
         return fn(value) ? accum + 1 : accum;
-    }, 0, foldable)
+    }, 0, foldable);
 });
 
 /**
@@ -496,7 +493,7 @@ Foldable.minimum = _fold1(
  * @return {Numeric}
  */
 Foldable.sum = _fold1(
-    _alwaysThrow(TypeError, "Foldable#sum can not be called on an empty structure"),
+    _alwaysThrow(TypeError, 'Foldable#sum can not be called on an empty structure'),
     Numeric.add
 );
 
@@ -508,7 +505,7 @@ Foldable.sum = _fold1(
  * @return {Numeric}
  */
 Foldable.product = _fold1(
-    _alwaysThrow(TypeError, "Foldable#mul can not be called on an empty structure"),
+    _alwaysThrow(TypeError, 'Foldable#mul can not be called on an empty structure'),
     Numeric.mul
 );
 

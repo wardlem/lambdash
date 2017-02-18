@@ -3,8 +3,8 @@ var __ = Object.freeze(Object.create(null, {
         value: true,
         configurable: false,
         enumerable: false,
-        writable: false
-    }
+        writable: false,
+    },
 }));
 
 module.exports = __;

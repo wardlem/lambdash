@@ -7,7 +7,6 @@ const _isNumber = require('./_isNumber');
 const _isInteger = require('./_isInteger');
 const _isString = require('./_isString');
 const _isArray = require('./_isArray');
-const _isObject = require('./_isObject');
 const _isPlainObject = require('./_isPlainObject');
 const _isFunction = require('./_isFunction');
 const _isRegExp = require('./_isRegExp');
@@ -23,7 +22,7 @@ const _curry = require('./_curry');
 
 const _primitives = module.exports;
 
-const _assert = _curry(function(test, msg, value){
+const _assert = _curry(function(test, msg, value) {
     if (!test(value)) {
         throw new TypeError(msg);
     }
@@ -31,11 +30,11 @@ const _assert = _curry(function(test, msg, value){
 });
 
 function _Boolean(value) {
-    if (null == value) {
+    if (value == null) {
         return false;
     }
 
-    if (_isFunction(value.valueOf) && _isBoolean(value.valueOf()) ) {
+    if (_isFunction(value.valueOf) && _isBoolean(value.valueOf())) {
         return value.valueOf();
     }
 
@@ -43,20 +42,20 @@ function _Boolean(value) {
 }
 
 _Boolean.member = _isBoolean;
-_Boolean.assert = _assert(_isBoolean, "Invalid value for Boolean");
+_Boolean.assert = _assert(_isBoolean, 'Invalid value for Boolean');
 
 _primitives.Boolean = _Boolean;
 
 function _Number(value) {
     if (_Number.member(+value)) {
-        return Num(+value);
+        return Number(+value);
     }
 
     return _Number.assert(parseFloat(value));
 }
 
 _Number.member = _isNumber;
-_Number.assert = _assert(_isNumber, "Invalid value for Number");
+_Number.assert = _assert(_isNumber, 'Invalid value for Number');
 _primitives.Number = _Number;
 
 function _Integer(value) {
@@ -68,7 +67,7 @@ function _Integer(value) {
 }
 
 _Integer.member = _isInteger;
-_Integer.assert = _assert(_isInteger, "Invalid value for Integer");
+_Integer.assert = _assert(_isInteger, 'Invalid value for Integer');
 
 _primitives.Integer = _Integer;
 
@@ -80,7 +79,7 @@ function _String(value) {
 }
 
 _String.member = _isString;
-_String.assert = _assert(_isString, "Invalid value for String");
+_String.assert = _assert(_isString, 'Invalid value for String');
 
 _primitives.String = _String;
 
@@ -89,31 +88,31 @@ function _Array() {
 }
 
 _Array.member = _isArray;
-_Array.assert = _assert(_isArray, "Invalid value for Array");
+_Array.assert = _assert(_isArray, 'Invalid value for Array');
 
 _primitives.Array = _Array;
 
-function _Object(value){
-    return Object(value)
+function _Object(value) {
+    return Object(value);
 }
 
 _Object.member = _isPlainObject;
-_Object.assert = _assert(_isPlainObject, "Invalid value for Object");
+_Object.assert = _assert(_isPlainObject, 'Invalid value for Object');
 _primitives.Object = _Object;
 
-function _Set(){
+function _Set() {
     return new Set(arguments);
 }
 _Set.member = _isSet;
-_Set.assert = _assert(_isSet, "Invalid value for Set");
+_Set.assert = _assert(_isSet, 'Invalid value for Set');
 _primitives.Set = _Set;
 
-function _Map(){
+function _Map() {
     return new Map(arguments);
 }
 _Map.member = _isMap;
-_Map.assert = _assert(_isMap, "Invalid value for Map");
-_primitives.Map = _Map
+_Map.assert = _assert(_isMap, 'Invalid value for Map');
+_primitives.Map = _Map;
 
 
 function _Function(value) {
@@ -121,7 +120,7 @@ function _Function(value) {
 }
 
 _Function.member = _isFunction;
-_Function.assert = _assert(_isFunction, "Invalid value for Function");
+_Function.assert = _assert(_isFunction, 'Invalid value for Function');
 _primitives.Function = _Function;
 
 
@@ -130,7 +129,7 @@ function _RegExp(value) {
 }
 
 _RegExp.member = _isRegExp;
-_RegExp.assert = _assert(_isRegExp, "Invalid value for RegExp");
+_RegExp.assert = _assert(_isRegExp, 'Invalid value for RegExp');
 _primitives.RegExp = _RegExp;
 
 
@@ -139,20 +138,19 @@ function _Date(value) {
 }
 
 _Date.member = _isDate;
-_Date.assert = _assert(_isDate, "Invalid value for Date");
+_Date.assert = _assert(_isDate, 'Invalid value for Date');
 _primitives.Date = _Date;
 
 
 function Unit(value) {
-    if (arguments.length === 0)
-    {
-      return null;
+    if (arguments.length === 0)    {
+        return null;
     }
     return Unit.assert(value);
 }
 
 Unit.member = _isUnit;
-Unit.assert = _assert(_isUnit, "Invalid value for Unit");
+Unit.assert = _assert(_isUnit, 'Invalid value for Unit');
 _primitives.Unit = Unit;
 
 
@@ -161,7 +159,7 @@ function _TypedArray(value) {
 }
 
 _TypedArray.member = _isTypedArray;
-_TypedArray.assert = _assert(_isTypedArray, "Invalid value for TypedArray");
+_TypedArray.assert = _assert(_isTypedArray, 'Invalid value for TypedArray');
 _primitives.TypedArray = _TypedArray;
 
 [
@@ -190,5 +188,5 @@ function _ArrayBuffer(value) {
 }
 
 _ArrayBuffer.member = _isArrayBuffer;
-_ArrayBuffer.assert = _assert(_isArrayBuffer, "Invalid value for ArrayBuffer");
+_ArrayBuffer.assert = _assert(_isArrayBuffer, 'Invalid value for ArrayBuffer');
 _primitives.ArrayBuffer = _ArrayBuffer;

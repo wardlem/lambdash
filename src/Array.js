@@ -8,6 +8,8 @@ const __ = require('./internal/_blank');
 const Ord = require('./Ord');
 const Ordering = require('./Ordering');
 const Sequential = require('./Sequential');
+const Semigroup = require('./Semigroup');
+const Serializable = require('./Serializable');
 
 /**
  * _Array is the module for javascript's built-in array type.
@@ -65,7 +67,7 @@ _Array.compare = _curry(function(left, right) {
     }
 
     const len = Math.min(left.length, right.length);
-    for (let ind = 0; ind < len; ind++) {
+    for (let ind = 0; ind < len; ind += 1) {
         const ordering = Ord.compare(left[ind], right[ind]);
         if (!Ordering.isEQ(ordering)) {
             return ordering;
@@ -91,7 +93,7 @@ _Array.compare = _curry(function(left, right) {
 _Array.fmap = _curry(function(fn, array) {
     var res = [];
     var ind = 0;
-    while(ind < array.length) {
+    while (ind < array.length) {
         res.push(fn(array[ind]));
         ind += 1;
     }
@@ -144,7 +146,7 @@ _Array.foldr = _curry(function(fn, init, array) {
  * @param {Array} right the suffix of the concatenation
  * @returns {Array} left and right concatenated together
  */
-_Array.concat = _curry(function(left, right){
+_Array.concat = _curry(function(left, right) {
     return left.concat(right);
 });
 
@@ -174,7 +176,7 @@ _Array.empty = _curry(function empty() {
  * @param {*[]} array an array to which each function in applicative will be applied
  * @return {*[]}
  */
-_Array.ap = _curry(function(applicative, array){
+_Array.ap = _curry(function(applicative, array) {
     var result = [];
     var ind = 0;
     while (ind < applicative.length) {
@@ -335,10 +337,10 @@ _Array.intersperse = _curry(function(value, array) {
  * @sig a -> Array a -> Boolean
  * @since 0.6.0
  */
-_Array.exists = _curry(function(key, array){
+_Array.exists = _curry(function(key, array) {
     var ind = 0;
-    while(ind < array.length) {
-        if (_equal(key, array[ind])){
+    while (ind < array.length) {
+        if (_equal(key, array[ind])) {
             return true;
         }
 
@@ -356,8 +358,8 @@ _Array.exists = _curry(function(key, array){
  * @sig a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.insert = _curry(function(key, array){
-    if (_Array.exists(key, array)){
+_Array.insert = _curry(function(key, array) {
+    if (_Array.exists(key, array)) {
         return array;
     }
 
@@ -373,11 +375,11 @@ _Array.insert = _curry(function(key, array){
  * @sig a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.remove = _curry(function(key, array){
+_Array.remove = _curry(function(key, array) {
     var ind = 0;
-    while(ind < array.length) {
-        if (_equal(key, array[ind])){
-            array = _Array.concat(_Array.slice(0, ind, array), _Array.slice(ind+1, array.length, array));
+    while (ind < array.length) {
+        if (_equal(key, array[ind])) {
+            array = _Array.concat(_Array.slice(0, ind, array), _Array.slice(ind + 1, array.length, array));
         } else {
             ind += 1;
         }
@@ -392,7 +394,7 @@ _Array.remove = _curry(function(key, array){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.union = _curry(function(left, right){
+_Array.union = _curry(function(left, right) {
     return Sequential.unique(_Array.concat(left,right));
 });
 
@@ -402,7 +404,7 @@ _Array.union = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.difference = _curry(function(left, right){
+_Array.difference = _curry(function(left, right) {
     return Sequential.filter(_not(_Array.exists(__, right)), Sequential.unique(left));
 });
 
@@ -412,7 +414,7 @@ _Array.difference = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.intersection = _curry(function(left, right){
+_Array.intersection = _curry(function(left, right) {
     return Sequential.filter(_Array.exists(__, right), Sequential.unique(left));
 });
 
@@ -422,7 +424,7 @@ _Array.intersection = _curry(function(left, right){
  * @sig Array a -> Array a -> Array a
  * @since 0.6.0
  */
-_Array.symmetricDifference = _curry(function(left, right){
+_Array.symmetricDifference = _curry(function(left, right) {
     return _Array.concat(_Array.difference(left,right), _Array.difference(right,left));
 });
 
@@ -436,7 +438,11 @@ _Array.symmetricDifference = _curry(function(left, right){
  */
 _Array.show = _curry(function(array) {
     var items = _Array.fmap(_show, array);
-    return "[" + items.join(',') + "]";
+    return '[' + items.join(',') + ']';
+});
+
+_Array.serialize = _curry(function(array) {
+    return Semigroup.concatAll(_Array.map(Serializable.encode, array));
 });
 
 /**
@@ -448,7 +454,7 @@ _Array.show = _curry(function(array) {
  * @sig * -> Array
  * @since 0.6.3
  */
-_Array.fromArrayLike = _curry(function(arrLike){
+_Array.fromArrayLike = _curry(function(arrLike) {
     return Array.prototype.slice.call(arrLike);
 });
 

@@ -1,6 +1,5 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
-var _curry = require('./internal/_curry');
 var _show = require('./internal/_show');
 
 var Show = module.exports;

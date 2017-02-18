@@ -1,5 +1,3 @@
-var _arity = require('./_arity');
-var _slice = require('./_slice');
 var _curryN = require('./_curryN');
 var _last = require('./_last');
 var Fun = require('./_primitives').Function;
@@ -14,13 +12,13 @@ module.exports = function compose() {
     var args = arguments;
 
     var argsInd = arguments.length - 2;
-    while(argsInd >= 0) {
-        f = (function(g){
+    while (argsInd >= 0) {
+        f = (function(g) {
             var f = Fun.assert(args[argsInd]);
             return function() {
                 return f.call(this, g.apply(this, arguments));
-            }
-        })(f);
+            };
+        }(f));
 
         argsInd -= 1;
     }
@@ -28,9 +26,9 @@ module.exports = function compose() {
     return _curryN(_last(args).length, f);
 
 
-    //var g = compose.apply(compose, _slice(arguments, 1));
+    // var g = compose.apply(compose, _slice(arguments, 1));
     //
-    //return _curryN(g.length, function() {
+    // return _curryN(g.length, function() {
     //    return f.call(this, g.apply(this, arguments));
-    //});
+    // });
 };

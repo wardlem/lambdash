@@ -7,7 +7,7 @@ const Associative = require('./Associative');
 
 const AssocFoldable = module.exports;
 
-const _foldAssoc = _curry(function(_f, fn, init, foldable){
+const _foldAssoc = _curry(function(_f, fn, init, foldable) {
 
     const M = _moduleFor(foldable);
     if (_isFunction(M[_f])) {
@@ -132,7 +132,7 @@ AssocFoldable.mapAssoc = _curry(function(fn, assoc) {
         return M.mapAssoc(fn, assoc);
     } else if (_isFunction(M.foldlAssoc, M.empty, M.assoc)) {
         return M.foldlAssoc((accum, v, k) => {
-            return M.assoc(k, fn(v, k), assoc)
+            return M.assoc(k, fn(v, k), assoc);
         }, M.empty(), assoc);
     }
 

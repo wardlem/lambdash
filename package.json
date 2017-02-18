@@ -10,7 +10,9 @@
   "scripts": {
     "test": "node_modules/.bin/mocha test/",
     "coverage": "node_modules/.bin/istanbul cover _mocha && open coverage/lcov-report/*.html",
-    "toc": "node_modules/.bin/doctoc --github --maxlevel 3 README.md"
+    "toc": "node_modules/.bin/doctoc --github --maxlevel 3 README.md",
+    "lint": "./node_modules/.bin/eslint \"src/**\"",
+    "lint-fix": "./node_modules/.bin/eslint \"src/**\" --fix"
   },
   "keywords": [
     "functional",

@@ -14,7 +14,7 @@ function sumType(name, definition) {
 
     var names = Object.keys(definition);
 
-    var Sum = _isFunction(name) ? name : _makeFunction(name, function(){});
+    var Sum = _isFunction(name) ? name : _makeFunction(name, function() {});
     name = Sum.name;
 
     Sum.member = function member(value) {
@@ -45,13 +45,13 @@ function sumType(name, definition) {
 
         Sum[name] = Object.keys(def).length ? Product : Product();
 
-        Sum['is'+_ucfirst(name)] = Product.member;
+        Sum['is' + _ucfirst(name)] = Product.member;
 
     });
 
     Sum.case = _curry(function(cases, value) {
         if (!Sum.member(value)) {
-            throw new TypeError("Could not match value as " + name + " since it isn't of the right type");
+            throw new TypeError('Could not match value as ' + name + " since it isn't of the right type");
         }
 
         function doMatch(fn, value) {
@@ -77,7 +77,7 @@ function sumType(name, definition) {
             return doDefaultMatch(cases['_'], value);
         }
 
-        throw new TypeError("Non exhaustive case expression for " + name + ". " + c + " not handled.");
+        throw new TypeError('Non exhaustive case expression for ' + name + '. ' + c + ' not handled.');
     });
 
     Sum.eq = _curry(function(left, right) {
@@ -96,25 +96,25 @@ function sumType(name, definition) {
         return instance.constructor.unapply(fn, instance);
     });
 
-    Sum.set = _curry(function(key,value,instance){
+    Sum.set = _curry(function(key,value,instance) {
         return instance.length === 0 ? instance : instance.constructor.set(key,value,instance);
     });
 
-    Sum.patch = _curry(function(patches,instance){
+    Sum.patch = _curry(function(patches,instance) {
         return instance.length === 0 ? instance : instance.constructor.patch(patches,instance);
     });
 
     Sum.toJSON = _curry(function(instance) {
         if (instance.length == 0) {
             return {
-                __tag__: instance.constructor.name
-            }
+                __tag__: instance.constructor.name,
+            };
         }
         return {
             __tag__: instance.constructor.name,
-            data: instance.constructor.toJSON(instance)
-        }
-    })
+            data: instance.constructor.toJSON(instance),
+        };
+    });
 
     Sum.fromJSON = _curry(function(obj) {
         var t = obj.__tag__;
@@ -133,7 +133,7 @@ function sumType(name, definition) {
         throw new TypeError('Could not create ' + name + ' from object, invalid type.');
     });
 
-    Sum.show = _curry(function(instance){
+    Sum.show = _curry(function(instance) {
         return instance.length === 0
             ? name + '.' + instance.constructor.name
             : name + '.' + instance.constructor.show(instance);

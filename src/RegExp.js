@@ -8,7 +8,7 @@ var _RegExp = require('./internal/_primitives').RegExp;
  * @sig String -> RegExp -> Boolean
  * @since 0.6.0
  */
-_RegExp.test = _curry(function(str, re){
+_RegExp.test = _curry(function(str, re) {
     return re.test(str);
 });
 
@@ -21,7 +21,7 @@ _RegExp.test = _curry(function(str, re){
  * @sig String -> RegExp -> [String]
  * @since 0.6.0
  */
-_RegExp.exec = _curry(function(str, re){
+_RegExp.exec = _curry(function(str, re) {
     return re.exec(str) || [];
 });
 

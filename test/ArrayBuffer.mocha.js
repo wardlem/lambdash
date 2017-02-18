@@ -3,7 +3,7 @@ const assert = require('assert');
 const _ = require('../src/lambdash');
 const _ArrayBuffer = _.ArrayBuffer;
 
-var assertEqual = function(left, right){
+const assertEqual = function(left, right){
     if (!_.eq(left,right)){
         assert.fail(left, right, undefined, 'eq');
     }
@@ -145,6 +145,123 @@ describe('ArrayBuffer', () => {
         });
     });
 
+    describe('#hash', () => {
+        it('hashes a buffer and returns an integer', () => {
+            const values = _.fmap((c) => c.charCodeAt(0), "node.js".split(''));
+            const buffer = Uint8Array.from(values).buffer;
+
+            const hash = _ArrayBuffer.hash(buffer);
+
+            assert.equal(hash, 3096844302);
+        });
+    });
+
+    describe('#serializeBE', () => {
+        it('seralizes a buffer with the size in big endian byte order', () => {
+            const buffer = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const serialized = _ArrayBuffer.serializeBE(buffer);
+            const expected = Uint8Array.of(
+                0x00, 0x00, 0x00, 0x03,
+                0x02, 0x05, 0x09
+            );
+            assertEqual(serialized, expected);
+        });
+    });
+
+    describe('#serializeLE', () => {
+        it('seralizes a buffer with the size in little endian byte order', () => {
+            const buffer = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const serialized = _ArrayBuffer.serializeLE(buffer);
+            const expected = Uint8Array.of(
+                0x03, 0x00, 0x00, 0x00,
+                0x02, 0x05, 0x09
+            );
+            assertEqual(serialized, expected);
+        });
+    });
+
+    describe('#deserializeBE', () => {
+        it('deserializes a buffer with the byte length in big endian order', () => {
+            const serialized = Uint8Array.of(
+                0x00, 0x00, 0x00, 0x03,
+                0x02, 0x05, 0x09
+            );
+            const expected = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const result = _ArrayBuffer.deserializeBE(serialized);
+
+            assertEqual(result, expected);
+        });
+
+        it('ignores additional bytes', () => {
+            const serialized = Uint8Array.of(
+                0x00, 0x00, 0x00, 0x03,
+                0x02, 0x05, 0x09,
+                0x04, 0x06, 0x0F
+            );
+            const expected = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const result = _ArrayBuffer.deserializeBE(serialized);
+
+            assertEqual(result, expected);
+        });
+    });
+
+    describe('#deserializeBE', () => {
+        it('deserializes a buffer with the byte length in big endian order', () => {
+            const serialized = Uint8Array.of(
+                0x03, 0x00, 0x00, 0x00,
+                0x02, 0x05, 0x09
+            );
+            const expected = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const result = _ArrayBuffer.deserializeLE(serialized);
+
+            assertEqual(result, expected);
+        });
+
+        it('ignores additional bytes', () => {
+            const serialized = Uint8Array.of(
+                0x03, 0x00, 0x00, 0x00,
+                0x02, 0x05, 0x09,
+                0x04, 0x06, 0x0F
+            );
+            const expected = _ArrayBuffer.of(0x02, 0x05, 0x09);
+            const result = _ArrayBuffer.deserializeLE(serialized);
+
+            assertEqual(result, expected);
+        });
+    });
+
+    describe('#serializeByteLength', () => {
+        it('returns how many bytes it will take to serialize the buffer', () => {
+            const buffer = _ArrayBuffer.of(0x02, 0x05, 0x09);
+
+            assert.equal(_ArrayBuffer.serializeByteLength(buffer), 7);
+        });
+    });
+
+    describe('#deserializeByteLengthBE', () => {
+        it('returns the number of bytes that will be used when deserialized from big endian', () => {
+            const serialized = Uint8Array.of(
+                0x00, 0x00, 0x00, 0x03,
+                0x02, 0x05, 0x09,
+                0x04, 0x06, 0x0F
+            );
+
+            assert.equal(_ArrayBuffer.deserializeByteLengthBE(serialized), 7);
+        });
+    });
+
+    describe('#deserializeByteLengthLE', () => {
+        it('returns the number of bytes that will be used when deserialized from big endian', () => {
+            const serialized = Uint8Array.of(
+                0x03, 0x00, 0x00, 0x00,
+                0x02, 0x05, 0x09,
+                0x04, 0x06, 0x0F
+            );
+
+            assert.equal(_ArrayBuffer.deserializeByteLengthLE(serialized), 7);
+        });
+    });
+
     describe('@implements', () => {
         const arr = _ArrayBuffer.of();
 
@@ -156,7 +273,8 @@ describe('ArrayBuffer', () => {
             "Semigroup",
             "Monoid",
             "Sequential",
-            "Show"
+            "Show",
+            "Serializable"
         ].forEach((name) => {
             it(`implements ${name}`, () => {
                 assert(_[name].member(arr));

@@ -1,15 +1,11 @@
 var _moduleFor = require('./internal/_moduleFor');
 var _isFunction = require('./internal/_isFunction');
-var _isInteger = require('./internal/_isInteger');
 var _curry = require('./internal/_curry');
 var Int = require('./internal/_primitives').Integer;
 
-var Bounded = require('./Bounded');
-
 var Enum = module.exports;
 
-
-var fromInt = _curry(function fromInt(M, value){
+var fromInt = _curry(function fromInt(M, value) {
     if (!_isFunction(M.fromInt)) {
         throw new TypeError('Type can not be converted from Int');
     }
@@ -81,7 +77,7 @@ var _makeEnum = function(withLast, M, step, fromVal, toVal) {
 
     var _fromInt = fromInt(M);
 
-    while(fromVal != toVal) {
+    while (fromVal != toVal) {
         res.push(_fromInt(fromVal));
         fromVal = step(fromVal);
     }
@@ -172,4 +168,4 @@ Enum.enumFrom = _curry(function(count, from) {
 Enum.member = function(value) {
     var M = _moduleFor(value);
     return _isFunction(M.toInt) && _isFunction(M.fromInt);
-}
+};

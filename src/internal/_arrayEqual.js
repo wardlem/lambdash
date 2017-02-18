@@ -7,11 +7,11 @@ module.exports = function _arrayEqual(left, right) {
 
     var ind = 0;
     var len = left.length;
-    while(ind < len) {
+    while (ind < len) {
         if (!_equal(left[ind], right[ind])) {
             return false;
         }
-        ind++;
+        ind += 1;
     }
 
     return true;

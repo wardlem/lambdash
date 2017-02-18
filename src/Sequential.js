@@ -108,7 +108,7 @@ Sequential.prepend = _curry(function(value, sequence) {
  * @param {Sequential} sequence the structure the subsequence will be extracted from
  * @return {Sequential} A subsequence of the sequence
  */
-Sequential.slice = _curry(function(start, end, sequence){
+Sequential.slice = _curry(function(start, end, sequence) {
     var M = _moduleFor(sequence);
     if (_isFunction(M.slice)) {
         return M.slice(start, end, sequence);
@@ -292,7 +292,7 @@ Sequential.reverse = _curry(function(sequence) {
         var head = Sequential.head(sequence);
         var tail = Sequential.tail(sequence);
 
-        return Sequential.append(head, _reverse(l-1, tail));
+        return Sequential.append(head, _reverse(l - 1, tail));
     }
 
     return _reverse(Sequential.len(sequence), sequence);
@@ -364,11 +364,11 @@ Sequential.dropWhile = _curry(function(fn, sequence) {
  */
 Sequential.takeLastWhile = _curry(function(fn, sequence) {
     var idx = Sequential.len(sequence) - 1;
-    while(idx >= 0 && fn(Sequential.nth(idx, sequence))) {
+    while (idx >= 0 && fn(Sequential.nth(idx, sequence))) {
         idx -= 1;
     }
 
-    return Sequential.drop(idx+1, sequence);
+    return Sequential.drop(idx + 1, sequence);
 });
 
 /**
@@ -382,11 +382,11 @@ Sequential.takeLastWhile = _curry(function(fn, sequence) {
  */
 Sequential.dropLastWhile = _curry(function(fn, sequence) {
     var idx = Sequential.len(sequence) - 1;
-    while(idx >= 0 && fn(Sequential.nth(idx, sequence))) {
+    while (idx >= 0 && fn(Sequential.nth(idx, sequence))) {
         idx -= 1;
     }
 
-    return Sequential.take(idx+1, sequence);
+    return Sequential.take(idx + 1, sequence);
 });
 
 /**

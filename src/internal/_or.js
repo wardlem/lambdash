@@ -9,7 +9,7 @@ module.exports = function or() {
             if (conditions[ind].apply(this, arguments)) {
                 return true;
             }
-            ind++;
+            ind += 1;
         }
         return false;
     });

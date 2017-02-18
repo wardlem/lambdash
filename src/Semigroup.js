@@ -1,9 +1,6 @@
 var _moduleFor = require('./internal/_moduleFor');
-var _curryN = require('./internal/_curryN');
 var _curry = require('./internal/_curry');
 var _isFunction = require('./internal/_isFunction');
-var _slice = require('./internal/_slice');
-var _equal = require('./internal/_equal');
 
 var Foldable = require('./Foldable');
 
@@ -36,7 +33,7 @@ Semigroup.concat = _curry(function(a, b) {
  * @since 0.4.0
  * @returns {Semigroup}
  */
-Semigroup.concatAll = _curry(function (foldable) {
+Semigroup.concatAll = _curry(function(foldable) {
     return Foldable.foldl1(Semigroup.concat, foldable);
 });
 

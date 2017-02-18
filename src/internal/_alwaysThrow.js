@@ -5,5 +5,5 @@ module.exports = function(Constructor) {
 
     return function() {
         throw thunk();
-    }
+    };
 };

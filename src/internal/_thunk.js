@@ -5,5 +5,5 @@ module.exports = function _thunk(fn) {
 
     return function thunk() {
         return fn.apply(this, args);
-    }
+    };
 };

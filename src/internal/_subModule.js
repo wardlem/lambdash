@@ -3,7 +3,7 @@ module.exports = function(parent, child) {
         configurable: false,
         writable: false,
         enumerable: false,
-        value: parent
+        value: parent,
     });
 
     return child;

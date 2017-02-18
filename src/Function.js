@@ -296,7 +296,7 @@ _Function.apply = _curry(function(values, fn) {
         return fn.apply(this, values);
     }
 
-    return foldl(function(accum, value){
+    return foldl(function(accum, value) {
         return accum(value);
     }, fn, values);
 });
@@ -325,7 +325,7 @@ _Function.flip = _flip;
  * @since 0.6.0
  * @sig () -> ()
  */
-_Function.noop = function(){};
+_Function.noop = function() {};
 
 require('./internal/_module')(_Function);
 

@@ -19,7 +19,7 @@ function moduleFor(value) {
     }
 
     // TODO: consider using Object.prototype.toString.call(value)
-    switch(C){
+    switch (C) {
         case Number:
             return _primitives.Number;
         case Boolean:
@@ -48,7 +48,7 @@ function moduleFor(value) {
         default:
             if (_isTypedArray(value)) {
                 return _primitives[C.name];
-            };
+            }
             // not a plain javascript object
             return C;
     }

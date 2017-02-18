@@ -1,11 +1,27 @@
-var _is = require('./internal/_is');
-var _curry = require('./internal/_curry');
-var _curryN = require('./internal/_curryN');
-var _identity = require('./internal/_identity');
+const _is = require('./internal/_is');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _identity = require('./internal/_identity');
+const _always = require('./internal/_always');
 
-var Ordering = require('./Ordering');
+const Ordering = require('./Ordering');
+const ByteOrder = require('./ByteOrder');
+const Sequential = require('./Sequential');
+const Serializable = require('./Serializable');
+const Hashable = require('./Hashable');
 
-var _Number = require('./internal/_primitives').Number;
+/**
+ * @module
+ *
+ * @implements Eq
+ * @implements Ord
+ * @implements Enum
+ * @implements Numeric
+ * @implements Show
+ * @implements Serializable
+ * @implements Hashable
+ */
+const _Number = require('./internal/_primitives').Number;
 
 // Implementation for Eq
 
@@ -149,7 +165,7 @@ _Number.sign = _curry(function(a) {
  *
  * @sig Number -> String
  */
-_Number.show = _curry(function(a){
+_Number.show = _curry(function(a) {
     return String(a);
 });
 
@@ -159,5 +175,55 @@ _Number.show = _curry(function(a){
  * @sig Number -> Number -> Number
  */
 _Number.pow = _curryN(2, Math.pow);
+
+
+// Implementation for Serializable
+
+_Number.serializeBE = _curry(function(number) {
+    const f64View = Float64Array.of(number);
+    const u8View = new Uint8Array(f64View.buffer);
+
+    return ByteOrder.archIsBE()
+        ? u8View
+        : Sequential.reverse(u8View);
+});
+
+_Number.serializeLE = _curry(function(number) {
+    const f64View = Float64Array.of(number);
+    const u8View = new Uint8Array(f64View.buffer);
+
+    return ByteOrder.archIsLE()
+        ? u8View
+        : Sequential.reverse(u8View);
+});
+
+_Number.deserializeBE = _curry(function(source) {
+    const i8View = ByteOrder.archIsBE()
+        ? Sequential.slice(0,8,source)
+        : Sequential.reverse(Sequential.slice(0,8,source));
+
+    return (new Float64Array(i8View.buffer))[0];
+});
+
+_Number.deserializeLE = _curry(function(source) {
+    const i8View = ByteOrder.archIsLE()
+        ? Sequential.slice(0,8,source)
+        : Sequential.reverse(Sequential.slice(0,8,source));
+
+    return (new Float64Array(i8View.buffer))[0];
+});
+
+const serializeByteLength = _curryN(1, _always(8));
+_Number.serializeByteLength = serializeByteLength;
+_Number.deserializeByteLengthBE = serializeByteLength;
+_Number.deserializeByteLengthLE = serializeByteLength;
+
+_Number.hash = _curry(function(number) {
+    return Hashable.hash(Serializable.serialize(number));
+});
+
+_Number.hashWithSeed = _curry(function(seed, number) {
+    return Hashable.hashWithSeed(seed, Serializable.serialize(number));
+});
 
 module.exports = _Number;

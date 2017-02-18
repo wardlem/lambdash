@@ -6,7 +6,7 @@ module.exports = _curry(function(left, right) {
     var Ml = _moduleFor(left);
     var Mr = _moduleFor(right);
 
-    if(Ml !== Mr) {
+    if (Ml !== Mr) {
         return false;
     }
 

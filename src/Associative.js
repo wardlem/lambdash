@@ -49,7 +49,7 @@ Associative.lookup = _curryN(2, _useModuleMethod('lookup'));
  * @sig (Functor f, Associative a) => f k -> a k v -> f v
  * @since 0.6.0
  */
-Associative.lookupAll = _curryN(2, function(keys, assoc){
+Associative.lookupAll = _curryN(2, function(keys, assoc) {
     return Functor.fmap(Associative.lookup(__, assoc), keys);
 });
 
@@ -59,7 +59,7 @@ Associative.lookupAll = _curryN(2, function(keys, assoc){
  * @sig Associative a => v -> k -> a k v -> v
  * @since 0.6.0
  */
-Associative.lookupOr = _curryN(3, function(def, key, assoc){
+Associative.lookupOr = _curryN(3, function(def, key, assoc) {
     return Associative.exists(key, assoc) ? Associative.lookup(key, assoc) : def;
 });
 
@@ -69,7 +69,7 @@ Associative.lookupOr = _curryN(3, function(def, key, assoc){
  * @sig Associative a => k -> (v -> v) -> a k v -> a k v
  * @since 0.6.2
  */
-Associative.update = _curryN(3, function(key, fn, assoc){
+Associative.update = _curryN(3, function(key, fn, assoc) {
     return Associative.assoc(key, fn(Associative.lookup(key, assoc)), assoc);
 });
 
@@ -81,7 +81,7 @@ Associative.update = _curryN(3, function(key, fn, assoc){
  * @sig Associative a => v -> k -> (v -> v) -> a k v -> a k v
  * @since 0.6.2
  */
-Associative.updateOr = _curryN(4, function(def, key, fn, assoc){
+Associative.updateOr = _curryN(4, function(def, key, fn, assoc) {
     return Associative.exists(key, assoc)
         ? Associative.update(key, fn, assoc)
         : Associative.assoc(key, def, assoc);

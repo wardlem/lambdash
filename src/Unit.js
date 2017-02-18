@@ -1,9 +1,9 @@
-var _curry = require('./internal/_curry');
-var _curryN = require('./internal/_curryN');
-var _always = require('./internal/_always');
-var Ordering = require('./Ordering');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _always = require('./internal/_always');
+const Ordering = require('./Ordering');
 
-Unit = require('./internal/_primitives').Unit;
+const Unit = require('./internal/_primitives').Unit;
 
 Unit.eq = _curryN(2, _always(true));
 
@@ -13,7 +13,7 @@ Unit.empty = _always(null);
 Unit.concat = _curryN(2, _always(null));
 Unit.fmap = _curryN(2, _always(null));
 
-Unit.show = _curry(function(unit){
+Unit.show = _curry(function(unit) {
     return String(unit);
 });
 

@@ -1,9 +1,7 @@
 const _curry = require('./internal/_curry');
 const _Array = require('./Array');
 const _equal = require('./internal/_equal');
-const _show = require('./internal/_show');
 const _flip = require('./internal/_flip');
-const Foldable = require('./Foldable');
 
 /**
  * _Map is the module for javascript's built in Map type.
@@ -40,7 +38,7 @@ _Map.eq = _curry(function(left, right) {
         return false;
     }
 
-    for ([k,v] of left.entries()) {
+    for (let [k,v] of left.entries()) {
         if (!right.has(k) || _equal(v, right.get(k))) {
             return false;
         }
@@ -57,7 +55,7 @@ _Map.eq = _curry(function(left, right) {
  */
 _Map.fmap = _curry(function map(fn, map) {
     const newMap = new Map();
-    map.forEach((value, key) => { newMap.set(key, fn(value)) });
+    map.forEach((value, key) => { newMap.set(key, fn(value)); });
     return newMap;
 });
 
@@ -71,7 +69,7 @@ _Map.fmap = _curry(function map(fn, map) {
  * @since 0.7.0
  */
 _Map.foldl = _curry(function(fn, init, map) {
-    for (value of map.values()) {
+    for (let value of map.values()) {
         init = fn(init, value);
     }
 
@@ -88,7 +86,7 @@ _Map.foldl = _curry(function(fn, init, map) {
  * @since 0.7.0
  */
 _Map.foldr = _curry(function(fn, init, map) {
-    return _Array.foldr(fn, init, Array.from(map.values());
+    return _Array.foldr(fn, init, Array.from(map.values()));
 });
 
 /**
@@ -102,9 +100,9 @@ _Map.foldr = _curry(function(fn, init, map) {
 _Map.concat = _curry(function concat(left, right) {
     const newMap = new Map(right);
 
-    left.forEach((value, key) => { newMap.set(key, value) });
+    left.forEach((value, key) => { newMap.set(key, value); });
 
-    return newSet;
+    return newMap;
 });
 
 /**
@@ -136,7 +134,7 @@ _Map.union = _flip(_Map.concat);
 _Map.difference = _curry(function(left, right) {
     const newMap = new Map();
 
-    for ([key, value] of left.entries()) {
+    for (let [key, value] of left.entries()) {
         if (!right.has(key)) {
             newMap.set(key, value);
         }
@@ -155,7 +153,7 @@ _Map.difference = _curry(function(left, right) {
 _Map.intersection = _curry(function intersection(left, right) {
     const newMap = new Map();
 
-    for ([key, value] of left.entries()) {
+    for (let [key, value] of left.entries()) {
         if (right.has(key)) {
             newMap.set(key, value);
         }

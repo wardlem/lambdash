@@ -19,7 +19,7 @@ var Applicative = module.exports;
  *      _.ap([x => x + 1], [1,2,3]);              // [2,3,4]
  *      _.ap([x => x + 1, x => x * 2], [1,2,3]);  // [2,3,4,2,4,6]
  */
-Applicative.ap = _curry(function(apply, value){
+Applicative.ap = _curry(function(apply, value) {
 
     var M = _moduleFor(apply);
     if (_isFunction(M.ap)) {

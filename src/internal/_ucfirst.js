@@ -1,5 +1,5 @@
 var _curry = require('./_curry');
-module.exports = _curry(function(str){
+module.exports = _curry(function(str) {
     if (str.length == 0) {
         return str;
     }

@@ -246,6 +246,323 @@ describe('TypedArray', () => {
         });
     });
 
+    describe('#serializeBE', () => {
+        it('encodes a typed array into a Uint8Array in big endian order', () => {
+            const i8 = Int8Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const u16 = Uint16Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const i32 = Int32Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const f32 = Float32Array.of(1.5, 2.5);
+            const f64 = Float64Array.of(1.5, 2.5);
+
+            const i8Res = _Int8Array.serializeBE(i8);
+            const u16Res = _Uint16Array.serializeBE(u16);
+            const i32Res = _Int32Array.serializeBE(i32);
+            const f32Res = _Float32Array.serializeBE(f32);
+            const f64Res = _Float64Array.serializeBE(f64);
+
+            const i8Expected = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Expected = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0xFF,
+                0x00, 0x00,
+                0x00, 0x0F,
+                0x00, 0xF0
+            );
+            const i32Expected = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0x00, 0x00, 0xFF,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x0F,
+                0x00, 0x00, 0x00, 0xF0
+            );
+            const f32Expected = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 192, 0, 0,
+                64, 32, 0, 0
+            );
+            const f64Expected = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 248, 0, 0, 0, 0, 0, 0,
+                64, 4, 0, 0, 0, 0, 0, 0
+            );
+
+            assert(i8Res instanceof Uint8Array);
+            assert(u16Res instanceof Uint8Array);
+            assert(i32Res instanceof Uint8Array);
+            assert(f32Res instanceof Uint8Array);
+            assert(f64Res instanceof Uint8Array);
+
+            assertEqual(i8Res, i8Expected);
+            assertEqual(u16Res, u16Expected);
+            assertEqual(i32Res, i32Expected);
+            assertEqual(f32Res, f32Expected);
+            assertEqual(f64Res, f64Expected);
+
+        });
+    });
+
+    describe('#serializeLE', () => {
+        it('encodes a typed array into a Uint8Array in little endian order', () => {
+            const i8 = Int8Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const u16 = Uint16Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const i32 = Int32Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const f32 = Float32Array.of(1.5, 2.5);
+            const f64 = Float64Array.of(1.5, 2.5);
+
+            const i8Res = _Int8Array.serializeLE(i8);
+            const u16Res = _Uint16Array.serializeLE(u16);
+            const i32Res = _Int32Array.serializeLE(i32);
+            const f32Res = _Float32Array.serializeLE(f32);
+            const f64Res = _Float64Array.serializeLE(f64);
+
+            const i8Expected = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Expected = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00,
+                0x00, 0x00,
+                0x0F, 0x00,
+                0xF0, 0x00
+            );
+            const i32Expected = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x0F, 0x00, 0x00, 0x00,
+                0xF0, 0x00, 0x00, 0x00
+            );
+            const f32Expected = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 192, 63,
+                0, 0, 32, 64
+            );
+            const f64Expected = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 0, 0, 0, 0, 248, 63,
+                0, 0, 0, 0, 0, 0, 4, 64
+            );
+
+            assert(i8Res instanceof Uint8Array);
+            assert(u16Res instanceof Uint8Array);
+            assert(i32Res instanceof Uint8Array);
+            assert(f32Res instanceof Uint8Array);
+            assert(f64Res instanceof Uint8Array);
+
+            assertEqual(i8Res, i8Expected);
+            assertEqual(u16Res, u16Expected);
+            assertEqual(i32Res, i32Expected);
+            assertEqual(f32Res, f32Expected);
+            assertEqual(f64Res, f64Expected);
+
+        });
+    });
+
+    describe('#serializeByteLength', () => {
+        it('calculates the number of bytes a value will take to serialize', () => {
+            const i8 = Int8Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const u16 = Uint16Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const i32 = Int32Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const f32 = Float32Array.of(1.5, 2.5);
+            const f64 = Float64Array.of(1.5, 2.5);
+
+            assert.equal(_Int8Array.serializeByteLength(i8), 8);
+            assert.equal(_Uint16Array.serializeByteLength(u16), 12);
+            assert.equal(_Int32Array.serializeByteLength(i32), 20);
+            assert.equal(_Float32Array.serializeByteLength(f32), 12);
+            assert.equal(_Float64Array.serializeByteLength(f64), 20);
+        })
+    });
+
+    describe('#deserializeBE', () => {
+        it('creates a typed array from a big-endian encoded Uint8Array', () => {
+            const i8Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0xFF,
+                0x00, 0x00,
+                0x00, 0x0F,
+                0x00, 0xF0
+            );
+            const i32Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0x00, 0x00, 0xFF,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x0F,
+                0x00, 0x00, 0x00, 0xF0
+            );
+            const f32Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 192, 0, 0,
+                64, 32, 0, 0
+            );
+            const f64Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 248, 0, 0, 0, 0, 0, 0,
+                64, 4, 0, 0, 0, 0, 0, 0
+            );
+
+            const i8Expected = Int8Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const u16Expected = Uint16Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const i32Expected = Int32Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const f32Expected = Float32Array.of(1.5, 2.5);
+            const f64Expected = Float64Array.of(1.5, 2.5);
+
+            const i8Result = _Int8Array.deserializeBE(i8Serialized);
+            const u16Result = _Uint16Array.deserializeBE(u16Serialized);
+            const i32Result = _Int32Array.deserializeBE(i32Serialized);
+            const f32Result = _Float32Array.deserializeBE(f32Serialized);
+            const f64Result = _Float64Array.deserializeBE(f64Serialized);
+
+            assertEqual(i8Result, i8Expected);
+            assertEqual(u16Result, u16Expected);
+            assertEqual(i32Result, i32Expected);
+            assertEqual(f32Result, f32Expected);
+            assertEqual(f64Result, f64Expected);
+        });
+    });
+
+    describe('#deserializeLE', () => {
+        it('creates a typed array from a big-endian encoded Uint8Array', () => {
+            const i8Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00,
+                0x00, 0x00,
+                0x0F, 0x00,
+                0xF0, 0x00
+            );
+            const i32Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x0F, 0x00, 0x00, 0x00,
+                0xF0, 0x00, 0x00, 0x00
+            );
+            const f32Serialized = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 192, 63,
+                0, 0, 32, 64
+            );
+            const f64Serialized = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 0, 0, 0, 0, 248, 63,
+                0, 0, 0, 0, 0, 0, 4, 64
+            );
+
+            const i8Expected = Int8Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const u16Expected = Uint16Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const i32Expected = Int32Array.of(0xFF, 0x00, 0x0F, 0xF0);
+            const f32Expected = Float32Array.of(1.5, 2.5);
+            const f64Expected = Float64Array.of(1.5, 2.5);
+
+            const i8Result = _Int8Array.deserializeLE(i8Serialized);
+            const u16Result = _Uint16Array.deserializeLE(u16Serialized);
+            const i32Result = _Int32Array.deserializeLE(i32Serialized);
+            const f32Result = _Float32Array.deserializeLE(f32Serialized);
+            const f64Result = _Float64Array.deserializeLE(f64Serialized);
+
+            assertEqual(i8Result, i8Expected);
+            assertEqual(u16Result, u16Expected);
+            assertEqual(i32Result, i32Expected);
+            assertEqual(f32Result, f32Expected);
+            assertEqual(f64Result, f64Expected);
+        });
+
+    });
+
+    describe('#deserializeByteLengthBE', () => {
+        it('determines how many bytes it will consume from a buffer during serialization', () => {
+            const i8Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0xFF,
+                0x00, 0x00,
+                0x00, 0x0F,
+                0x00, 0xF0
+            );
+            const i32Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x04,
+                0x00, 0x00, 0x00, 0xFF,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x0F,
+                0x00, 0x00, 0x00, 0xF0
+            );
+            const f32Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 192, 0, 0,
+                64, 32, 0, 0
+            );
+            const f64Serialized = _Uint8Array.of(
+                0x00, 0x00, 0x00, 0x02,
+                63, 248, 0, 0, 0, 0, 0, 0,
+                64, 4, 0, 0, 0, 0, 0, 0
+            );
+
+            assert.equal(_Int8Array.deserializeByteLengthBE(i8Serialized), 8);
+            assert.equal(_Uint16Array.deserializeByteLengthBE(u16Serialized), 12);
+            assert.equal(_Int32Array.deserializeByteLengthBE(i32Serialized), 20);
+            assert.equal(_Float32Array.deserializeByteLengthBE(f32Serialized), 12);
+            assert.equal(_Float64Array.deserializeByteLengthBE(f64Serialized), 20);
+        });
+    });
+
+    describe('#deserializeByteLengthLE', () => {
+        it('determines how many bytes it will consume from a buffer during serialization', () => {
+            const i8Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x0F, 0xF0
+            );
+            const u16Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00,
+                0x00, 0x00,
+                0x0F, 0x00,
+                0xF0, 0x00
+            );
+            const i32Serialized = _Uint8Array.of(
+                0x04, 0x00, 0x00, 0x00,
+                0xFF, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x0F, 0x00, 0x00, 0x00,
+                0xF0, 0x00, 0x00, 0x00
+            );
+            const f32Serialized = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 192, 63,
+                0, 0, 32, 64
+            );
+            const f64Serialized = _Uint8Array.of(
+                0x02, 0x00, 0x00, 0x00,
+                0, 0, 0, 0, 0, 0, 248, 63,
+                0, 0, 0, 0, 0, 0, 4, 64
+            );
+
+            assert.equal(_Int8Array.deserializeByteLengthLE(i8Serialized), 8);
+            assert.equal(_Uint16Array.deserializeByteLengthLE(u16Serialized), 12);
+            assert.equal(_Int32Array.deserializeByteLengthLE(i32Serialized), 20);
+            assert.equal(_Float32Array.deserializeByteLengthLE(f32Serialized), 12);
+            assert.equal(_Float64Array.deserializeByteLengthLE(f64Serialized), 20);
+        });
+    });
+
+    describe('#hash', () => {
+        
+    });
+
     describe('@implements', () => {
         const u8 = new Uint8Array(0);
 
@@ -257,7 +574,9 @@ describe('TypedArray', () => {
             "Semigroup",
             "Monoid",
             "Sequential",
-            "Show"
+            "Show",
+            "Serializable",
+            "Hashable"
         ].forEach((name) => {
             it(`implements ${name}`, () => {
                 assert(_[name].member(u8));

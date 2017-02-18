@@ -1,5 +1,3 @@
-var _curry = require('./_curry');
-
 module.exports = function() {
     // https://github.com/ramda/ramda/blob/master/src/cond.js
     var conditions = arguments;
@@ -11,5 +9,5 @@ module.exports = function() {
             }
             condIndex += 1;
         }
-    }
+    };
 };
