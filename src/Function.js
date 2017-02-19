@@ -14,7 +14,7 @@ var _isArray = require('./internal/_isArray');
 var _flip = require('./internal/_flip');
 
 var ap = require('./Applicative').ap;
-var map = require('./Functor').fmap;
+var map = require('./Functor').map;
 var foldl = require('./Foldable').foldl;
 
 

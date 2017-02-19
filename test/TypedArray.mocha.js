@@ -76,14 +76,14 @@ describe('TypedArray', () => {
         });
     });
 
-    describe('#fmap', () => {
+    describe('#map', () => {
         it('creates a new typed array with the values of the original altered by a function', () => {
             const u8_1 = Uint8Array.of(1, 2, 3);
             const u32_1 = Uint32Array.of(1, 2, 3);
             const fn = _.mul(2);
 
-            const res1 = _Uint8Array.fmap(fn, u8_1);
-            const res2 = _Uint32Array.fmap(fn, u32_1);
+            const res1 = _Uint8Array.map(fn, u8_1);
+            const res2 = _Uint32Array.map(fn, u32_1);
 
             assertEqual(res1, Uint8Array.of(2,4,6));
             assertEqual(u8_1, Uint8Array.of(1,2,3));

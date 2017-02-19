@@ -93,10 +93,10 @@ describe('Array', function() {
         });
     });
 
-    describe('#fmap', function() {
+    describe('#map', function() {
         it('should return a new array with a function mapped over the values', function() {
             var arr = [1,2,3];
-            var res = Arr.fmap(_.pipe(_.add(1), _.show), arr);
+            var res = Arr.map(_.pipe(_.add(1), _.show), arr);
             assert(Arr.eq(res, ['2', '3', '4']));
             assert(_.eq(arr, [1,2,3]));
         });

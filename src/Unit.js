@@ -12,7 +12,7 @@ Unit.compare = _curryN(2, _always(Ordering.EQ));
 
 Unit.empty = _always(null);
 Unit.concat = _curryN(2, _always(null));
-Unit.fmap = _curryN(2, _always(null));
+Unit.map = _curryN(2, _always(null));
 
 Unit.show = _curry(function(unit) {
     return String(unit);

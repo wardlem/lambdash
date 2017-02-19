@@ -35,10 +35,10 @@ describe('Set', function() {
         });
     });
 
-    describe('#fmap', function() {
+    describe('#map', function() {
         it('returns a new set with each item in the original altered by a function', function() {
             const set = new Set([1,2,3]);
-            const res = _Set.fmap(_.pipe(_.add(1), _.show), set);
+            const res = _Set.map(_.pipe(_.add(1), _.show), set);
             assertEqual(res, new Set(['2', '3', '4']));
         });
     });

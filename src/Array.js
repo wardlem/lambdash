@@ -85,12 +85,12 @@ _Array.compare = _curry(function(left, right) {
  *
  * @sig (a -> b) -> Array a -> Array b
  * @since 0.4.0
- * @see Functor.fmap
+ * @see Functor.map
  * @param {Function} fn the function mapping over the array
  * @param {Array} array the array being mapped over
  * @return {Array} The array with fn applied to each of its elements
  */
-_Array.fmap = _curry(function(fn, array) {
+_Array.map = _curry(function(fn, array) {
     var res = [];
     var ind = 0;
     while (ind < array.length) {
@@ -180,7 +180,7 @@ _Array.ap = _curry(function(applicative, array) {
     var result = [];
     var ind = 0;
     while (ind < applicative.length) {
-        result = result.concat(_Array.fmap(applicative[ind], array));
+        result = result.concat(_Array.map(applicative[ind], array));
         ind += 1;
     }
 
@@ -437,7 +437,7 @@ _Array.symmetricDifference = _curry(function(left, right) {
  * @since 0.5.0
  */
 _Array.show = _curry(function(array) {
-    var items = _Array.fmap(_show, array);
+    var items = _Array.map(_show, array);
     return '[' + items.join(',') + ']';
 });
 
@@ -450,7 +450,7 @@ _Array.show = _curry(function(array) {
  * @since 0.7.0
  */
 _Array.hashWithSeed = _curry(function(seed, array) {
-    let parts = _Array.fmap(Hashable.hashWithSeed(seed), array);
+    let parts = _Array.map(Hashable.hashWithSeed(seed), array);
     return _Int32Array.hashWithSeed(seed, Int32Array.from(parts));
 });
 
@@ -463,7 +463,7 @@ _Array.hashWithSeed = _curry(function(seed, array) {
  * @since 0.7.0
  */
 _Array.hash = _curry(function(array) {
-    let parts = _Array.fmap(Hashable.hash, array);
+    let parts = _Array.map(Hashable.hash, array);
     return _Int32Array.hash(Int32Array.from(parts));
 });
 

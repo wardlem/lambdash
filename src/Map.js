@@ -55,7 +55,7 @@ _Map.eq = _curry(function(left, right) {
  * @sig (a -> b) -> (Map k a) -> (Map k b)
  * @since 0.7.0
  */
-_Map.fmap = _curry(function map(fn, map) {
+_Map.map = _curry(function map(fn, map) {
     const newMap = new Map();
     map.forEach((value, key) => { newMap.set(key, fn(value)); });
     return newMap;

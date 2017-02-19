@@ -50,7 +50,7 @@ Associative.lookup = _curryN(2, _useModuleMethod('lookup'));
  * @since 0.6.0
  */
 Associative.lookupAll = _curryN(2, function(keys, assoc) {
-    return Functor.fmap(Associative.lookup(__, assoc), keys);
+    return Functor.map(Associative.lookup(__, assoc), keys);
 });
 
 /**

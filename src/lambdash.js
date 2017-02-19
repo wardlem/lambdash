@@ -149,7 +149,7 @@ lambdash.pow = Numeric.pow;
 lambdash.powBy = Numeric.powBy;
 
 // Functor
-lambdash.fmap = Functor.fmap;
+lambdash.map = Functor.map;
 
 // Semigroup
 lambdash.concat = Semigroup.concat;

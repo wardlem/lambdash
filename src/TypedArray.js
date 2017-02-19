@@ -45,7 +45,7 @@ _TypedArray.compare = _curry(function(left, right) {
     return Ordering.fromNum(left.length - right.length);
 });
 
-_TypedArray.fmap = _curry(function(fn, array) {
+_TypedArray.map = _curry(function(fn, array) {
     const result = new array.constructor(array.length);
     for (let i = 0, l = result.length; i < l; i += 1) {
         result[i] = fn(array[i]);

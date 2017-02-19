@@ -36,11 +36,11 @@ describe('ArrayBuffer', () => {
         });
     });
 
-    describe('#fmap', () => {
+    describe('#map', () => {
         it('returns a new buffer with a function applied to each byte of the original', () => {
             const arr_1 = _ArrayBuffer.of(0x01, 0x02, 0x03);
             const fn = _.mul(3);
-            const res = _ArrayBuffer.fmap(fn, arr_1);
+            const res = _ArrayBuffer.map(fn, arr_1);
 
             assert(res instanceof ArrayBuffer);
             assertEqual(res, _ArrayBuffer.of(0x03, 0x06, 0x09));
@@ -147,7 +147,7 @@ describe('ArrayBuffer', () => {
 
     describe('#hash', () => {
         it('hashes a buffer and returns an integer', () => {
-            const values = _.fmap((c) => c.charCodeAt(0), 'node.js'.split(''));
+            const values = _.map((c) => c.charCodeAt(0), 'node.js'.split(''));
             const buffer = Uint8Array.from(values).buffer;
 
             const hash = _ArrayBuffer.hash(buffer);

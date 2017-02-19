@@ -39,7 +39,7 @@ describe('Applicative', function() {
         it('should return true if a value is a member of Applicative false otherwise', function() {
             var Ap = _.Type.product('Ap', {value: null});
 
-            Ap.fmap = function(fn, ap) {
+            Ap.map = function(fn, ap) {
                 return Ap(fn, ap);
             };
 

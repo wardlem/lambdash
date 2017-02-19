@@ -26,8 +26,8 @@ _ArrayBuffer.compare = _curry(function(left, right) {
     return _Uint8Array.compare(new Uint8Array(left), new Uint8Array(right));
 });
 
-_ArrayBuffer.fmap = _curry(function(fn, buffer) {
-    return _Uint8Array.fmap(fn, new Uint8Array(buffer)).buffer;
+_ArrayBuffer.map = _curry(function(fn, buffer) {
+    return _Uint8Array.map(fn, new Uint8Array(buffer)).buffer;
 });
 
 _ArrayBuffer.concat = _curry(function(left, right) {

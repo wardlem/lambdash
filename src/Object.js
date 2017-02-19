@@ -89,7 +89,7 @@ _Object.compare = _curry(function(left, right) {
  * @sig (a -> b) -> {String: a} -> {String: b}
  * @since 0.6.0
  */
-_Object.fmap = _curry(function(fn, object) {
+_Object.map = _curry(function(fn, object) {
     return Foldable.foldl(function(accum, key) {
         accum[key] = fn(object[key]);
         return accum;
@@ -384,7 +384,7 @@ _Object.propOr = _curry(function(def, key, object) {
  * @since 0.6.0
  */
 _Object.props = _curry(function(props, object) {
-    return Functor.fmap(_Object.prop(__, object), props);
+    return Functor.map(_Object.prop(__, object), props);
 });
 
 /**
@@ -439,7 +439,7 @@ _Object.ownValues = _curry(function(object) {
  * @since 0.6.0
  */
 _Object.pairs = _curry(function(object) {
-    return Functor.fmap(function(key) {
+    return Functor.map(function(key) {
         return [key, object[key]];
     }, _Object.propNames(object));
 });
@@ -452,7 +452,7 @@ _Object.pairs = _curry(function(object) {
  * @since 0.6.0
  */
 _Object.ownPairs = _curry(function(object) {
-    return Functor.fmap(function(key) {
+    return Functor.map(function(key) {
         return [key, object[key]];
     }, _Object.ownPropNames(object));
 });

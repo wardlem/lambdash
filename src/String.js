@@ -69,7 +69,7 @@ _String.fromInt = _curry(String.fromCharCode);
  * @sig (String -> String) -> String -> String
  * @since 0.5.0
  */
-_String.fmap = _curry(function(fn, string) {
+_String.map = _curry(function(fn, string) {
     return string.split('').map(fn).join('');
 });
 

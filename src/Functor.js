@@ -14,14 +14,14 @@ var Functor = module.exports;
  * @return {Functor}
  * @example
  *
- *      _.fmap(x => x * 2, [1,2,3]);  // [2,4,6]
+ *      _.map(x => x * 2, [1,2,3]);  // [2,4,6]
  */
-Functor.fmap = _curry(function(fn, functor) {
+Functor.map = _curry(function(fn, functor) {
     var M = _moduleFor(functor);
-    return M.fmap(fn, functor);
+    return M.map(fn, functor);
 });
 
 Functor.member = function(value) {
     var M = _moduleFor(value);
-    return _isFunction(M.fmap);
+    return _isFunction(M.map);
 };

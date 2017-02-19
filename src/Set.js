@@ -51,7 +51,7 @@ _Set.eq = _curry(function eq(left, right) {
  * @sig (a -> b) -> (Set a) -> (Set b)
  * @since 0.7.0
  */
-_Set.fmap = _curry(function map(fn, set) {
+_Set.map = _curry(function map(fn, set) {
     const newSet = new Set();
 
     set.forEach(value => { newSet.add(fn(value)); });
@@ -124,7 +124,7 @@ _Set.ap = _curry(function ap(applicative, set) {
     let result = new Set();
 
     for (let fn of applicative) {
-        result = _Set.concat(result, _Set.fmap(fn, set));
+        result = _Set.concat(result, _Set.map(fn, set));
     }
 
     return result;
@@ -207,7 +207,7 @@ _Set.remove = _curry(function(key, set) {
 });
 
 _Set.show = _curry(function(set) {
-    var items = _Set.fmap(_show, set);
+    var items = _Set.map(_show, set);
     return 'Set(' + Foldable.joinWith(',', items) + ')';
 });
 
