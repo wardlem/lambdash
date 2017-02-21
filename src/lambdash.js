@@ -8,6 +8,7 @@ const Obj = require('./Object');
 const Regex = require('./RegExp');
 const DT = require('./Date');
 const _Set = require('./Set');
+const _Map = require('./Map');
 const Fun = require('./Function');
 const Unit = require('./Unit');
 const Any = require('./Any');
@@ -68,6 +69,7 @@ lambdash.Obj = lambdash.Object = Obj;
 lambdash.Regex = lambdash.RegExp = Regex;
 lambdash.DT = lambdash.Date = DT;
 lambdash.Set = _Set;
+lambdash.Map = _Map;
 lambdash.Fun = lambdash.Function = Fun;
 lambdash.Unit = Unit;
 lambdash.ArrayBuffer = _ArrayBuffer;
@@ -351,3 +353,5 @@ Object.defineProperty(lambdash, '@@functional/blank', {
     enumerable: false,
     writable: false,
 });
+
+require('./_derives')(lambdash);

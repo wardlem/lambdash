@@ -21,8 +21,8 @@ const typeclass = function typeclass(Typeclass, def) {
     return Typeclass;
 };
 
-typeclass.createDeriveFor = function(deriveFn, deriveProtoFn, derivePrototype = true) {
-    return function deriveFor(M) {
+typeclass.createDeriveFor = function(deriveFn, deriveProtoFn) {
+    return function deriveFor(M, derivePrototype = true) {
         const methods = deriveFn(M);
         const protoMethods = deriveProtoFn(M);
 
@@ -44,12 +44,12 @@ typeclass.createDeriveFor = function(deriveFn, deriveProtoFn, derivePrototype = 
 
 typeclass.createIsImplementedBy = function(required, superTypes) {
 
-    return _typecached(function(M) {
+    return function(M) {
         return !!M
             && superTypes.reduce((res, SuperType) => res && SuperType.isImplementedBy(M), true)
             && required.reduce((res, fnName) => res && _isFunction(M[fnName]), true)
         ;
-    });
+    };
 };
 
 typeclass.forward = (methodName, deriveFn) => {

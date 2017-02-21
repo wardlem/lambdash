@@ -221,7 +221,7 @@ _Set.show = _curry(function(set) {
  * @sig (Hashable k, Hashable v) => Integer -> (Map k v) -> Integer
  * @since 0.7.0
  */
-_Set.hasWithSeed = _curry(function hashWithSeed(seed, set) {
+_Set.hashWithSeed = _curry(function hashWithSeed(seed, set) {
     const values = [];
 
     for (let value of set) {
@@ -229,22 +229,6 @@ _Set.hasWithSeed = _curry(function hashWithSeed(seed, set) {
     }
 
     return _Int32Array.hashWithSeed(seed, Int32Array.of(values));
-});
-
-/**
- * Hashes a map with a default seed
- *
- * @sig (Hashable k, Hashable v) => (Map k v) -> Integer
- * @since 0.7.0
- */
-_Set.hash = _curry(function hash(set) {
-    const values = [];
-
-    for (let value of set) {
-        values.push(Hashable.hash(value));
-    }
-
-    return _Int32Array.hash(Int32Array.of(values));
 });
 
 module.exports = _Set;

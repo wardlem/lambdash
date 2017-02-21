@@ -1,6 +1,7 @@
 var _is = require('./internal/_is');
 var _curry = require('./internal/_curry');
 var _flip = require('./internal/_flip');
+const _identity = require('./internal/_identity');
 
 var Ordering = require('./Ordering');
 var Foldable = require('./Foldable');
@@ -154,6 +155,8 @@ _String.nth = _curry(function(ind, string) {
 
     return string[ind];
 });
+
+_String.of = _identity;
 
 /**
  * Appends a string to another.

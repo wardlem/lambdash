@@ -24,6 +24,10 @@ _Integer.compare = _curry(function(left, right) {
 _Integer.toInt = _identity;
 _Integer.fromInt = _identity;
 
+// Implementation for Numeric
+_Integer.toNum = _identity;
+_Integer.fromNum = _identity;
+
 // Implementation for Bounded
 _Integer.minBound = function() {
     return -2147483648;

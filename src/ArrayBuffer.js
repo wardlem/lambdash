@@ -1,4 +1,5 @@
 const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
 const _Uint8Array = require('./internal/_primitives').Uint8Array;
 const _Integer = require('./internal/_primitives').Integer;
 const Sequential = require('./Sequential');
@@ -54,9 +55,9 @@ _ArrayBuffer.nth = _curry(function(index, buffer) {
     return (new Uint8Array(buffer))[index];
 });
 
-_ArrayBuffer.of = function(...bytes) {
+_ArrayBuffer.of = _curryN(1, function(...bytes) {
     return Uint8Array.from(bytes).buffer;
-};
+});
 
 _ArrayBuffer.serializeBE = _curry(function(buffer) {
     const sizeSerialized = _Integer.serializeBE(buffer.byteLength);
@@ -93,10 +94,10 @@ _ArrayBuffer.deserializeByteLengthLE = _curry(function(source) {
 });
 
 const HASH_BASE = 0x811c9dc5;
-_ArrayBuffer.hash = function(buffer) {
+_ArrayBuffer.hashWithSeed = _curry(function(seed, buffer) {
     // FNV1-A hash, based on schwarzkopfb's implementation: https://github.com/schwarzkopfb/fnv1a
 
-    let hash = HASH_BASE;
+    let hash = seed;
     const view = new Uint8Array(buffer);
 
     for (let i = 0, l = view.length; i < l; i += 1) {
@@ -105,7 +106,9 @@ _ArrayBuffer.hash = function(buffer) {
     }
 
     return hash >>> 0;
-};
+});
+
+_ArrayBuffer.hash = _ArrayBuffer.hashWithSeed(HASH_BASE);
 
 _ArrayBuffer.show = _curry(function(buffer) {
     let vs = _ArrayBuffer.foldl((arr, byte) => arr.concat([`0x0${byte.toString(16).toUpperCase()}`]), [], buffer);

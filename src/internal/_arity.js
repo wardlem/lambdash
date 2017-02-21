@@ -56,6 +56,9 @@ module.exports = function _arity(n, fn) {
                 return fn.apply(this, arguments);
             };
         default:
+            if (n < 0) {
+                throw new RangeError('N cannot be less than 0');
+            }
             var argNames = intRange(0, n).map(function(i) {return '_' + i;}).join(',');
             var fnName = '_f' + n;
             var fnStr = 'function ' + fnName + '(' + argNames + '){return fn.apply(this,arguments);}';

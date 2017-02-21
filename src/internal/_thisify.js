@@ -3,6 +3,9 @@ var __ = require('./_blank');
 var _slice = require('./_slice');
 
 module.exports = function(fn) {
+    if (fn.length < 1) {
+        return fn;
+    }
     return _arity(fn.length - 1, function() {
         var applied = _slice(arguments);
         var count = fn.length - 1;

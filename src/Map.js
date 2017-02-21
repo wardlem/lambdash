@@ -2,6 +2,7 @@ const _curry = require('./internal/_curry');
 const _Array = require('./Array');
 const _equal = require('./internal/_equal');
 const _flip = require('./internal/_flip');
+const _show = require('./internal/_show');
 const _Int32Array = require('./internal/_primitives').Int32Array;
 const Hashable = require('./Hashable');
 
@@ -14,11 +15,11 @@ const Hashable = require('./Hashable');
  * @implements Foldable
  * @implements Semigroup
  * @implements Monoid
- * @implements Applicative
- * @implements Monad
  * @implements SetOps
- * @implements SetKind
  * @implements Show
+ * @implements Associative
+ * @implements AssocFoldable
+ * @implements Hashable
  */
 const _Map = require('./internal/_primitives').Map;
 
@@ -180,7 +181,7 @@ _Map.symmetricDifference = _curry(function symmetricDifference(left, right) {
  * @sig (Hashable k, Hashable v) => Integer -> (Map k v) -> Integer
  * @since 0.7.0
  */
-_Map.hasWithSeed = _curry(function hashWithSeed(seed, map) {
+_Map.hashWithSeed = _curry(function hashWithSeed(seed, map) {
     const values = [];
 
     for (let [key, value] of map.entries()) {
@@ -191,19 +192,51 @@ _Map.hasWithSeed = _curry(function hashWithSeed(seed, map) {
     return _Int32Array.hashWithSeed(seed, Int32Array.of(values));
 });
 
-/**
- * Hashes a map with a default seed
- *
- * @sig (Hashable k, Hashable v) => (Map k v) -> Integer
- * @since 0.7.0
- */
-_Map.hash = _curry(function hash(map) {
-    const values = [];
+_Map.foldlAssoc = _curry(function(fn, init, map) {
+    let pairs = Array.from(map.entries());
 
-    for (let [key, value] of map.entries()) {
-        values.push(Hashable.hash(key));
-        values.push(Hashable.hash(value));
-    }
-
-    return _Int32Array.hash(Int32Array.of(values));
+    return pairs.reduce((accum, [k,v]) => fn(accum, v, k), init);
 });
+
+_Map.foldrAssoc = _curry(function(fn, init, map) {
+    let pairs = Array.from(map.entries()).reverse();
+
+    return pairs.reduce((accum, [k,v]) => fn(accum, v, k), init);
+});
+
+_Map.assoc = _curry(function(key, value, map) {
+    const newMap = new Map(map);
+    newMap.set(key, value);
+    return newMap;
+});
+
+_Map.dissoc = _curry(function(key, map) {
+    const newMap = new Map(map);
+    newMap.delete(key);
+    return newMap;
+});
+
+_Map.exists = _curry(function(key, map) {
+    return map.has(key);
+});
+
+_Map.lookup = _curry(function(key, map) {
+    return map.get(key);
+});
+
+_Map.hashWithSeed = _curry(function(seed, map) {
+    const Hashable = require('./Hashable');
+    return _Map.foldlAssoc((res, v, k) => {
+        return Hashable.hashWithSeed(
+            Hashable.hashWithSeed(seed, k),
+            v
+        );
+    }, seed, map);
+});
+
+_Map.show = _curry(function(map) {
+    const values = _Map.mapAssoc((v,k) => `[${_show(k)},${_show(v)}]`, map);
+
+    return `Map([${values}])`;
+});
+module.exports = _Map;
