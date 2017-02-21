@@ -84,7 +84,7 @@ describe('Eq', function() {
 
             assert.equal(Eq.eq(CaseA(1), CaseA(2)), false);
             assert.equal(Eq.eq(CaseB(2), CaseB(1)), false);
-            assert.equal(Eq.eq(CaseA(1), CaseB(1)), true);
+            assert.equal(Eq.eq(CaseA(1), CaseB(1)), false);
         });
     });
 
@@ -101,7 +101,7 @@ describe('Eq', function() {
             assert(Eq.member(1));
             assert(Eq.member([]));
             assert(Eq.member({}));
-            assert(!Eq.member(function() {}));
+            assert(Eq.member(function() {}));
         });
     });
 

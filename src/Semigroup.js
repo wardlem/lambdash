@@ -1,10 +1,38 @@
-var _moduleFor = require('./internal/_moduleFor');
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
+const _moduleFor = require('./internal/_moduleFor');
+const _curry = require('./internal/_curry');
+const _isFunction = require('./internal/_isFunction');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const _flip = require('./internal/_flip');
+const typeclass = require('./typeclass');
 
-var Foldable = require('./Foldable');
+const Semigroup = {name: 'Semigroup'};
+const Foldable = require('./Foldable');
 
-var Semigroup = module.exports;
+const semigroupForModule = _typecached(M => {
+    if (!Semigroup.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Semigroup`);
+    }
+
+
+    const _Semigroup = {};
+
+    _Semigroup.concat = M.concat;
+
+    return _Semigroup;
+});
+
+const semigroupForModulePrototype = _typecached(M => {
+    const methods = semigroupForModule(M);
+
+    return {
+        concat: _thisify(_flip(methods.concat)),
+        concatAll: function(others) {
+            return Semigroup.concatAll([this].concat(others));
+        },
+    };
+});
 
 /**
  * Returns the concatenation of two values
@@ -19,10 +47,7 @@ var Semigroup = module.exports;
  *      _.concat([1,2,3],[4,5,6]);  // [1,2,3,4,5,6]
  *      _.concat("ABC", "123");     // "ABC123"
  */
-Semigroup.concat = _curry(function(a, b) {
-    var M = _moduleFor(a);
-    return M.concat(a, b);
-});
+Semigroup.concat = _curryN(2, typeclass.forward('concat', semigroupForModule));
 
 /**
  * Concatenates all values in a foldable into one.
@@ -33,12 +58,17 @@ Semigroup.concat = _curry(function(a, b) {
  * @since 0.4.0
  * @returns {Semigroup}
  */
-Semigroup.concatAll = _curry(function(foldable) {
-    return Foldable.foldl1(Semigroup.concat, foldable);
-});
+Semigroup.concatAll = _curry(foldable => Foldable.foldl1(Semigroup.concat, foldable));
 
 
 Semigroup.member = function(value) {
-    var M = _moduleFor(value);
+    const M = _moduleFor(value);
     return _isFunction(M.concat);
 };
+
+module.exports = typeclass(Semigroup, {
+    deriveFn: semigroupForModule,
+    deriveProtoFn: semigroupForModulePrototype,
+    required: ['concat'],
+    superTypes: [],
+});

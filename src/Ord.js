@@ -1,16 +1,75 @@
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
-var _compose = require('./internal/_compose');
-var _not = require('./internal/_not');
-var _moduleFor = require('./internal/_moduleFor');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
+const _flip = require('./internal/_flip');
+const _isFunction = require('./internal/_isFunction');
+const _compose = require('./internal/_compose');
+const _not = require('./internal/_not');
 
-var Eq = require('./Eq');
-var Ordering = require('./Ordering');
+const Eq = require('./Eq');
+const Ordering = require('./Ordering');
 
 
-var Ord = module.exports;
+const Ord = {name: 'Ord'};
 
 Ord.eq = Eq.eq;
+
+const ordForModule = _typecached((M) => {
+    if (!Ord.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Ord`);
+    }
+
+    const _Ord = {};
+
+    _Ord.compare = M.compare;
+    _Ord.gt = _isFunction(M.gt)
+        ? M.gt
+        : _compose(Ordering.isGT, _Ord.compare)
+    ;
+
+    _Ord.lt = _isFunction(M.lt)
+        ? M.lt
+        : _compose(Ordering.isLT, _Ord.compare)
+    ;
+
+    _Ord.gte = _isFunction(M.gte)
+        ? M.gte
+        : _not(_Ord.lt)
+    ;
+
+    _Ord.lte = _isFunction(M.lte)
+        ? M.lte
+        : _not(_Ord.gt)
+    ;
+
+    _Ord.min = _isFunction(M.min)
+        ? M.min
+        : _curry((left, right) => Ord.lte(left, right) ? left : right)
+    ;
+
+    _Ord.max = _isFunction(M.max)
+        ? M.max
+        : _curry((left, right) => Ord.gte(left, right) ? left : right)
+    ;
+
+    return _Ord;
+});
+
+const ordForModulePrototype = _typecached((M) => {
+    const methods = ordForModule(M);
+
+    return {
+        compare: _thisify(_flip(methods.compare)),
+        gt: _thisify(_flip(methods.gt)),
+        lt: _thisify(_flip(methods.lt)),
+        gte: _thisify(_flip(methods.gte)),
+        lte: _thisify(_flip(methods.lte)),
+        min: _thisify(_flip(methods.min)),
+        max: _thisify(_flip(methods.max)),
+    };
+});
 
 /**
  * Compares two values of the same type.
@@ -38,15 +97,7 @@ Ord.eq = Eq.eq;
  *      _.compare('CAB')('CAR');    // _.LT
  *
  */
-Ord.compare = _curry(function(left, right) {
-    var M = _moduleFor(left);
-    if (_isFunction(M.compare)) {
-        return M.compare(left, right);
-    }
-
-    // default
-    return Ord.compare(String(left),String(right));
-});
+Ord.compare = _curryN(2, typeclass.forward('compare', ordForModule));
 
 
 /**
@@ -63,7 +114,7 @@ Ord.compare = _curry(function(left, right) {
  *      _.gt(2,1);  // true
  *      _.gt(2,2);  // false
  */
-Ord.gt = _compose(Ordering.isGT, Ord.compare);
+Ord.gt = _curryN(2, typeclass.forward('gt', ordForModule));
 
 /**
  * Returns true if the left value is less than the right value
@@ -79,7 +130,7 @@ Ord.gt = _compose(Ordering.isGT, Ord.compare);
  *      _.lt(2,1);  // false
  *      _.lt(2,2);  // false
  */
-Ord.lt = _compose(Ordering.isLT, Ord.compare);
+Ord.lt = _curryN(2, typeclass.forward('lt', ordForModule));
 
 /**
  * Returns true if the left value is greater than or equal to the right value
@@ -97,7 +148,7 @@ Ord.lt = _compose(Ordering.isLT, Ord.compare);
  *      _.gte(2,1);  // true
  *      _.gte(2,2);  // true
  */
-Ord.gte = _not(Ord.lt);
+Ord.gte = _curryN(2, typeclass.forward('gte', ordForModule));
 
 /**
  * Returns true if the left value is less than or equal to the right value
@@ -115,7 +166,7 @@ Ord.gte = _not(Ord.lt);
  *      _.lte(2,1);  // false
  *      _.lte(2,2);  // true
  */
-Ord.lte = _not(Ord.gt);
+Ord.lte = _curryN(2, typeclass.forward('lte', ordForModule));
 
 /**
  * Returns the lesser of two comparable values
@@ -132,9 +183,7 @@ Ord.lte = _not(Ord.gt);
  *      _.min(1,2);  // 1
  *      _.min("car", "cab"); // "cab"
  */
-Ord.min = _curry(function(left, right) {
-    return Ord.lte(left, right) ? left : right;
-});
+Ord.min = _curryN(2, typeclass.forward('min', ordForModule));
 
 /**
  * Returns the greater of two comparable values
@@ -151,12 +200,12 @@ Ord.min = _curry(function(left, right) {
  *      _.max(1,2);  // 2
  *      _.max("car", "cab"); // "car"
  */
-Ord.max = _curry(function(left, right) {
-    return Ord.gte(left, right) ? left : right;
+Ord.max = _curryN(2, typeclass.forward('max', ordForModule));
+
+
+module.exports = typeclass(Ord, {
+    deriveFn: ordForModule,
+    deriveProtoFn: ordForModulePrototype,
+    required: ['compare'],
+    superTypes: [Eq],
 });
-
-
-Ord.member = function(value) {
-    var M = _moduleFor(value);
-    return Eq.member(value) && _isFunction(M.compare);
-};

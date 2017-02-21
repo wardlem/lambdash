@@ -91,8 +91,8 @@ _Array.compare = _curry(function(left, right) {
  * @return {Array} The array with fn applied to each of its elements
  */
 _Array.map = _curry(function(fn, array) {
-    var res = [];
-    var ind = 0;
+    const res = [];
+    let ind = 0;
     while (ind < array.length) {
         res.push(fn(array[ind]));
         ind += 1;
@@ -177,8 +177,8 @@ _Array.empty = _curry(function empty() {
  * @return {*[]}
  */
 _Array.ap = _curry(function(applicative, array) {
-    var result = [];
-    var ind = 0;
+    let result = [];
+    let ind = 0;
     while (ind < applicative.length) {
         result = result.concat(_Array.map(applicative[ind], array));
         ind += 1;
@@ -309,8 +309,8 @@ _Array.reverse = _curry(function(array) {
  *
  * @example
  *
- *      var array = ["c","r","c","s"];
- *      var caracas = _.intersperse("a", array);
+ *      const array = ["c","r","c","s"];
+ *      const caracas = _.intersperse("a", array);
  *      // caracas is ["c", "a", "r", "a", "c", "a", "s"]
  */
 _Array.intersperse = _curry(function(value, array) {
@@ -318,8 +318,8 @@ _Array.intersperse = _curry(function(value, array) {
         return [];
     }
 
-    var res = [array[0]];
-    var ind = 1;
+    const res = [array[0]];
+    let ind = 1;
     while (ind < array.length) {
         res.push(value);
         res.push(array[ind]);
@@ -338,7 +338,7 @@ _Array.intersperse = _curry(function(value, array) {
  * @since 0.6.0
  */
 _Array.exists = _curry(function(key, array) {
-    var ind = 0;
+    let ind = 0;
     while (ind < array.length) {
         if (_equal(key, array[ind])) {
             return true;
@@ -376,7 +376,7 @@ _Array.insert = _curry(function(key, array) {
  * @since 0.6.0
  */
 _Array.remove = _curry(function(key, array) {
-    var ind = 0;
+    let ind = 0;
     while (ind < array.length) {
         if (_equal(key, array[ind])) {
             array = _Array.concat(_Array.slice(0, ind, array), _Array.slice(ind + 1, array.length, array));
@@ -437,7 +437,7 @@ _Array.symmetricDifference = _curry(function(left, right) {
  * @since 0.5.0
  */
 _Array.show = _curry(function(array) {
-    var items = _Array.map(_show, array);
+    const items = _Array.map(_show, array);
     return '[' + items.join(',') + ']';
 });
 
@@ -452,19 +452,6 @@ _Array.show = _curry(function(array) {
 _Array.hashWithSeed = _curry(function(seed, array) {
     let parts = _Array.map(Hashable.hashWithSeed(seed), array);
     return _Int32Array.hashWithSeed(seed, Int32Array.from(parts));
-});
-
-/**
- * Hashes an array with the default seed
- *
- * All items in the array must implement Hashable
- *
- * @sig Hashable a => Array a -> Integer
- * @since 0.7.0
- */
-_Array.hash = _curry(function(array) {
-    let parts = _Array.map(Hashable.hash, array);
-    return _Int32Array.hash(Int32Array.from(parts));
 });
 
 /**

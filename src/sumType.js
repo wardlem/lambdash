@@ -1,10 +1,10 @@
-var _isObject = require('./internal/_isObject');
-var _isFunction = require('./internal/_isFunction');
-var _makeFunction = require('./internal/_makeFunction');
-var _isDefined = require('./internal/_isDefined');
-var _curry = require('./internal/_curry');
-var _ucfirst = require('./internal/_ucfirst');
-var productType = require('./productType');
+const _isObject = require('./internal/_isObject');
+const _isFunction = require('./internal/_isFunction');
+const _makeFunction = require('./internal/_makeFunction');
+const _isDefined = require('./internal/_isDefined');
+const _curry = require('./internal/_curry');
+const _ucfirst = require('./internal/_ucfirst');
+const productType = require('./productType');
 
 
 function sumType(name, definition, proto = null) {
@@ -12,9 +12,9 @@ function sumType(name, definition, proto = null) {
         throw new TypeError('The second parameter to sumType must be an object');
     }
 
-    var names = Object.keys(definition);
+    const names = Object.keys(definition);
 
-    var Sum = _isFunction(name) ? name : _makeFunction(name, function() {});
+    const Sum = _isFunction(name) ? name : _makeFunction(name, function() {});
     name = Sum.name;
 
     Sum.member = function member(value) {
@@ -33,12 +33,12 @@ function sumType(name, definition, proto = null) {
     Sum.prototype.constructor = Sum;
 
     names.forEach(function(name) {
-        var def = definition[name];
+        let def = definition[name];
         if (!_isObject(def)) {
             def = [];
         }
 
-        var Product = productType(name, def, Sum.prototype);
+        const Product = productType(name, def, Sum.prototype);
 
         require('./internal/_subModule')(Sum, Product);
 
@@ -68,7 +68,7 @@ function sumType(name, definition, proto = null) {
             return fn;
         }
 
-        var c = value.constructor.name;
+        const c = value.constructor.name;
         if (_isDefined(cases[c])) {
             return doMatch(cases[c], value);
         } else if (_isDefined(cases['_'])) {
@@ -115,7 +115,7 @@ function sumType(name, definition, proto = null) {
     });
 
     Sum.fromJSON = _curry(function(obj) {
-        var t = obj.__tag__;
+        const t = obj.__tag__;
         if (typeof t !== 'string') {
             throw new TypeError('Could not create ' + name + ' from object, missing type.');
         }

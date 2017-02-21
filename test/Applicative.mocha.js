@@ -37,19 +37,27 @@ describe('Applicative', function() {
 
     describe('#member', function() {
         it('should return true if a value is a member of Applicative false otherwise', function() {
-            var Ap = _.Type.product('Ap', {value: null});
+            var Ap = _.Type.product('Ap', {value: _.Any});
 
-            Ap.map = function(fn, ap) {
-                return Ap(fn, ap);
-            };
+            Ap.map = _.curry(function(fn, ap) {
+                return Ap(fn(ap.value));
+            });
 
             Ap.of = Ap;
 
             assert(!Applicative.member(Ap(1)));
 
-            Ap.ap = function(left, right) {
+            Ap = _.Type.product('Ap', {value: _.Any});
+
+            Ap.map = _.curry(function(fn, ap) {
+                return Ap(fn(ap.value));
+            });
+
+            Ap.of = Ap;
+
+            Ap.ap = _.curry(function(left, right) {
                 return Ap(left.value(right.value));
-            };
+            });
 
             assert(Applicative.member(Ap(1)));
         });

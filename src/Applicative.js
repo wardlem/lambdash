@@ -1,10 +1,30 @@
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
-var _moduleFor = require('./internal/_moduleFor');
+const _curry = require('./internal/_curry');
+const _moduleFor = require('./internal/_moduleFor');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var Functor = require('./Functor');
+const Functor = require('./Functor');
 
-var Applicative = module.exports;
+const Applicative = {name: 'Applicative'};
+
+const applicativeForModule = _typecached((M) => {
+    if (!Applicative.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Applicative`);
+    }
+
+    return {
+        ap: M.ap,
+    };
+});
+
+const applicativeForModulePrototype = _typecached((M) => {
+    const methods = applicativeForModule(M);
+
+    return {
+        ap: _thisify(methods.ap),
+    };
+});
 
 /**
  * Applies the function values contained in the first argument to the second
@@ -19,17 +39,11 @@ var Applicative = module.exports;
  *      _.ap([x => x + 1], [1,2,3]);              // [2,3,4]
  *      _.ap([x => x + 1, x => x * 2], [1,2,3]);  // [2,3,4,2,4,6]
  */
-Applicative.ap = _curry(function(apply, value) {
+Applicative.ap = _curry((apply, value) => applicativeForModule(_moduleFor(value)).ap(apply, value));
 
-    var M = _moduleFor(apply);
-    if (_isFunction(M.ap)) {
-        return M.ap(apply, value);
-    }
-
-    throw new TypeError('Applicative#ap called on a value that does not implement Applicative');
+module.exports = typeclass(Applicative, {
+    required: ['ap', 'of'],
+    superTypes: [Functor],
+    deriveFn: applicativeForModule,
+    deriveProtoFn: applicativeForModulePrototype,
 });
-
-Applicative.member = function(value) {
-    var M = _moduleFor(value);
-    return Functor.member(value) && _isFunction(M.ap) && _isFunction(M.of);
-};

@@ -1,25 +1,25 @@
-var _makeFunction = require('./internal/_makeFunction');
-var _curry = require('./internal/_curry');
-var _curryN = require('./internal/_curryN');
-var _isDefined = require('./internal/_isDefined');
-var _isArray = require('./internal/_isArray');
-var _isFunction = require('./internal/_isFunction');
-var _slice = require('./internal/_slice');
-var _arrayEqual = require('./internal/_arrayEqual');
-var _ucfirst = require('./internal/_ucfirst');
-var _moduleFor = require('./internal/_moduleFor');
-var _thisify = require('./internal/_thisify');
-var _flip = require('./internal/_flip');
+const _makeFunction = require('./internal/_makeFunction');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _isDefined = require('./internal/_isDefined');
+const _isArray = require('./internal/_isArray');
+const _isFunction = require('./internal/_isFunction');
+const _slice = require('./internal/_slice');
+const _arrayEqual = require('./internal/_arrayEqual');
+const _ucfirst = require('./internal/_ucfirst');
+const _moduleFor = require('./internal/_moduleFor');
+const _thisify = require('./internal/_thisify');
+const _flip = require('./internal/_flip');
 
-var Show = require('./Show');
-var Obj = require('./internal/_primitives').Object;
+const Show = require('./Show');
+const Obj = require('./internal/_primitives').Object;
 
-var productType = module.exports = function productType(name, definition, proto = null) {
+const productType = module.exports = function productType(name, definition, proto = null) {
 
-    var tags = Object.keys(definition);
+    let tags = Object.keys(definition);
 
-    var constraints = tags.map(function(tag) {
-        var c = definition[tag];
+    const constraints = tags.map(function(tag) {
+        const c = definition[tag];
         return c != null && _isFunction(c.member) ? c.member
             :  _isFunction(c) ? (v) => v instanceof c
             :  _isDefined;
@@ -31,8 +31,8 @@ var productType = module.exports = function productType(name, definition, proto 
         });
     }
 
-    var makeProduct = _curryN(tags.length, function(...args) {
-        var descriptors = tags.reduce(function(accum, tag, ind) {
+    const makeProduct = _curryN(tags.length, function(...args) {
+        const descriptors = tags.reduce(function(accum, tag, ind) {
             if (!constraints[ind](args[ind])) {
                 throw new TypeError('Invalid value for tag ' + tag + ' in ' + name);
             }
@@ -64,7 +64,7 @@ var productType = module.exports = function productType(name, definition, proto 
         return Object.freeze(Object.create(Product.prototype, descriptors));
     });
 
-    var Product = _makeFunction(name, makeProduct);
+    const Product = _makeFunction(name, makeProduct);
 
     Product.unapply = _curry(function unapply(fn, instance) {
         return fn.apply(null, _slice(instance));
@@ -84,14 +84,14 @@ var productType = module.exports = function productType(name, definition, proto 
     });
 
     Product.fromObject = _curry(function(obj) {
-        var values = tags.map(function(tag) {
+        const values = tags.map(function(tag) {
             return obj[tag];
         });
         return Product.apply(this, values);
     });
 
     Product.toObject = _curry(function(product) {
-        var obj = {};
+        const obj = {};
         tags.map(function(tag) {
             obj[tag] = product[tag];
         });
@@ -99,9 +99,9 @@ var productType = module.exports = function productType(name, definition, proto 
     });
 
     Product.toJSON = _curry(function(product) {
-        var obj = {};
+        const obj = {};
         tags.map(function(tag) {
-            var M = _moduleFor(product[tag]);
+            const M = _moduleFor(product[tag]);
             if (_isFunction(M.toJSON)) {
                 obj[tag] = M.toJSON(product[tag]);
             } else {
@@ -113,13 +113,13 @@ var productType = module.exports = function productType(name, definition, proto 
     Product.fromJSON = Product.fromObject;
 
     Product.set = _curry(function(tag,value,product) {
-        var obj = Product.toObject(product);
+        const obj = Product.toObject(product);
         obj[tag] = value;
         return Product.fromObject(obj);
     });
 
     tags.forEach(function(tag) {
-        var fnName = 'set' + _ucfirst(tag);
+        const fnName = 'set' + _ucfirst(tag);
         Product[fnName] = Product.set(tag);
     });
 
@@ -128,7 +128,7 @@ var productType = module.exports = function productType(name, definition, proto 
     });
 
     Product.show = _curry(function(value) {
-        var values = Array.prototype.map.call(value,function(v) {
+        const values = Array.prototype.map.call(value,function(v) {
             return Show.show(v);
         }).join(',');
         return name + '(' + values + ')';

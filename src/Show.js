@@ -1,8 +1,28 @@
-var _moduleFor = require('./internal/_moduleFor');
-var _isFunction = require('./internal/_isFunction');
-var _show = require('./internal/_show');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var Show = module.exports;
+const Show = {name: 'Show'};
+
+const showForModule = _typecached((M) => {
+    const _Show = {};
+
+    _Show.show = M.show
+        ? M.show
+        : _curryN(1, (v) => String(v))
+    ;
+
+    return _Show;
+});
+
+const showForModulePrototype = _typecached((M) => {
+    const methods = showForModule(M);
+
+    return {
+        show: _thisify(methods.show),
+    };
+});
 
 /**
  * Converts a value to its string representation.
@@ -12,8 +32,11 @@ var Show = module.exports;
  * @param {Show} value
  * @returns {String} a string representation of the value
  */
-Show.show = _show;
+Show.show = _curryN(1, typeclass.forward('show', showForModule));
 
-Show.member = function(value) {
-    return _isFunction(_moduleFor(value).show);
-};
+module.exports = typeclass(Show, {
+    deriveFn: showForModule,
+    deriveProtoFn: showForModulePrototype,
+    required: [],
+    superTypes: [],
+});

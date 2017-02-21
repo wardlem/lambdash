@@ -10,7 +10,7 @@ var assertEqual = function(left, right) {
 
 var ArrayMap = _.Type.product('ArrayMap', {data: _.Arr});
 
-ArrayMap.exists = function(key, map) {
+ArrayMap.exists = _.curry(function(key, map) {
     var ind = 0;
     var data = map.data;
     while (ind < data.length) {
@@ -21,9 +21,9 @@ ArrayMap.exists = function(key, map) {
     }
 
     return false;
-};
+});
 
-ArrayMap.assoc = function(key, value, map) {
+ArrayMap.assoc = _.curry(function(key, value, map) {
     var ind = 0;
     var data = map.data;
     var result = _.drop(0, data);
@@ -37,9 +37,9 @@ ArrayMap.assoc = function(key, value, map) {
 
     result.push([key, value]);
     return ArrayMap(result);
-};
+});
 
-ArrayMap.dissoc = function(key, map) {
+ArrayMap.dissoc = _.curry(function(key, map) {
     var ind = 0;
     var data = map.data;
     while (ind < data.length) {
@@ -50,9 +50,9 @@ ArrayMap.dissoc = function(key, map) {
     }
 
     return map;
-};
+});
 
-ArrayMap.lookup = function(key, map) {
+ArrayMap.lookup = _.curry(function(key, map) {
     var ind = 0;
     var data = map.data;
     while (ind < data.length) {
@@ -63,9 +63,9 @@ ArrayMap.lookup = function(key, map) {
     }
 
     return undefined;
-};
+});
 
-ArrayMap.foldlAssoc = function(fn, init, map) {
+ArrayMap.foldlAssoc = _.curry(function(fn, init, map) {
     var ind = 0;
     var data = map.data;
     while (ind < data.length) {
@@ -74,9 +74,9 @@ ArrayMap.foldlAssoc = function(fn, init, map) {
     }
 
     return init;
-};
+});
 
-ArrayMap.foldrAssoc = function(fn, init, map) {
+ArrayMap.foldrAssoc = _.curry(function(fn, init, map) {
     var data = map.data;
     var ind = data.length - 1;
     while (ind >= 0) {
@@ -85,7 +85,7 @@ ArrayMap.foldrAssoc = function(fn, init, map) {
     }
 
     return init;
-};
+});
 
 ArrayMap.empty = function() {
     return ArrayMap([]);

@@ -1,62 +1,65 @@
-var _moduleFor = require('./internal/_moduleFor');
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var SetOps = require('./SetOps');
+const SetOps = require('./SetOps');
 
 
-var Set = module.exports;
+const SetKind = {name: 'SetKind'};
+
+const setKindForModule = _typecached((M) => {
+    if (!SetKind.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement SetKind`);
+    }
+
+    const _SetKind = {
+        exists: M.exists,
+        insert: M.insert,
+        remove: M.remove,
+    };
+
+    return _SetKind;
+});
+
+const setKindForModulePrototype = _typecached((M) => {
+    const methods = setKindForModule(M);
+
+    const res = {};
+    Object.keys(methods).forEach((method) => {
+        res[method] = _thisify(methods[method]);
+    });
+
+    return res;
+});
 
 /**
  * Returns true if the key is in the set.
  *
- * @sig Set s => k -> s k -> Boolean
+ * @sig SetKind s => k -> s k -> Boolean
  * @since 0.6.0
  */
-Set.exists = _curry(function(key, s) {
-    var M = _moduleFor(s);
-    if (_isFunction(M.exists)) {
-        return M.exists(key, s);
-    }
-
-    throw new TypeError('Set#exists called on a value that does not implement set');
-});
+SetKind.exists = _curryN(2, typeclass.forward('exists', setKindForModule));
 
 /**
  * Returns a new set with the key added.
  *
- * @sig Set s => k -> s k -> s k
+ * @sig SetKind s => k -> s k -> s k
  * @since 0.6.0
  */
-Set.insert = _curry(function(key, s) {
-    var M = _moduleFor(s);
-    if (_isFunction(M.insert)) {
-        return M.insert(key, s);
-    }
-
-    throw new TypeError('Set#insert called on a value that does not implement set');
-});
+SetKind.insert = _curryN(2, typeclass.forward('insert', setKindForModule));
 
 /**
  * Removes a new set with an element removed from another set.
  *
- * @sig Set s => k -> s k -> s k
+ * @sig SetKind s => k -> s k -> s k
  * @since 0.6.0
  */
-Set.remove = _curry(function(key, s) {
-    var M = _moduleFor(s);
-    if (_isFunction(M.remove)) {
-        return M.remove(key, s);
-    }
+SetKind.remove = _curryN(2, typeclass.forward('remove', setKindForModule));
 
-    throw new TypeError('Set#remove called on a value that does not implement set');
+module.exports = typeclass(SetKind, {
+    deriveFn: setKindForModule,
+    deriveProtoFn: setKindForModulePrototype,
+    required: ['exists', 'insert', 'remove'],
+    superTypes: [SetOps],
 });
-
-Set.member = function(value) {
-    var M = _moduleFor(value);
-
-    return SetOps.member(value)
-        && _isFunction(M.exists)
-        && _isFunction(M.insert)
-        && _isFunction(M.remove);
-};

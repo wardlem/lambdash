@@ -1,15 +1,15 @@
-var _arrFold = require('./internal/_arrFold');
-var _isArray = require('./internal/_isArray');
-var _isFunction = require('./internal/_isFunction');
-var _curry = require('./internal/_curry');
-var _is = require('./internal/_is');
+const _arrFold = require('./internal/_arrFold');
+const _isArray = require('./internal/_isArray');
+const _isFunction = require('./internal/_isFunction');
+const _curry = require('./internal/_curry');
+const _is = require('./internal/_is');
 
-var sumType = require('./sumType');
-var Ordering = require('./Ordering');
+const sumType = require('./sumType');
+const Ordering = require('./Ordering');
 
-var enumeratedType = function(name, definition) {
+const enumeratedType = function(name, definition, proto = null) {
 
-    var Constructor = name;
+    const Constructor = name;
     if (_isFunction(name)) {
         name = name.name;
     }
@@ -18,9 +18,9 @@ var enumeratedType = function(name, definition) {
         throw new TypeError('enumeratedType requires an array definition that is not empty');
     }
 
-    var maxValue = 0;
-    var sumDef = {};
-    var intValues = _arrFold(function(accum, name) {
+    let maxValue = 0;
+    const sumDef = {};
+    const intValues = _arrFold(function(accum, name) {
         accum[name] = maxValue;
         sumDef[name] = [];
         maxValue += 1;
@@ -29,7 +29,7 @@ var enumeratedType = function(name, definition) {
 
     maxValue -= 1;
 
-    var Enumeration = sumType(Constructor, sumDef);
+    const Enumeration = sumType(Constructor, sumDef, proto);
 
     Enumeration.toInt = Enumeration.case(intValues);
 

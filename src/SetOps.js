@@ -1,10 +1,36 @@
-var _curryN = require('./internal/_curryN');
-var _useModuleMethod = require('./internal/_useModuleMethod');
-var _moduleFor = require('./internal/_moduleFor');
-var _isFunction = require('./internal/_isFunction');
+const _flip = require('./internal/_flip');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
+const SetOps = {name: 'SetOps'};
 
-var SetOps = module.exports;
+const setOpsForModule = _typecached((M) => {
+    if (!SetOps.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement SetOps`);
+    }
+
+    const _SetOps = {
+        union: M.union,
+        difference: M.difference,
+        intersection: M.intersection,
+        symmetricDifference: M.symmetricDifference,
+    };
+
+    return _SetOps;
+});
+
+const setOpsForModulePrototype = _typecached((M) => {
+    const methods = setOpsForModule(M);
+
+    const res = {};
+    Object.keys(methods).forEach((method) => {
+        res[method] = _thisify(_flip(methods[method]));
+    });
+
+    return res;
+});
 
 /**
  * Returns a new set with all the keys from both sets.
@@ -12,7 +38,7 @@ var SetOps = module.exports;
  * @sig SetOps s => s -> s -> s
  * @since 0.6.0
  */
-SetOps.union = _curryN(2, _useModuleMethod('union'));
+SetOps.union = _curryN(2, typeclass.forward('union', setOpsForModule));
 
 /**
  * Returns a new set with all the keys in the left that are not present in the right.
@@ -20,7 +46,7 @@ SetOps.union = _curryN(2, _useModuleMethod('union'));
  * @sig SetOps s => s -> s -> s
  * @since 0.6.0
  */
-SetOps.difference = _curryN(2, _useModuleMethod('difference'));
+SetOps.difference = _curryN(2, typeclass.forward('difference', setOpsForModule));
 
 /**
  * Returns a new set with all the keys in both the left and right set.
@@ -28,7 +54,7 @@ SetOps.difference = _curryN(2, _useModuleMethod('difference'));
  * @sig SetOps s => s -> s -> s
  * @since 0.6.0
  */
-SetOps.intersection = _curryN(2, _useModuleMethod('intersection'));
+SetOps.intersection = _curryN(2, typeclass.forward('intersection', setOpsForModule));
 
 /**
  * Returns a new set with all the keys in left or right, but not in both.
@@ -36,13 +62,11 @@ SetOps.intersection = _curryN(2, _useModuleMethod('intersection'));
  * @sig SetOps s => s -> s -> s
  * @since 0.6.0
  */
-SetOps.symmetricDifference = _curryN(2, _useModuleMethod('symmetricDifference'));
+SetOps.symmetricDifference = _curryN(2, typeclass.forward('symmetricDifference', setOpsForModule));
 
-
-SetOps.member = function(value) {
-    var M = _moduleFor(value);
-    return _isFunction(M.union)
-        && _isFunction(M.difference)
-        && _isFunction(M.intersection)
-        && _isFunction(M.symmetricDifference);
-};
+module.exports = typeclass(SetOps, {
+    deriveFn: setOpsForModule,
+    deriveProtoFn: setOpsForModulePrototype,
+    required: ['union', 'difference', 'intersection', 'symmetricDifference'],
+    superTypes: [],
+});

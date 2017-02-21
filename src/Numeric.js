@@ -1,29 +1,81 @@
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
-var _moduleFor = require('./internal/_moduleFor');
-var _flip = require('./internal/_flip');
+const _curry = require('./internal/_curry');
+const _isFunction = require('./internal/_isFunction');
+const _flip = require('./internal/_flip');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var _Number = require('./internal/_primitives').Number;
+const _Number = require('./internal/_primitives').Number;
 
-var Numeric = module.exports;
+const Numeric = {name: 'Numeric'};
 
-var _binOp = _curry(function(op, a, b) {
-    var M = _moduleFor(a);
-    if (_isFunction(M[op])) {
-        return M[op](a, b);
+const numericForModule = _typecached(M => {
+    if (!Numeric.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Numeric`);
     }
 
-    return M.fromNum(_Number[op](M.toNum(a), M.toNum(b)));
+    const _Numeric = {};
+
+    _Numeric.fromNum = M.fromNum;
+    _Numeric.toNum = M.toNum;
+
+    const _binOp = _curry(function(op, a, b) {
+        return _Numeric.fromNum(_Number[op](_Numeric.toNum(a), _Numeric.toNum(b)));
+    });
+
+    const _unaryOp = _curry(function(op, a) {
+        return _Numeric.fromNum(_Number[op](_Numeric.toNum(a)));
+    });
+
+    _Numeric.add = _isFunction(M.add) ? M.add : _binOp('add');
+    _Numeric.sub = _isFunction(M.sub) ? M.sub : _binOp('sub');
+    _Numeric.subBy = _isFunction(M.subBy) ? M.subBy : _flip(_Numeric.sub);
+    _Numeric.mul = _isFunction(M.mul) ? M.mul : _binOp('mul');
+    _Numeric.div = _isFunction(M.div) ? M.div : _binOp('div');
+    _Numeric.divBy = _isFunction(M.divBy) ? M.divBy : _flip(_Numeric.div);
+    _Numeric.mod = _isFunction(M.mod) ? M.mod : _binOp('mod');
+    _Numeric.modBy = _isFunction(M.modBy) ? M.modBy : _flip(_Numeric.mod);
+    _Numeric.abs = _isFunction(M.abs) ? M.abs : _unaryOp('abs');
+    _Numeric.sign = _isFunction(M.sign) ? M.sign : _unaryOp('sign');
+    _Numeric.negate = _isFunction(M.negate) ? M.negate : _unaryOp('negate');
+    _Numeric.reciprocal = _isFunction(M.reciprocal) ? M.reciprocal : _unaryOp('reciprocal');
+    _Numeric.pow = _isFunction(M.pow) ? M.pow : _binOp('pow');
+    _Numeric.powBy = _isFunction(M.powBy) ? M.powBy : _flip(_Numeric.pow);
+
+    return _Numeric;
 });
 
-var _unaryOp = _curry(function(op, a) {
-    var M = _moduleFor(a);
-    if (_isFunction(M[op])) {
-        return M[op](a);
-    }
+const numericForModulePrototype = _typecached(M => {
+    const methods = numericForModule(M);
 
-    return M.fromNum(_Number[op](M.toNum(a)));
+    return {
+        toNum: _thisify(methods.toNum),
+        add: _thisify(_flip(methods.add)),
+        sub: _thisify(methods.subBy),
+        subFrom: _thisify(methods.sub),
+        mul: _thisify(_flip(methods.mul)),
+        div: _thisify(methods.divBy),
+        divFrom: _thisify(methods.div),
+        mod: _thisify(methods.modBy),
+        modFrom: _thisify(methods.mod),
+        abs: _thisify(methods.abs),
+        sign: _thisify(methods.sign),
+        negate: _thisify(methods.negate),
+        reciprocal: _thisify(methods.reciprocal),
+        pow: _thisify(methods.powBy),
+        powFrom: _thisify(methods.pow),
+    };
 });
+
+const _binOp = (fnName) => {
+    return _curryN(2, typeclass.forward(fnName, numericForModule));
+};
+
+const _unaryOp = (fnName) => {
+    return _curryN(1, typeclass.forward(fnName, numericForModule));
+};
+
 
 /**
  * Converts a numeric value to a plain old javascript number
@@ -89,7 +141,7 @@ Numeric.sub = _binOp('sub');
  *      _.subBy(1)(2); // 1
  *
  */
-Numeric.subBy = _flip(Numeric.sub);
+Numeric.subBy = _binOp('subBy');
 
 /**
  * Returns the product of two numeric values.
@@ -143,7 +195,7 @@ Numeric.div = _binOp('div');
  *      _.div(1)(2); // 2
  *
  */
-Numeric.divBy = _flip(Numeric.div);
+Numeric.divBy = _binOp('divBy');
 
 /**
  * Returns the modulus or remainder of the division of two numeric values.
@@ -177,7 +229,7 @@ Numeric.mod = _binOp('mod');
  *      _.modBy(3,13);  // 1
  *      _.modBy(3)(13); // 1
  */
-Numeric.modBy = _flip(Numeric.mod);
+Numeric.modBy = _binOp('modBy');
 
 /**
  * Returns the absolute value of a numeric value.
@@ -287,9 +339,11 @@ Numeric.pow = _binOp('pow');
  *      _.powBy(2,3);  // 9
  *      _.powBy(2)(3); // 9
  */
-Numeric.powBy = _flip(Numeric.pow);
+Numeric.powBy = _binOp('powBy');
 
-Numeric.member = function(value) {
-    var M = _moduleFor(value);
-    return _isFunction(M.toNum) && _isFunction(M.fromNum);
-};
+module.exports = typeclass(Numeric, {
+    deriveFn: numericForModule,
+    deriveProtoFn: numericForModulePrototype,
+    required: ['toNum', 'fromNum'],
+    superTypes: [],
+});

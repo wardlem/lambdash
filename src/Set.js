@@ -87,7 +87,11 @@ _Set.foldl = _curry(function(fn, init, set) {
  */
 _Set.foldr = _curry(function(fn, init, set) {
     // the order does not matter, but we do it for good measure
-    return Array.from(set).reduceRight(fn, init);
+    for (let value of Array.from(set).reverse()) {
+        init = fn(init, value);
+    }
+
+    return init;
 });
 
 /**

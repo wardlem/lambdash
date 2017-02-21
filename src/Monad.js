@@ -1,15 +1,43 @@
-var _moduleFor = require('./internal/_moduleFor');
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
-var _compose = require('./internal/_compose');
-var _arrReverse = require('./internal/_reverse');
+const _moduleFor = require('./internal/_moduleFor');
+const _isFunction = require('./internal/_isFunction');
+const _compose = require('./internal/_compose');
+const _arrReverse = require('./internal/_reverse');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var Functor = require('./Functor');
-var Applicative = require('./Applicative');
+const Applicative = require('./Applicative');
+const Functor = require('./Functor');
 
-var Monad = module.exports;
+const Monad = {name: 'Monad'};
 
-Monad.map = Functor.map;
+const monadForModule = _typecached((M) => {
+
+    if (!Monad.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Monad`);
+    }
+
+    const _Monad = {};
+
+    _Monad.flatten = M.flatten;
+
+    _Monad.chain = _isFunction(M.chain)
+        ? M.chain
+        : _compose(_Monad.flatten, Functor.map)
+    ;
+
+    return _Monad;
+});
+
+const monadForModulePrototype = _typecached(M => {
+    const methods = monadForModule(M);
+
+    return {
+        flatten: _thisify(methods.flatten),
+        chain: _thisify(methods.chain),
+    };
+});
 
 /**
  * Flattens a monadic structure.
@@ -22,15 +50,7 @@ Monad.map = Functor.map;
  *
  *      _.flatten([[1,2,3],[4,5,6],[7,8,9]]); [1,2,3,4,5,6,7,8,9]
  */
-Monad.flatten = _curry(function(monad) {
-    var M = _moduleFor(monad);
-    if (_isFunction(M.flatten)) {
-        return M.flatten(monad);
-    }
-
-    throw new TypeError('Monad#flatten called on a value that does not implement Monad');
-});
-
+Monad.flatten = _curryN(1, typeclass.forward('flatten', monadForModule));
 
 /**
  * Flat maps a monadic value with a function.
@@ -45,13 +65,7 @@ Monad.flatten = _curry(function(monad) {
  *
  *      _.chain(n => [n + 1], [1,2,3]);  // [2,3,4]
  */
-Monad.chain = _curry(function(fn, monad) {
-    var M = _moduleFor(monad);
-    if (_isFunction(M.chain)) {
-        return M.chain(fn, monad);
-    }
-    return Monad.flatten(Functor.map(fn, monad));
-});
+Monad.chain = _curryN(2, typeclass.forward('chain', monadForModule));
 
 /**
  * Composes functions using the chain function.
@@ -71,15 +85,15 @@ Monad.chain = _curry(function(fn, monad) {
  *      _.composeM(fn1, fn2)([1,2,3]);  // [3,5,7]
  *      _.composeM(fn2, fn1)([1,2,3]);  // [4,6,8]
  */
-Monad.composeM = function() {
+Monad.composeM = function(...args) {
     // _checkCompose(arguments);
-    var argsInd = 0;
-    var args = [];
-    while (argsInd < arguments.length) {
-        args[argsInd] = Monad.chain(arguments[argsInd]);
+    let argsInd = 0;
+    const argsM = [];
+    while (argsInd < args.length) {
+        argsM[argsInd] = Monad.chain(args[argsInd]);
         argsInd += 1;
     }
-    return _compose.apply(this, args);
+    return _compose.apply(this, argsM);
 };
 
 /**
@@ -102,11 +116,16 @@ Monad.composeM = function() {
  *      _.pipeM(fn1, fn2)([1,2,3]);  // [4,6,8]
  *      _.pipeM(fn2, fn1)([1,2,3]);  // [3,5,7]
  */
-Monad.pipeM = function() {
+Monad.pipeM = function(...args) {
     // _checkPipe(arguments);
-    return Monad.composeM.apply(this, _arrReverse(arguments));
+    return Monad.composeM(..._arrReverse(args));
 };
 
-Monad.member = function(value) {
-    return Applicative.member(value) && _isFunction(_moduleFor(value).flatten);
-};
+Monad.map = Functor.map;
+
+module.exports = typeclass(Monad, {
+    deriveFn: monadForModule,
+    deriveProtoFn: monadForModulePrototype,
+    required: ['flatten'],
+    superTypes: [Applicative],
+});

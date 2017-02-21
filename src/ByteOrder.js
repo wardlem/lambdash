@@ -4,9 +4,6 @@ const _thunk = require('./internal/_thunk');
 
 const ByteOrder = sumType('ByteOrder', {BE: [], LE: []});
 
-ByteOrder.isBE = _is(ByteOrder.BE);
-ByteOrder.isLE = _is(ByteOrder.LE);
-
 ByteOrder.archEndianness = (function() {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView
     const buffer = new ArrayBuffer(2);

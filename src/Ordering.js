@@ -1,8 +1,7 @@
-var sumType = require('./sumType');
-var _is = require('./internal/_is');
-var _curry = require('./internal/_curry');
+const sumType = require('./sumType');
+const _curry = require('./internal/_curry');
 
-var Ordering = sumType('Ordering', {LT: [], EQ: [], GT: []});
+const Ordering = sumType('Ordering', {LT: [], EQ: [], GT: []});
 
 // Implementation for Ord
 Ordering.compare = _curry(function(left, right) {
@@ -21,13 +20,5 @@ Ordering.toNum = Ordering.toInt = Ordering.case({
     GT: 1,
     EQ: 0,
 });
-
-Ordering.isLT = _is(Ordering.LT);
-Ordering.isGT = _is(Ordering.GT);
-Ordering.isEQ = _is(Ordering.EQ);
-
-// Ordering.prototype.isLessThan = _thisify(Ordering.isLessThan);
-// Ordering.prototype.isGreaterThan = _thisify(Ordering.isGreaterThan);
-// Ordering.prototype.isEqual = _thisify(Ordering.isEqual);
 
 module.exports = Ordering;

@@ -11,12 +11,12 @@ var Enum = require('../src/Enum');
 var _arrEqual = require('../src/internal/_arrayEqual');
 
 var Test = productType('Test', {val: Int});
-Test.toInt = function(value) {
+Test.toInt = _.curry(function(value) {
     return value.val + 1;
-};
-Test.fromInt = function(int) {
+});
+Test.fromInt = _.curry(function(int) {
     return Test(int - 1);
-};
+});
 
 describe('Enum', function() {
     describe('#toInt', function() {

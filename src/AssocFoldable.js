@@ -1,20 +1,64 @@
-const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
 const _isFunction = require('./internal/_isFunction');
-const _moduleFor = require('./internal/_moduleFor');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+
+const typeclass = require('./typeclass');
+
 
 const Semigroup = require('./Semigroup');
 const Associative = require('./Associative');
 
-const AssocFoldable = module.exports;
+const AssocFoldable = {name: 'AssocFoldable'};
 
-const _foldAssoc = _curry(function(_f, fn, init, foldable) {
-
-    const M = _moduleFor(foldable);
-    if (_isFunction(M[_f])) {
-        return M[_f](fn, init, foldable);
+const assocFoldableForModule = _typecached((M) => {
+    if (!AssocFoldable.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement AssocFoldable`);
     }
+    const _AssocFoldable = {};
 
-    throw new TypeError('AssocFoldable#' + _f + ' called on a value that does not implement AssocFoldable');
+    _AssocFoldable.foldlAssoc = M.foldlAssoc;
+    _AssocFoldable.foldrAssoc = M.foldrAssoc;
+    _AssocFoldable.pairs = _isFunction(M.pairs)
+        ? M.pairs
+        : M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [[k,v]]), Object.freeze([]))
+    ;
+    _AssocFoldable.values = _isFunction(M.values)
+        ? M.values
+        : M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [v]), Object.freeze([]))
+    ;
+    _AssocFoldable.keys = _isFunction(M.keys)
+        ? M.keys
+        : M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [k]), Object.freeze([]))
+    ;
+    _AssocFoldable.filterAssoc = _isFunction(M.filterAssoc)
+        ? M.filterAssoc
+        : _curryN(2, (filter, assoc) => M.foldlAssoc((accum, v, k) => {
+            return filter(v, k) ? M.assoc(k, v, accum) : accum;
+        }, M.empty(), assoc))
+    ;
+    _AssocFoldable.mapAssoc = _isFunction(M.mapAssoc)
+        ? M.mapAssoc
+        : _curryN(2, (fn, assoc) => M.foldlAssoc((accum, v, k) => {
+            return M.assoc(k, fn(v, k), assoc);
+        }, M.empty(), assoc))
+    ;
+
+    return _AssocFoldable;
+});
+
+const assocFoldableForModulePrototype = _typecached(M => {
+    const methods = assocFoldableForModule(M);
+
+    return {
+        foldlAssoc: _thisify(methods.foldlAssoc),
+        foldrAssoc: _thisify(methods.foldrAssoc),
+        pairs: _thisify(methods.pairs),
+        values: _thisify(methods.values),
+        keys: _thisify(methods.keys),
+        filterAssoc: _thisify(methods.filterAssoc),
+        mapAssoc: _thisify(methods.mapAssoc),
+    };
 });
 
 /**
@@ -31,7 +75,7 @@ const _foldAssoc = _curry(function(_f, fn, init, foldable) {
  *      const fn = (result, value, key) => result + key + (value + 1);
  *      _.foldlAssoc(fn, 'g', obj); // 'gr8k9'
  */
-AssocFoldable.foldlAssoc = _foldAssoc('foldlAssoc');
+AssocFoldable.foldlAssoc = _curryN(3, typeclass.forward('foldlAssoc', assocFoldableForModule));
 
 /**
  * Folds an associative container from right to left with the key.
@@ -47,7 +91,7 @@ AssocFoldable.foldlAssoc = _foldAssoc('foldlAssoc');
  *      const fn = (result, value, key) => result + key + (value + 1);
  *      _.foldrAssoc(fn, '', obj); // 'gr8k9'
  */
-AssocFoldable.foldrAssoc = _foldAssoc('foldrAssoc');
+AssocFoldable.foldrAssoc = _curryN(3, typeclass.forward('foldrAssoc', assocFoldableForModule));
 
 /**
  * Returns an array of key value pair tuples (as arrays) where the first index of each pair is a key
@@ -56,16 +100,7 @@ AssocFoldable.foldrAssoc = _foldAssoc('foldrAssoc');
  * @sig Associative a => a k v -> [[k,a]]
  * @since 0.6.0
  */
-AssocFoldable.pairs = _curry(function(assoc) {
-    const M = _moduleFor(assoc);
-    if (_isFunction(M.pairs)) {
-        return M.pairs(assoc);
-    } else if (_isFunction(M.foldlAssoc)) {
-        return M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [[k,v]]), [], assoc);
-    }
-
-    throw new TypeError('AssocFoldable#pairs called on a value that does not implement AssocFoldable');
-});
+AssocFoldable.pairs = _curryN(1, typeclass.forward('pairs', assocFoldableForModule));
 
 /**
  * Returns all the keys in an associative collection as an array.
@@ -73,33 +108,15 @@ AssocFoldable.pairs = _curry(function(assoc) {
  * @sig Associative a => a k v -> [k]
  * @since 0.6.0
  */
-AssocFoldable.keys = _curry(function(assoc) {
-    const M = _moduleFor(assoc);
-    if (_isFunction(M.keys)) {
-        return M.keys(assoc);
-    } else if (_isFunction(M.foldlAssoc)) {
-        return M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [k]), [], assoc);
-    }
-
-    throw new TypeError('AssocFoldable#pairs called on a value that does not implement AssocFoldable');
-});
+AssocFoldable.keys = _curryN(1, typeclass.forward('keys', assocFoldableForModule));
 
 /**
  * Returns all the keys in an associative collection as an array.
  *
- * @sig Associative a => a k v -> [k]
+ * @sig Associative a => a k v -> [v]
  * @since 0.6.0
  */
-AssocFoldable.values = _curry(function(assoc) {
-    const M = _moduleFor(assoc);
-    if (_isFunction(M.values)) {
-        return M.values(assoc);
-    } else if (_isFunction(M.foldlAssoc)) {
-        return M.foldlAssoc((accum, v, k) => Semigroup.concat(accum, [v]), [], assoc);
-    }
-
-    throw new TypeError('AssocFoldable#pairs called on a value that does not implement AssocFoldable');
-});
+AssocFoldable.values = _curryN(1, typeclass.forward('values', assocFoldableForModule));
 
 /**
  * Filters an associative container based on a predicate function that accepts both a value and key.
@@ -107,18 +124,7 @@ AssocFoldable.values = _curry(function(assoc) {
  * @sig Associative a => (v -> k -> Boolean) -> a k v -> a k v
  * @since 0.6.0
  */
-AssocFoldable.filterAssoc = _curry(function(filter, assoc) {
-    const M = _moduleFor(assoc);
-    if (_isFunction(M.filterAssoc)) {
-        return M.filterAssoc(filter, assoc);
-    } else if (_isFunction(M.foldlAssoc, M.empty, M.assoc)) {
-        return M.foldlAssoc((accum, v, k) => {
-            return filter(v, k) ? M.assoc(k, v, accum) : accum;
-        }, M.empty(), assoc);
-    }
-
-    throw new TypeError('AssocFoldable#filterAssoc called on a value that does not implement AssocFoldable');
-});
+AssocFoldable.filterAssoc = _curryN(2, typeclass.forward('filterAssoc', assocFoldableForModule));
 
 /**
  * Maps the values and keys of an associative container.
@@ -126,20 +132,11 @@ AssocFoldable.filterAssoc = _curry(function(filter, assoc) {
  * @sig Associative a => (v -> k -> v) -> a k v -> a k v
  * @since 0.6.0
  */
-AssocFoldable.mapAssoc = _curry(function(fn, assoc) {
-    const M = _moduleFor(assoc);
-    if (_isFunction(M.mapAssoc)) {
-        return M.mapAssoc(fn, assoc);
-    } else if (_isFunction(M.foldlAssoc, M.empty, M.assoc)) {
-        return M.foldlAssoc((accum, v, k) => {
-            return M.assoc(k, fn(v, k), assoc);
-        }, M.empty(), assoc);
-    }
+AssocFoldable.mapAssoc = _curryN(2, typeclass.forward('mapAssoc', assocFoldableForModule));
 
-    throw new TypeError('AssocFoldable#mapAssoc called on a value that does not implement AssocFoldable');
+module.exports = typeclass(AssocFoldable, {
+    deriveFn: assocFoldableForModule,
+    deriveProtoFn: assocFoldableForModulePrototype,
+    superTypes: [Associative],
+    required: ['empty', 'foldlAssoc', 'foldrAssoc'],
 });
-
-AssocFoldable.member = function(value) {
-    const M = _moduleFor(value);
-    return Associative.member(value) && _isFunction(M.empty, M.foldlAssoc, M.foldrAssoc);
-};

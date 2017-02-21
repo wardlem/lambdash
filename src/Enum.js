@@ -1,16 +1,98 @@
-var _moduleFor = require('./internal/_moduleFor');
-var _isFunction = require('./internal/_isFunction');
-var _curry = require('./internal/_curry');
-var Int = require('./internal/_primitives').Integer;
+const _isFunction = require('./internal/_isFunction');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
+const Int = require('./internal/_primitives').Integer;
 
-var Enum = module.exports;
+const Enum = {name: 'Enum'};
 
-var fromInt = _curry(function fromInt(M, value) {
-    if (!_isFunction(M.fromInt)) {
-        throw new TypeError('Type can not be converted from Int');
+const enumForModule = _typecached((M) => {
+    if (!Enum.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Enum`);
     }
 
-    return M.fromInt(value);
+    const _Enum = {};
+
+    _Enum.toInt = M.toInt;
+    _Enum.fromInt = M.fromInt;
+
+    _Enum.prev = _isFunction(M.prev)
+        ? M.prev
+        : _curry((v) => _Enum.fromInt(_Enum.toInt(v) - 1))
+    ;
+
+    _Enum.next = _isFunction(M.next)
+        ? M.next
+        : _curry((v) => _Enum.fromInt(_Enum.toInt(v) + 1))
+    ;
+
+    const _makeEnumeration = function(withLast, step, fromVal, toVal) {
+        const res = [];
+
+        const _fromInt = _Enum.fromInt;
+
+        while (fromVal != toVal) {
+            res.push(_fromInt(fromVal));
+            fromVal = step(fromVal);
+        }
+        if (withLast) {
+            res.push(_fromInt(fromVal));
+        }
+
+        return res;
+    };
+
+    const _enumerate = _curry(function(withLast, from, to) {
+        const fromVal = _Enum.toInt(from);
+        const toVal = _Enum.toInt(to);
+
+        const step = toVal < fromVal ? Int.add(-1) : Int.add(1);
+
+        return _makeEnumeration(withLast, step, fromVal, toVal);
+    });
+
+    _Enum.enumTo = _isFunction(M.enumTo)
+        ? M.enumTo
+        : _enumerate(true)
+    ;
+
+    _Enum.enumUntil = _isFunction(M.enumUntil)
+        ? M.enumUntil
+        : _enumerate(false)
+    ;
+
+    _Enum.enumFrom = _isFunction(M.enumFrom)
+        ? M.enumFrom
+        : _curry((count, from) => {
+            if (!Int.member(count)) {
+                throw new TypeError('enumFrom must have an integer for the count parameter');
+            }
+
+            const fromVal = _Enum.toInt(from);
+            const toVal = fromVal + count;
+
+            const step = toVal < fromVal ? Int.add(-1)  : Int.add(1);
+
+            return _makeEnumeration(false, step, fromVal, toVal);
+        })
+    ;
+
+    return _Enum;
+});
+
+const enumForModulePrototype = _typecached(M => {
+    const methods = enumForModule(M);
+
+    return {
+        toInt: _thisify(methods.toInt),
+        prev: _thisify(methods.prev),
+        next: _thisify(methods.next),
+        enumTo: _thisify(methods.enumTo),
+        enumUntil: _thisify(methods.enumUntil),
+        enumFrom: _thisify(methods.enumFrom),
+    };
 });
 
 /**
@@ -28,14 +110,7 @@ var fromInt = _curry(function fromInt(M, value) {
  *      _.toInt(_.LT);  // -1
  *      _.toInt('A');   // 65, the char code value
  */
-Enum.toInt = _curry(function toInt(value) {
-    var M = _moduleFor(value);
-    if (_isFunction(M.toInt)) {
-        return M.toInt(value);
-    }
-
-    throw new TypeError('Enum#toInt called on a value that does not implement Enum');
-});
+Enum.toInt = _curryN(1, typeclass.forward('toInt', enumForModule));
 
 /**
  * Returns the previous value of the one given.
@@ -50,9 +125,7 @@ Enum.toInt = _curry(function toInt(value) {
  *      _.prev('B');  // 'A'
  *
  */
-Enum.prev = _curry(function(value) {
-    return fromInt(_moduleFor(value), Enum.toInt(value) - 1);
-});
+Enum.prev = _curryN(1, typeclass.forward('prev', enumForModule));
 
 /**
  * Returns the next value of the one given.
@@ -67,35 +140,7 @@ Enum.prev = _curry(function(value) {
  *      _.prev('B');  // 'C'
  *
  */
-Enum.next = _curry(function(value) {
-    return fromInt(_moduleFor(value), Enum.toInt(value) + 1);
-});
-
-
-var _makeEnum = function(withLast, M, step, fromVal, toVal) {
-    var res = [];
-
-    var _fromInt = fromInt(M);
-
-    while (fromVal != toVal) {
-        res.push(_fromInt(fromVal));
-        fromVal = step(fromVal);
-    }
-    if (withLast) {
-        res.push(_fromInt(fromVal));
-    }
-
-    return res;
-};
-
-var _enum = _curry(function(withLast, from, to) {
-    var fromVal = Enum.toInt(from);
-    var toVal = Enum.toInt(to);
-
-    var step = toVal < fromVal ? Int.add(-1)  : Int.add(1);
-
-    return _makeEnum(withLast, _moduleFor(from), step, fromVal, toVal);
-});
+Enum.next = _curryN(1, typeclass.forward('next', enumForModule));
 
 /**
  * Creates a range of values from the starting value up to and including the ending value.
@@ -114,7 +159,7 @@ var _enum = _curry(function(withLast, from, to) {
  *      _.enumTo(6,2);     // [6,5,4,3,2]
  *
  */
-Enum.enumTo = _enum(true);
+Enum.enumTo = _curryN(2, typeclass.forward('enumTo', enumForModule));
 
 /**
  * Creates a range of values from the starting value up to but not including the ending value.
@@ -133,7 +178,7 @@ Enum.enumTo = _enum(true);
  *      _.enumTo(6,2);     // [6,5,4,3]
  *
  */
-Enum.enumUntil = _enum(false);
+Enum.enumUntil = _curryN(2, typeclass.forward('enumUntil', enumForModule));
 
 /**
  * Creates a range of values from the starting value with a specified number of elements
@@ -151,21 +196,11 @@ Enum.enumUntil = _enum(false);
  *      _.enumFrom(-4, 6);     // [6,5,4,3]
  *
  */
-Enum.enumFrom = _curry(function(count, from) {
+Enum.enumFrom = _curryN(2, typeclass.forward('enumFrom', enumForModule));
 
-    if (!Int.member(count)) {
-        throw new TypeError('Enum#enumFrom must have an integer for the count parameter');
-    }
-
-    var fromVal = Enum.toInt(from);
-    var toVal = fromVal + count;
-
-    var step = toVal < fromVal ? Int.add(-1)  : Int.add(1);
-
-    return _makeEnum(false, _moduleFor(from), step, fromVal, toVal);
+module.exports = typeclass(Enum, {
+    deriveFn: enumForModule,
+    deriveProtoFn: enumForModulePrototype,
+    required: ['toInt', 'fromInt'],
+    superTypes: [],
 });
-
-Enum.member = function(value) {
-    var M = _moduleFor(value);
-    return _isFunction(M.toInt) && _isFunction(M.fromInt);
-};

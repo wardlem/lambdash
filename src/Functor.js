@@ -1,8 +1,28 @@
-var _isFunction = require('./internal/_isFunction');
-var _moduleFor = require('./internal/_moduleFor');
-var _curry = require('./internal/_curry');
+const _isFunction = require('./internal/_isFunction');
+const _moduleFor = require('./internal/_moduleFor');
+const _curry = require('./internal/_curry');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var Functor = module.exports;
+const Functor = {name: 'Functor'};
+
+const functorForModule = (M) => {
+    if (!Functor.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Functor`);
+    }
+
+    return {
+        map: M.map,
+    };
+};
+
+const functorForModulePrototype = (M) => {
+    const methods = functorForModule(M);
+
+    return {
+        map: _thisify(methods.map),
+    };
+};
 
 /**
  * Maps a function over the values of a structure
@@ -17,11 +37,13 @@ var Functor = module.exports;
  *      _.map(x => x * 2, [1,2,3]);  // [2,4,6]
  */
 Functor.map = _curry(function(fn, functor) {
-    var M = _moduleFor(functor);
+    const M = _moduleFor(functor);
     return M.map(fn, functor);
 });
 
-Functor.member = function(value) {
-    var M = _moduleFor(value);
-    return _isFunction(M.map);
-};
+module.exports = typeclass(Functor, {
+    required: ['map'],
+    superTypes: [],
+    deriveFn: functorForModule,
+    deriveProtoFn: functorForModulePrototype,
+});

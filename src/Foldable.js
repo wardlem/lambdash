@@ -1,27 +1,216 @@
-var _curry = require('./internal/_curry');
-var _isFunction = require('./internal/_isFunction');
-var _moduleFor = require('./internal/_moduleFor');
-var _not = require('./internal/_not');
-var _equal = require('./internal/_equal');
-var _identity = require('./internal/_identity');
-var _alwaysThrow = require('./internal/_alwaysThrow');
+const _curry = require('./internal/_curry');
+const _curryN = require('./internal/_curryN');
+const _typecached = require('./internal/_typecached');
+const _isFunction = require('./internal/_isFunction');
+const _equal = require('./internal/_equal');
+const _identity = require('./internal/_identity');
+const _thisify = require('./internal/_thisify');
+const typeclass = require('./typeclass');
 
-var Ord = require('./Ord');
-var Monoid = require('./Monoid');
-var Numeric = require('./Numeric');
+const Foldable = {name: 'Foldable'};
 
-var Foldable = module.exports;
+const foldableForModule = _typecached(M => {
+    const Ord = require('./Ord');
+    const Monoid = require('./Monoid');
+    const Numeric = require('./Numeric');
 
-var _fold = _curry(function(_f, fn, init, foldable) {
-
-    var M = _moduleFor(foldable);
-    if (_isFunction(M[_f])) {
-        return M[_f](fn, init, foldable);
+    if (!Foldable.isImplementedBy(M)) {
+        throw new TypeError(`${M.name} does not implement Foldable`);
     }
 
-    throw new TypeError('Foldable#' + _f + ' called on a value that does not implement Foldable');
+    const _Foldable = {};
+
+    _Foldable.foldl = M.foldl;
+    _Foldable.foldr = M.foldr;
+
+    const EMPTY = Symbol();
+
+    _Foldable.foldMap = _isFunction(M.foldMap)
+        ? M.foldMap
+        : _curry((fn, foldable) => {
+            const result = _Foldable.foldr(function(accum, value) {
+                if (accum === EMPTY) {
+                    return fn(value);
+                }
+                return Monoid.concat(fn(value), accum);
+            }, EMPTY, foldable);
+
+            if (result === EMPTY) {
+                throw new TypeError('foldMap can not called on an empty structure');
+            }
+
+            return result;
+        })
+    ;
+
+    _Foldable.foldMapDef = _isFunction(M.foldMapDef)
+        ? M.foldMapDef
+        : _curry((fn, empty, foldable) => _Foldable.foldr((accum, value) => {
+            return Monoid.concat(fn(value), accum);
+        }, empty, foldable))
+    ;
+
+    _Foldable.join = _isFunction(M.join)
+        ? M.join
+        : _Foldable.foldMap(_identity)
+    ;
+
+    _Foldable.joinWith = _isFunction(M.joinWith)
+        ? M.join
+        : _curry((sep, foldable) => {
+            let ind = 0;
+            return _Foldable.foldMap(function(v) {
+                if (ind === 0) {
+                    ind += 1;
+                    return v;
+                } else {
+                    return Monoid.concat(v,sep);
+                }
+            }, foldable);
+        })
+    ;
+
+    _Foldable.joinDef = _isFunction(M.joinDef)
+        ? M.joinDef
+        : _Foldable.foldMapDef(_identity)
+    ;
+
+    _Foldable.joinWithDef = _isFunction(M.joinWithDef)
+        ? M.joinWithDef
+        : _curry((empty, sep, foldable) => {
+            let ind = 0;
+            return _Foldable.foldMapDef(function(v) {
+                if (ind === 0) {
+                    ind += 1;
+                    return v;
+                } else {
+                    return Monoid.concat(v,sep);
+                }
+            }, empty, foldable);
+        })
+    ;
+
+    _Foldable.toArray = _isFunction(M.toArray)
+        ? M.toArray
+        : _Foldable.foldMapDef((v) => [v], Object.freeze([]))
+    ;
+
+    _Foldable.len = _isFunction(M.len)
+        ? M.len
+        : _Foldable.foldl((count, x) => count + 1, 0)
+    ;
+
+    _Foldable.isEmpty = _isFunction(M.isEmpty)
+        ? M.isEmpty
+        : _curry(foldable => _Foldable.len(foldable) === 0)
+    ;
+
+    _Foldable.isNotEmpty = _isFunction(M.isNotEmpty)
+        ? M.isNotEmpty
+        : _curry(foldable => _Foldable.len(foldable) !== 0)
+    ;
+
+    _Foldable.contains = _isFunction(M.contains)
+        ? M.contains
+        : _curry((search, foldable) => _Foldable.foldl(
+            (accum, value) => accum || _equal(search, value),
+            false,
+            foldable
+        ))
+    ;
+
+    _Foldable.notContains = _isFunction(M.notContains)
+        ? M.notContains
+        : _curry((search, foldable) => !_Foldable.contains(search, foldable))
+    ;
+
+    _Foldable.all = _isFunction(M.all)
+        ? M.all
+        : _curry((fn, foldable) => _Foldable.foldl((accum, v) => {
+            return accum && fn(v);
+        }, true, foldable))
+    ;
+
+    _Foldable.any = _isFunction(M.any)
+        ? M.any
+        : _curry((fn, foldable) => _Foldable.foldl((accum, v) => {
+            return accum || fn(v);
+        }, false, foldable))
+    ;
+
+    _Foldable.countWith = _isFunction(M.countWith)
+        ? M.countWith
+        : _curry((fn, foldable) => _Foldable.foldl((accum, value) => {
+            return fn(value) ? accum + 1 : accum;
+        }, 0, foldable))
+    ;
+
+    _Foldable.count = _isFunction(M.count)
+        ? M.count
+        : _curry((v, foldable) => _Foldable.countWith(_equal(v), foldable))
+    ;
+
+    _Foldable.foldl1 = _isFunction(M.foldl1)
+        ? M.foldl1
+        : _curry((fn, foldable) => {
+            const result = _Foldable.foldl((accum, value) => {
+                return accum === EMPTY ? value : fn(accum, value);
+            }, EMPTY, foldable);
+
+            if (result === EMPTY) {
+                throw new TypeError('foldl1 cannot be called with an empty structure');
+            }
+
+            return result;
+        })
+    ;
+
+    _Foldable.foldr1 = _isFunction(M.foldr1)
+        ? M.foldr1
+        : _curry((fn, foldable) => {
+            const result = _Foldable.foldr((accum, value) => {
+                return accum === EMPTY ? value : fn(accum, value);
+            }, EMPTY, foldable);
+
+            if (result === EMPTY) {
+                throw new TypeError('foldr1 cannot be called with an empty structure');
+            }
+
+            return result;
+        })
+    ;
+
+    _Foldable.maximum = _isFunction(M.maximum)
+        ? M.maximum
+        : _Foldable.foldl1(Ord.max)
+    ;
+
+    _Foldable.minimum = _isFunction(M.minimum)
+        ? M.minimum
+        : _Foldable.foldl1(Ord.min)
+    ;
+
+    _Foldable.sum = _isFunction(M.sum)
+        ? M.sum
+        : _Foldable.foldl1(Numeric.add)
+    ;
+
+    _Foldable.product = _isFunction(M.product)
+        ? M.product
+        : _Foldable.foldl1(Numeric.mul)
+    ;
+
+    return _Foldable;
 });
 
+const foldableForModulePrototype = _typecached((M) => {
+    const methods = foldableForModule(M);
+
+    return Object.keys(methods).reduce((res, key) => {
+        res[key] = _thisify(methods[key]);
+        return res;
+    }, {});
+});
 
 /**
  * Folds a value from left to right.
@@ -34,7 +223,7 @@ var _fold = _curry(function(_f, fn, init, foldable) {
  * @param {Foldable} the container being folded
  * @return {*} the accumulated value
  */
-Foldable.foldl = _fold('foldl');
+Foldable.foldl = _curryN(3, typeclass.forward('foldl', foldableForModule));
 
 
 /**
@@ -48,7 +237,7 @@ Foldable.foldl = _fold('foldl');
  * @param {Foldable} the container being folded
  * @return {*} the accumulated value
  */
-Foldable.foldr = _fold('foldr');
+Foldable.foldr = _curryN(3, typeclass.forward('foldr', foldableForModule));
 
 /**
  * Maps each element of a container to a monoid and concatenates the result
@@ -64,34 +253,20 @@ Foldable.foldr = _fold('foldr');
  * @return {Monoid} the concatenated result of the fold
  * @example
  *
- *     var foldable = [1,2,3]
- *     var fn = n => String(n + 1)
+ *     const foldable = [1,2,3]
+ *     const fn = n => String(n + 1)
  *
  *     _.foldMap(fn, foldable);  // '234'
  *
  *
- *     var Sum = _.productType('Sum', {value: _.Num});
+ *     const Sum = _.productType('Sum', {value: _.Num});
  *     Sum.concat = _.curry(function(left, right) {
  *         return Sum(left.value + right.value);
  *     });
  *
  *     _.foldMap(Sum, [1,2,3]); // Sum(6)
  */
-Foldable.foldMap = _curry(function(fn, foldable) {
-    var EMPTY = {};
-    var result = Foldable.foldr(function(accum, value) {
-        if (accum === EMPTY) {
-            return fn(value);
-        }
-        return Monoid.concat(fn(value), accum);
-    }, EMPTY, foldable);
-
-    if (result === EMPTY) {
-        throw new TypeError('Foldable#foldMap can not called on an empty structure');
-    }
-
-    return result;
-});
+Foldable.foldMap = _curryN(2, typeclass.forward('foldMap', foldableForModule));
 
 /**
  * Maps each element of a container to a monoid and concatenates the result
@@ -104,14 +279,14 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  * @return {Monoid} the concatenated result of the fold
  * @example
  *
- *     var foldable = [1,2,3]
- *     var fn = n => return String(n + 1)
- *     var empty = '';
+ *     const foldable = [1,2,3]
+ *     const fn = n => return String(n + 1)
+ *     const empty = '';
  *
  *     _.foldMapDef(fn, empty, foldable);  // '234'
  *
  *
- *     var Sum = _.productType('Sum', {value: _.Num});
+ *     const Sum = _.productType('Sum', {value: _.Num});
  *     Sum.empty = _.always(Sum(0));
  *     Sum.concat = _.curry(function(left, right) {
  *         return Sum(left.value + right.value);
@@ -119,11 +294,7 @@ Foldable.foldMap = _curry(function(fn, foldable) {
  *
  *     _.foldMapDef(Sum, Sum.empty(), [1,2,3]); // Sum(6)
  */
-Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
-    return Foldable.foldr(function(accum, value) {
-        return Monoid.concat(fn(value), accum);
-    }, empty, foldable);
-});
+Foldable.foldMapDef = _curryN(3, typeclass.forward('foldMapDef', foldableForModule));
 
 /**
  * Folds a container, accumulating the result in a monoid
@@ -138,13 +309,13 @@ Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
  * @return {Monoid} the concatenated result of the fold
  * @example
  *
- *     var foldable = ['a','b','c']
- *     var empty = '';
+ *     const foldable = ['a','b','c']
+ *     const empty = '';
  *
  *     _.join(foldable);  // 'abc'
  *
  *
- *     var Sum = _.productType('Sum', {value: _.Num});
+ *     const Sum = _.productType('Sum', {value: _.Num});
  *     Sum.empty = _.always(Sum(0));
  *     Sum.concat = _.curry(function(left, right) {
  *         return Sum(left.value + right.value);
@@ -152,7 +323,7 @@ Foldable.foldMapDef = _curry(function(fn, empty, foldable) {
  *
  *     _.join([Sum(1),Sum(2),Sum(3)]); // Sum(6)
  */
-Foldable.join = Foldable.foldMap(_identity);
+Foldable.join = _curryN(1, typeclass.forward('join', foldableForModule));
 
 /**
  * Joins a monad with a separator.
@@ -168,17 +339,7 @@ Foldable.join = Foldable.foldMap(_identity);
  *
  *      _.joinWith(',', ['first', 'second', 'third']); // 'first,second,third'
  */
-Foldable.joinWith = _curry(function(sep, foldable) {
-    var ind = 0;
-    return Foldable.foldMap(function(v) {
-        if (ind === 0) {
-            ind += 1;
-            return v;
-        } else {
-            return Monoid.concat(v,sep);
-        }
-    }, foldable);
-});
+Foldable.joinWith = _curryN(2, typeclass.forward('joinWith', foldableForModule));
 
 /**
  * Folds a container, accumulating the result in a monoid
@@ -194,21 +355,21 @@ Foldable.joinWith = _curry(function(sep, foldable) {
  * @return {Monoid} the concatenated result of the fold
  * @example
  *
- *     var foldable = ['a','b','c']
- *     var empty = '';
+ *     const foldable = ['a','b','c']
+ *     const empty = '';
  *
- *     _.join2(empty, foldable);  // 'abc'
+ *     _.joinDef(empty, foldable);  // 'abc'
  *
  *
- *     var Sum = _.productType('Sum', {value: _.Num});
+ *     const Sum = _.productType('Sum', {value: _.Num});
  *     Sum.empty = _.always(Sum(0));
  *     Sum.concat = _.curry(function(left, right) {
  *         return Sum(left.value + right.value);
  *     });
  *
- *     _.join2(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
+ *     _.joinDef(Sum.empty(), [Sum(1),Sum(2),Sum(3)]); // Sum(6)
  */
-Foldable.joinDef = Foldable.foldMapDef(_identity);
+Foldable.joinDef = _curryN(2, typeclass.forward('joinDef', foldableForModule));
 
 /**
  * Joins a monad with a separator.
@@ -227,17 +388,7 @@ Foldable.joinDef = Foldable.foldMapDef(_identity);
  *      _.joinWith2(',', '', ['first', 'second', 'third']); // 'first,second,third'
  *      _.joinWith2(',', '', []);                           // ''
  */
-Foldable.joinWithDef = _curry(function(empty, sep, foldable) {
-    var ind = 0;
-    return Foldable.foldMapDef(function(v) {
-        if (ind === 0) {
-            ind += 1;
-            return v;
-        } else {
-            return Monoid.concat(v,sep);
-        }
-    }, empty, foldable);
-});
+Foldable.joinWithDef = _curryN(3, typeclass.forward('joinWithDef', foldableForModule));
 
 /**
  * Transforms a foldable structure into an array
@@ -246,7 +397,7 @@ Foldable.joinWithDef = _curry(function(empty, sep, foldable) {
  * @param {Foldable} foldable the structure being converted to an array
  * @return {Array}
  */
-Foldable.toArray = Foldable.foldMapDef(function(v) {return [v];}, []);
+Foldable.toArray = _curryN(1, typeclass.forward('toArray', foldableForModule));
 
 /**
  * Counts the elements in a foldable value
@@ -260,7 +411,7 @@ Foldable.toArray = Foldable.foldMapDef(function(v) {return [v];}, []);
  *     _.Foldable.len([1,2,3]);  // 3
  *     _.Foldable.len('');       // 0
  */
-Foldable.len = Foldable.foldl(function(count, x) {return count + 1;}, 0);
+Foldable.len = _curryN(1, typeclass.forward('len', foldableForModule));
 
 /**
  * Returns whether or not a foldable value is empty
@@ -275,7 +426,7 @@ Foldable.len = Foldable.foldl(function(count, x) {return count + 1;}, 0);
  *      _.Foldable.isEmpty([1,2,3]);  // false
  *      _.Foldable.isEmpty('');       // true
  */
-Foldable.isEmpty = _curry(function(foldable) { return Foldable.len(foldable) === 0;});
+Foldable.isEmpty = _curryN(1, typeclass.forward('isEmpty', foldableForModule));
 
 /**
  * The inverse of Foldable.isEmpty function
@@ -290,7 +441,7 @@ Foldable.isEmpty = _curry(function(foldable) { return Foldable.len(foldable) ===
  *      _.Foldable.isNotEmpty([1,2,3]);  // true
  *      _.Foldable.isNotEmpty('');       // false
  */
-Foldable.isNotEmpty = _not(Foldable.isEmpty);
+Foldable.isNotEmpty = _curryN(1, typeclass.forward('isNotEmpty', foldableForModule));
 
 /**
  * Returns whether or not a foldable contains a value
@@ -302,17 +453,13 @@ Foldable.isNotEmpty = _not(Foldable.isEmpty);
  * @returns {Boolean}
  * @example
  *
- *     var turduckin = ['turkey', 'duck', 'chicken']
+ *     const turduckin = ['turkey', 'duck', 'chicken']
  *     _.contains('duck', turduckin);    // true
  *     _.contains('pigeon', turduckin);  // false
  *
  *     _.contains([1,2,3], [[4,5,6], [7,8,9], [1,2,3]]); // true
  */
-Foldable.contains = _curry(function(search, foldable) {
-    return Foldable.foldl(function(accum, value) {
-        return accum || _equal(search, value);
-    }, false, foldable);
-});
+Foldable.contains = _curryN(2, typeclass.forward('contains', foldableForModule));
 
 /**
  * Returns the inverse of whether or not a foldable contains a value
@@ -324,14 +471,14 @@ Foldable.contains = _curry(function(search, foldable) {
  * @returns {Boolean}
  * @example
  *
- *     var turduckin = ['turkey', 'duck', 'chicken']
- *     _.contains('duck', turduckin);    // false
- *     _.contains('pigeon', turduckin);  // true
+ *     const turduckin = ['turkey', 'duck', 'chicken']
+ *     _.notContains('duck', turduckin);    // false
+ *     _.notContains('pigeon', turduckin);  // true
  *
- *     _.contains([1,2,3], [[4,5,6], [7,8,9], [1,2,3]]); // false
- *     _.contains([1,2,4], [[4,5,6], [7,8,9], [1,2,3]]); // true
+ *     _.notContains([1,2,3], [[4,5,6], [7,8,9], [1,2,3]]); // false
+ *     _.notContains([1,2,4], [[4,5,6], [7,8,9], [1,2,3]]); // true
  */
-Foldable.notContains = _not(Foldable.contains);
+Foldable.notContains = _curryN(2, typeclass.forward('notContains', foldableForModule));
 
 /**
  * Returns true if all values in a foldable return true for some predicate function
@@ -343,17 +490,13 @@ Foldable.notContains = _not(Foldable.contains);
  * @returns {Boolean}
  * @example
  *
- *     var test = v => return v > 1;
+ *     const test = v => return v > 1;
  *
  *     _.all(test, [2,3,4]);  // true
  *     _.all(test, [1,3,4]);  // false
  *     _.all(test, []);       // true
  */
-Foldable.all = _curry(function(fn, foldable) {
-    return Foldable.foldl(function(accum, v) {
-        return accum && fn(v);
-    }, true, foldable);
-});
+Foldable.all = _curryN(2, typeclass.forward('all', foldableForModule));
 
 /**
  * Returns true if any values in a foldable return true for some predicate function
@@ -365,17 +508,13 @@ Foldable.all = _curry(function(fn, foldable) {
  * @returns {Boolean}
  * @example
  *
- *     var test = v => v < 1;
+ *     const test = v => v < 1;
  *
  *     _.any(test, [2,3,4]);    // false
  *     _.any(test, [2,3,4,0]);  // true
  *     _.any(test, []);         // false
  */
-Foldable.any = _curry(function(fn, foldable) {
-    return Foldable.foldl(function(accum, v) {
-        return accum || fn(v);
-    }, false, foldable);
-});
+Foldable.any = _curryN(2, typeclass.forward('any', foldableForModule));
 
 /**
  * Returns the number of elements in the structure that return true for a predicate.
@@ -387,15 +526,11 @@ Foldable.any = _curry(function(fn, foldable) {
  * @return {Number} The number of elements that the predicate returned true for
  * @example
  *
- *      var arr = [1,1,2,3,4,4,5]
+ *      const arr = [1,1,2,3,4,4,5]
  *
  *      _.countWith(_.gt(_, 2), arr);  // 4
  */
-Foldable.countWith = _curry(function(fn, foldable) {
-    return Foldable.foldl(function(accum, value) {
-        return fn(value) ? accum + 1 : accum;
-    }, 0, foldable);
-});
+Foldable.countWith = _curryN(2, typeclass.forward('countWith', foldableForModule));
 
 /**
  * Returns the number of elements in foldable which are equal to a given value.
@@ -407,33 +542,11 @@ Foldable.countWith = _curry(function(fn, foldable) {
  * @return {Number} The number of values in the structure equal to v
  * @example
  *
- *      var arr = [1,1,2,3,4,4,5]
+ *      const arr = [1,1,2,3,4,4,5]
  *
  *      _.count(4, arr);  // 2
  */
-Foldable.count = _curry(function(v, foldable) {
-    return Foldable.countWith(_equal(v), foldable);
-});
-
-
-var __fold1 = _curry(function(_fold, err, fn, foldable) {
-    var NOTHING = {};
-    var result = Foldable[_fold](function(accum, value) {
-        if (accum === NOTHING) {
-            return value;
-        } else {
-            return fn(accum, value);
-        }
-    }, NOTHING, foldable);
-
-    if (result === NOTHING) {
-        err();
-    }
-
-    return result;
-});
-
-var _fold1 = __fold1('foldl');
+Foldable.count = _curryN(2, typeclass.forward('count', foldableForModule));
 
 /**
  * Folds a non-empty structure without a base case from left to right.
@@ -443,10 +556,7 @@ var _fold1 = __fold1('foldl');
  * @param {Foldable} foldable the structure being folded
  * @return {*}
  */
-Foldable.foldl1 = __fold1(
-    'foldl',
-    _alwaysThrow(TypeError, 'Foldable#foldl1 can not be called on an empty structure')
-);
+Foldable.foldl1 = _curryN(2, typeclass.forward('foldl1', foldableForModule));
 
 /**
  * Folds a non-empty structure without a base case from right to left.
@@ -456,10 +566,7 @@ Foldable.foldl1 = __fold1(
  * @param {Foldable} foldable the structure being folded
  * @return {*}
  */
-Foldable.foldr1 = __fold1(
-    'foldr',
-    _alwaysThrow(TypeError, 'Foldable#foldr1 can not be called on an empty structure')
-);
+Foldable.foldr1 = _curryN(2, typeclass.forward('foldr1', foldableForModule));
 
 /**
  * Returns the maximum value in a non-empty structure
@@ -468,10 +575,7 @@ Foldable.foldr1 = __fold1(
  * @param {Foldable} foldable the structure the maximum value is being retrieved from
  * @return {Ord}
  */
-Foldable.maximum = _fold1(
-    _alwaysThrow(TypeError, 'Foldable#maximum can not be called on an empty structure'),
-    Ord.max
-);
+Foldable.maximum = _curryN(1, typeclass.forward('maximum', foldableForModule));
 
 /**
  * Returns the minimum value in a non-empty structure
@@ -480,10 +584,7 @@ Foldable.maximum = _fold1(
  * @param {Foldable} foldable the structure the minimum value is being retrieved from
  * @return {Ord}
  */
-Foldable.minimum = _fold1(
-    _alwaysThrow(TypeError, 'Foldable#minimum can not be called on an empty structure'),
-    Ord.min
-);
+Foldable.minimum = _curryN(1, typeclass.forward('minimum', foldableForModule));
 
 /**
  * Returns the accumulated sum of the values in a non-empty structure
@@ -492,10 +593,7 @@ Foldable.minimum = _fold1(
  * @param {Foldable} foldable the structure being summed
  * @return {Numeric}
  */
-Foldable.sum = _fold1(
-    _alwaysThrow(TypeError, 'Foldable#sum can not be called on an empty structure'),
-    Numeric.add
-);
+Foldable.sum = _curryN(1, typeclass.forward('sum', foldableForModule));
 
 /**
  * Returns the accumulated product of the values in a non-empty structure
@@ -504,12 +602,11 @@ Foldable.sum = _fold1(
  * @param {Foldable} foldable the structure being accumulated
  * @return {Numeric}
  */
-Foldable.product = _fold1(
-    _alwaysThrow(TypeError, 'Foldable#mul can not be called on an empty structure'),
-    Numeric.mul
-);
+Foldable.product = _curryN(1, typeclass.forward('product', foldableForModule));
 
-Foldable.member = function(value) {
-    var M = _moduleFor(value);
-    return _isFunction(M.foldl) && _isFunction(M.foldr);
-};
+module.exports = typeclass(Foldable, {
+    deriveFn: foldableForModule,
+    deriveProtoFn: foldableForModulePrototype,
+    required: ['foldl', 'foldr'],
+    superTypes: [],
+});
