@@ -37,6 +37,18 @@ const assocFoldableForModule = _typecached((M) => {
             return filter(v, k) ? M.assoc(k, v, accum) : accum;
         }, M.empty(), assoc))
     ;
+    _AssocFoldable.filterValues = _isFunction(M.filterValues)
+        ? M.filterValues
+        : _curryN(2, (filter, assoc) => M.foldlAssoc((accum, v, k) => {
+            return filter(v) ? M.assoc(k, v, accum) : accum;
+        }, M.empty(), assoc))
+    ;
+    _AssocFoldable.filterKeys = _isFunction(M.filterKeys)
+        ? M.filterKeys
+        : _curryN(2, (filter, assoc) => M.foldlAssoc((accum, v, k) => {
+            return filter(k) ? M.assoc(k, v, accum) : accum;
+        }, M.empty(), assoc))
+    ;
     _AssocFoldable.mapAssoc = _isFunction(M.mapAssoc)
         ? M.mapAssoc
         : _curryN(2, (fn, assoc) => M.foldlAssoc((accum, v, k) => {
@@ -57,6 +69,8 @@ const assocFoldableForModulePrototype = _typecached(M => {
         values: _thisify(methods.values),
         keys: _thisify(methods.keys),
         filterAssoc: _thisify(methods.filterAssoc),
+        filterKeys: _thisify(methods.filterKeys),
+        filterValues: _thisify(methods.filterValues),
         mapAssoc: _thisify(methods.mapAssoc),
     };
 });
@@ -125,6 +139,22 @@ AssocFoldable.values = _curryN(1, typeclass.forward('values', assocFoldableForMo
  * @since 0.6.0
  */
 AssocFoldable.filterAssoc = _curryN(2, typeclass.forward('filterAssoc', assocFoldableForModule));
+
+/**
+ * Filters an associative container based on a predicate function that accepts the container's keys.
+ *
+ * @sig Associative a => (k -> Boolean) -> a k v -> a k v
+ * @since 0.6.0
+ */
+AssocFoldable.filterKeys = _curryN(2, typeclass.forward('filterKeys', assocFoldableForModule));
+
+/**
+ * Filters an associative container based on a predicate function that accepts the container's values.
+ *
+ * @sig Associative a => (k -> Boolean) -> a k v -> a k v
+ * @since 0.6.0
+ */
+AssocFoldable.filterValues = _curryN(2, typeclass.forward('filterValues', assocFoldableForModule));
 
 /**
  * Maps the values and keys of an associative container.
