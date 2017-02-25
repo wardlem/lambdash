@@ -1,4 +1,3 @@
-const _moduleFor = require('./internal/_moduleFor');
 const _isFunction = require('./internal/_isFunction');
 
 const Type = Object.assign(exports, {
@@ -16,3 +15,5 @@ const Type = Object.assign(exports, {
     isSubModule: require('./internal/_isSubModule'),
     member: (M) => M != null && _isFunction(M.member, M.name),
 });
+
+module.exports = Type;
