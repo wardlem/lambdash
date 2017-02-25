@@ -43,19 +43,7 @@ const Ordering = require('./Ordering');
 // Blank
 const __ = require('./internal/_blank');
 
-const Type = {
-    product: require('./productType'),
-    sum: require('./sumType'),
-    enumerated: require('./enumeratedType'),
-    union: require('./unionType'),
-    module: require('./internal/_module'),
-    subModule: require('./internal/_subModule'),
-    moduleFor: require('./internal/_moduleFor'),
-    hasModuleMethod: require('./internal/_hasModuleMethod'),
-    useModuleMethod: require('./internal/_useModuleMethod'),
-    isModule: require('./internal/_isModule'),
-    isSubModule: require('./internal/_isSubModule'),
-};
+const Type = require('./Type');
 
 const lambdash = module.exports;
 
@@ -327,6 +315,7 @@ lambdash.lift = Fun.lift;
 lambdash.apply = Fun.apply;
 lambdash.noop = Fun.noop;
 lambdash.flip = Fun.flip;
+lambdash.typecached = Fun.typecached;
 
 // Regex
 lambdash.test = Regex.test;

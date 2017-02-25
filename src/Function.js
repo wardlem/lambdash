@@ -327,6 +327,14 @@ _Function.flip = _flip;
  */
 _Function.noop = function() {};
 
+/**
+ * Caches the result of a function that expects only types as arguments.
+ *
+ * @since 0.7.0
+ * @sig (...Type -> *) -> (...Type -> *)
+ */
+_Function.typecached = require('./internal/_typecached');
+
 require('./internal/_module')(_Function);
 
 module.exports = _Function;
