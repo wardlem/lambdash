@@ -8,8 +8,8 @@
   },
   "repository": "https://github.com/mwardle/lambdash.git",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/",
-    "coverage": "node_modules/.bin/istanbul cover _mocha && open coverage/lcov-report/*.html",
+    "test": "node_modules/.bin/mocha spec/**/*.spec.js",
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text mocha spec/**/*.spec.js",
     "toc": "node_modules/.bin/doctoc --github --maxlevel 3 README.md"
   },
   "keywords": [
@@ -22,8 +22,15 @@
   "author": "Mark Wardle <mwwardle@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "code": "^5.2.0",
     "doctoc": "^1.0.0",
     "istanbul": "^0.4.1",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "nyc": "^11.6.0"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }

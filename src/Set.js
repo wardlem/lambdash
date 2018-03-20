@@ -43,7 +43,7 @@ Set.insert = _curry(function(key, s){
  * @sig Set s => k -> s k -> s k
  * @since 0.6.0
  */
-Set.remove = _curry(function(key, s){
+Set.remove = _curry(function(key, s) {
     var M = _moduleFor(s);
     if (_isFunction(M.remove)) {
         return M.remove(key, s);

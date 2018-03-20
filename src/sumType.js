@@ -13,7 +13,7 @@ function sumType(name, definition) {
 
     var names = Object.keys(definition);
 
-    var Sum = _isFunction(name) ? name : _makeFunction(name, function(){});
+    var Sum = _isFunction(name) ? name : _makeFunction(name, function() {});
     name = Sum.name;
 
     Sum.member = function member(value) {
@@ -43,7 +43,6 @@ function sumType(name, definition) {
 
 
         Sum[name] = Object.keys(def).length ? Product : Product();
-
     });
 
     Sum.case = _curry(function(cases, value) {

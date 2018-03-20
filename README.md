@@ -61,7 +61,7 @@ This includes curried functions and operations that do not modify the values the
   - [Implementing Interfaces](#implementing-interfaces)
 - [Roadmap](#roadmap)
   - [Plans For Next Release](#plans-for-next-release)
-  - [Future Plans](#future-plans)
+  - [Eventual Plans](#eventual-plans)
 - [Additional Libraries](#additional-libraries)
 - [Contributing](#contributing)
 - [Tests](#tests)
