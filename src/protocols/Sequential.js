@@ -85,11 +85,14 @@ const Sequential = Protocol.define('Sequential', {
 
         return _reverse(this[Sequential.length](), this);
     },
-    splitAt: function(n) {
+    splitAt: function(n, Container = Array) {
         const left = this[Sequential.take](n);
         const right = this[Sequential.drop](n);
 
-        return this[Applicative.of](left)[Foldable.concat](this[Applicative.of](right));
+        const leftContainer = Container.prototype[Applicative.of].call(null, left);
+        const rightContainer = Container.prototype[Applicative.of].call(null, right);
+
+        return leftContainer[Semigroup.concat](rightContainer);
     },
     takeWhile: function(pred) {
         let idx = 0;

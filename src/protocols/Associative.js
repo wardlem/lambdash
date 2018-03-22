@@ -1,11 +1,11 @@
 const Protocol = require('./Protocol');
 
+const Monoid = require('./Monoid');
+const Keyed = require('./Keyed');
+
 const Associative = Protocol.define('Associative', {
     set: null,
-    'delete': null,
-    has: null,
     get: null,
-    size: null,
     getMaybe: function(key) {
         const Maybe = require('../types/Maybe');
         if (this[Associative.has](key)) {
@@ -28,15 +28,18 @@ const Associative = Protocol.define('Associative', {
     getOr: function(key, def) {
         return this[Associative.has](key) ? this[Associative.get](key) : def;
     },
-    update: function(key, fn) {
+    alter: function(key, fn) {
         return this[Associative.set](key, fn(this[Associative.get](key)));
     },
-    updateOr: function(key, fn, def) {
+    alterOr: function(key, fn, def) {
         if (this[Associative.has](key)) {
             return this[Associative.update](key, fn);
         }
         return this[Associative.set](key, def);
     },
-});
+    isempty: [Monoid.isempty, function() {
+        return this[Associative.size]() === 0;
+    }],
+}, [Keyed]);
 
 module.exports = Associative;

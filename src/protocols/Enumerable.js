@@ -35,39 +35,47 @@ const Enumerable = Protocol.define('Enumerable', {
     },
     enumTo: function enumTo(final) {
         // TODO: this can run forever if final not same type as this
-        const res = this[Enumerable.enumUntil](final);
-        res.push(final);
 
-        return res;
+        const gen = function*() {
+            yield* this[Enumerable.enumUntil](final);
+            yield final;
+        }.bind(this);
+
+        return gen();
     },
     enumUntil: function enumUntil(final) {
-        // TODO: this can run forever if final not same type as this
-        const step = this[Ord.isLessThan](final)
+        const step = this[Ord.lt](final)
             ? Enumerable.next
             : Enumerable.prev
         ;
 
-        const res = [];
         let current = this;
-        while (current[Eq.notEquals](final)) {
-            res.push(current);
-            current = current[step]();
-        }
+        const gen = function*() {
+            while (current[Eq.notEquals](final)) {
+                yield current;
+                current = current[step]();
+            }
+        };
 
-        return res;
+        return gen();
     },
     enumN: function enumN(n) {
         const step = n < 0 ? Enumerable.prev : Enumerable.next;
         n = Math.abs(n);
 
-        const res = [];
+        let count = 0;
         let current = this;
-        while (res.length < n) {
-            res.push(current);
-            current = current[step]();
-        }
 
-        return res;
+        const gen = function*() {
+            while (count < n) {
+                yield current;
+                count += 1;
+                current = current[step]();
+            }
+        };
+
+
+        return gen();
     },
 }, [Eq, Ord]);
 

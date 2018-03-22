@@ -1,0 +1,21 @@
+module.exports = {
+    // Function symbols
+    compose: Symbol('Function.compose'),
+    pipe: Symbol('Function.pipe'),
+    always: Symbol('Function.always'),
+    alwaysThrow: Symbol('Function.alwaysThrow'),
+    thunk: Symbol('Function.thunk'),
+    identity: Symbol('Function.identity'),
+    curry: Symbol('Function.curry'),
+    curryN: Symbol('Function.curryN'),
+    arity: Symbol('Function.arity'),
+    named: Symbol('Function.named'),
+    liftN: Symbol('Function.liftN'),
+    lift: Symbol('Function.lift'),
+    apply: Symbol('Function.apply'),
+    flip: Symbol('Function.flip'),
+    noop: Symbol('Function.noop'),
+    curried: Symbol('Function.curried'),
+    blank: Symbol('Function.blank'),
+    source: Symbol('Function.source'),
+};

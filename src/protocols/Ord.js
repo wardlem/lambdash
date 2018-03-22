@@ -3,13 +3,14 @@ const Protocol = require('./Protocol');
 const Eq = require('./Eq');
 
 function compare(other) {
+    const Ordering = require('../types/Ordering');
     if (this[Ord.lte](other)) {
         if (other[Ord.lte](this)) {
-            return 0;
+            return Ordering.EQ;
         }
-        return -1;
+        return Ordering.LT;
     }
-    1;
+    Ordering.GT;
 }
 
 function lte(other) {
@@ -18,7 +19,7 @@ function lte(other) {
     if (this[Ord.compare] === compare) {
         return this <= other;
     }
-    return this[Ord.compare](other) <= 0;
+    return this[Ord.compare](other).isLTE();
 }
 
 const Ord = Protocol.define('Ord', {
@@ -34,7 +35,10 @@ const Ord = Protocol.define('Ord', {
         return !this[Ord.lt](other);
     },
     equals: [Eq.equals, function equals(other) {
-        return this[Ord.lte](other) && other[Ord.lte](this);
+        if (this === other) {
+            return true;
+        }
+        return this[Ord.compare](other).isEQ();
     }],
     min: function min(other) {
         return this[Ord.lte](other) ? this : other;

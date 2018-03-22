@@ -16,6 +16,7 @@ const Sum = module.exports;
 Sum.define = function defineSum(name, definition, options = {}) {
     const {
         writable = false,
+        supertype = null,
     } = options;
 
     const names = Object.keys(definition);
@@ -61,6 +62,11 @@ Sum.define = function defineSum(name, definition, options = {}) {
     ThisSum[Type.has] = function has(obj) {
         return obj instanceof ThisSum;
     };
+
+    if (supertype !== Object) {
+        ThisSum.prototype = Object.create(supertype && supertype.prototype);
+        ThisSum.prototype.constructor = ThisSum;
+    }
 
     merge(ThisSum.prototype, {
         [Case.case](cases) {

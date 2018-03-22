@@ -150,7 +150,7 @@ Bool.not = _curry(function(bool) {
 Bool.both = _curry(function(left, right) {
     return function both() {
         return left.apply(this, arguments) && right.apply(this, arguments);
-    }
+    };
 });
 
 /**

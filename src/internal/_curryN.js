@@ -1,21 +1,23 @@
-var _arity = require('./_arity');
+const {blank, curried, source} = require('./_symbols');
+const setFunctionLength = require('../util/setFunctionLength');
+const nameFunction = require('../util/nameFunction');
 
 function __curryN(n, applied, fn) {
-    return _arity(n, function() {
+    const curriedFn = function _curried() {
 
-        var combined = [];
+        const combined = [];
 
-        var appInd = 0;
-        var argsInd = 0;
-        var totalApplied = 0;
+        let appInd = 0;
+        let argsInd = 0;
+        let totalApplied = 0;
 
-        while(appInd < applied.length || argsInd < arguments.length) {
+        while (appInd < applied.length || argsInd < arguments.length) {
 
             if (appInd >= applied.length ||
-                (applied[appInd] != null && applied[appInd]['@@functional/blank'] === true && argsInd < arguments.length)
+                (applied[appInd] != null && applied[appInd][blank] === true && argsInd < arguments.length)
             ) {
                 combined.push(arguments[argsInd]);
-                if (arguments[argsInd] == null || arguments[argsInd]['@@functional/blank'] !== true) {
+                if (arguments[argsInd] == null || arguments[argsInd][blank] !== true) {
                     totalApplied += 1;
                 }
                 argsInd += 1;
@@ -26,16 +28,14 @@ function __curryN(n, applied, fn) {
             }
         }
 
-        //console.log('n ', n);
-        //console.log('arguments ', arguments);
-        //console.log('applied ', applied);
-        //console.log('combined ', combined);
-        //console.log('totalApplied ', totalApplied);
-        //console.log('');
-
         return totalApplied >= n ? fn.apply(this, combined) : __curryN(n - totalApplied, combined, fn);
+    };
 
-    });
+    setFunctionLength(n, curriedFn);
+    nameFunction(fn.name, curriedFn);
+    curriedFn[curried] = true;
+    curriedFn[source] = fn[source] || fn;
+    return curriedFn;
 }
 
 module.exports = function curryN(n, fn) {

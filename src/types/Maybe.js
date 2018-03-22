@@ -10,6 +10,10 @@ const Semigroup = require('../protocols/Semigroup');
 const Foldable = require('../protocols/Foldable');
 const Case = require('../protocols/Case');
 const Monad = require('../protocols/Monad');
+const Ord = require('../protocols/Ord');
+const Logical = require('../protocols/Logical');
+
+const Ordering = require('./Ordering');
 
 const merge = require('../util/mergeDescriptors');
 
@@ -25,6 +29,18 @@ const Maybe = Sum.define(function Maybe(...args) {
 });
 
 merge(Maybe.prototype, {
+    [Ord.compare](other) {
+        return this[Case.case]({
+            None: () => other[Case.case]({
+                None: Ordering.EQ,
+                Some: Ordering.LT,
+            }),
+            Some: (l) => other[Case.case]({
+                None: Ordering.GT,
+                Some: (r) => l[Ord.compare](r),
+            }),
+        });
+    },
     [Semigroup.concat]: function(other) {
         return this[Case.case]({
             None: other,
@@ -66,8 +82,11 @@ merge(Maybe.prototype, {
             Some: (v) => fn(v, accum),
         });
     },
+    [Logical.toBoolean]: function() {
+        return this !== Maybe.None;
+    },
 });
 
-Protocol.implement(Maybe, Semigroup, Monoid, Functor, Apply, Applicative, Foldable, Monad);
+Protocol.implement(Maybe, Ord, Semigroup, Monoid, Functor, Apply, Applicative, Foldable, Monad, Logical);
 
 module.exports = Maybe;

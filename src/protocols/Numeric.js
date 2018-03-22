@@ -28,6 +28,7 @@ const Numeric = Protocol.define('Numeric', {
     sign: unaryOp('sign'),
     negate: unaryOp('negate'),
     reciprocal: unaryOp('reciprocal'),
+    round: unaryOp('round'),
     ceil: unaryOp('ceil'),
     floor: unaryOp('floor'),
     trunc: unaryOp('trunc'),
