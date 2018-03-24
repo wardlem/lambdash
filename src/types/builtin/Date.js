@@ -22,6 +22,9 @@ merge(Date.prototype, {
         return new Date(number);
     },
     [Show.show]() {
+        if (isNaN(this)) {
+            return 'new Date("Invalid Date")';
+        }
         return `new Date("${this.toISOString()}")`;
     },
     [Clone.clone]() {
@@ -33,6 +36,6 @@ Date[Type.has] = function has(value) {
     return value instanceof Date;
 };
 
-Protocol.implement(Date, Ord, Numeric, Show);
+Protocol.implement(Date, Ord, Numeric, Show, Clone);
 
 module.exports = Date;

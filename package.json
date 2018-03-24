@@ -8,8 +8,8 @@
   },
   "repository": "https://github.com/mwardle/lambdash.git",
   "scripts": {
-    "test": "node_modules/.bin/mocha spec/**/*.spec.js",
-    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text mocha spec/**/*.spec.js",
+    "test": "node_modules/.bin/mocha \"spec/**/*.spec.js\"",
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text npm test",
     "toc": "node_modules/.bin/doctoc --github --maxlevel 3 README.md"
   },
   "keywords": [

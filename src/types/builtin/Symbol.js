@@ -1,4 +1,5 @@
 const Eq = require('../../protocols/Eq');
+const Ord = require('../../protocols/Ord');
 const Protocol = require('../../protocols/Protocol');
 const Show = require('../../protocols/Show');
 
@@ -11,6 +12,9 @@ function desc(symbol) {
 }
 
 merge(Symbol.prototype, {
+    [Ord.lte](other) {
+        return desc(this)[Ord.lte](desc(other));
+    },
     [Show.show]() {
         return `Symbol(${desc(this)[Show.show]()})`;
     },
@@ -20,6 +24,6 @@ Symbol[Type.has] = function has(value) {
     typeof value === 'symbol';
 };
 
-Protocol.implement(Symbol, Eq, Show);
+Protocol.implement(Symbol, Eq, Ord, Show);
 
 module.exports = Symbol;

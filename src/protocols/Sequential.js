@@ -2,7 +2,7 @@ const Protocol = require('./Protocol');
 
 const Foldable = require('./Foldable');
 const Semigroup = require('./Semigroup');
-const Applicative = require('./Applicative');
+const Of = require('./Of');
 const Eq = require('./Eq');
 const Monoid = require('./Monoid');
 
@@ -10,14 +10,11 @@ const _identity = require('../internal/_identity');
 
 const Sequential = Protocol.define('Sequential', {
     at: null,
-    length: function() {
-        return this[Foldable.count]();
-    },
     append: function(item) {
-        return this[Semigroup.concat](this[Semigroup.of](item));
+        return this[Semigroup.concat](this[Of.of](item));
     },
     prepend: function(item) {
-        return this[Semigroup.of](item)[Semigroup.concat](this);
+        return this[Of.of](item)[Semigroup.concat](this);
     },
     slice: function(start, end) {
         let res = this.empty();
@@ -32,13 +29,13 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.slice(0, n)];
     },
     drop: function(n) {
-        return this[Sequential.slice](n, this[Sequential.length]());
+        return this[Sequential.slice](n, this[Sequential.count]());
     },
     takeLast: function(n) {
-        return this[Sequential.drop](this[Sequential.length]() - n);
+        return this[Sequential.drop](this[Sequential.count]() - n);
     },
     dropLast: function(n) {
-        return this[Sequential.take](this[Sequential.length]() - n);
+        return this[Sequential.take](this[Sequential.count]() - n);
     },
     head: function() {
         return this[Sequential.at](0);
@@ -47,13 +44,13 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.drop](1);
     },
     last: function() {
-        return this[Sequential.at](this[Sequential.length]() - 1);
+        return this[Sequential.at](this[Sequential.count]() - 1);
     },
     init: function() {
         return this[Sequential.dropRight](1);
     },
     intersperse: function(sep) {
-        const l = this[Sequential.length](this);
+        const l = this[Sequential.count](this);
         if (l < 2) {
             return this;
         }
@@ -83,20 +80,20 @@ const Sequential = Protocol.define('Sequential', {
             return tail[Sequential.append](head);
         };
 
-        return _reverse(this[Sequential.length](), this);
+        return _reverse(this[Sequential.count](), this);
     },
     splitAt: function(n, Container = Array) {
         const left = this[Sequential.take](n);
         const right = this[Sequential.drop](n);
 
-        const leftContainer = Container.prototype[Applicative.of].call(null, left);
-        const rightContainer = Container.prototype[Applicative.of].call(null, right);
+        const leftContainer = Container.prototype[Of.of].call(null, left);
+        const rightContainer = Container.prototype[Of.of].call(null, right);
 
         return leftContainer[Semigroup.concat](rightContainer);
     },
     takeWhile: function(pred) {
         let idx = 0;
-        let l = this[Sequential.length]();
+        let l = this[Sequential.count]();
         while (idx < l && pred(this[Sequential.at](idx))) {
             idx += 1;
         }
@@ -105,7 +102,7 @@ const Sequential = Protocol.define('Sequential', {
     },
     dropWhile: function(pred) {
         let idx = 0;
-        let l = this[Sequential.length]();
+        let l = this[Sequential.count]();
         while (idx < l && pred(this[Sequential.at](idx))) {
             idx += 1;
         }
@@ -113,7 +110,7 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.drop](idx);
     },
     takeLastWhile: function(pred) {
-        let idx = this[Sequential.length]() - 1;
+        let idx = this[Sequential.count]() - 1;
         while (idx >= 0 && pred(this[Sequential.at](idx))) {
             idx -= 1;
         }
@@ -121,7 +118,7 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.drop](idx + 1);
     },
     dropLastWhile: function(pred) {
-        let idx = this[Sequential.length]() - 1;
+        let idx = this[Sequential.count]() - 1;
         while (idx >= 0 && pred(this[Sequential.at](idx))) {
             idx -= 1;
         }
@@ -129,12 +126,12 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.take](idx + 1);
     },
     filter: function(pred) {
-        let res = this.empty();
+        let res = this[Monoid.empty]();
         let idx = 0;
-        let l = this[Sequential.length]();
+        let l = this[Sequential.count]();
 
         while (idx < l) {
-            const v = this[Sequential.at]();
+            const v = this[Sequential.at](idx);
             if (pred(v)) {
                 res = res[Sequential.append](v);
             }
@@ -144,12 +141,13 @@ const Sequential = Protocol.define('Sequential', {
         return res;
     },
     uniqueBy: function(map) {
-        const head = this[Sequential.head]();
-        const tail = this[Sequential.tail]();
-
         if (this[Monoid.isempty]()) {
             return this;
         }
+
+        const head = this[Sequential.head]();
+        const tail = this[Sequential.tail]();
+
 
         const testv = map(head);
         const pred = (v) => map(v)[Eq.notEquals](testv);
@@ -161,10 +159,10 @@ const Sequential = Protocol.define('Sequential', {
         return this[Sequential.uniqueBy](_identity);
     },
     isempty: [Monoid.isempty, function() {
-        return this[Sequential.length]() === 0;
+        return this[Sequential.count]() === 0;
     }],
     findIndex: function(pred) {
-        let l = this[Sequential.length]();
+        let l = this[Sequential.count]();
         let idx = 0;
 
         while (idx < l) {
@@ -178,7 +176,7 @@ const Sequential = Protocol.define('Sequential', {
         return -1;
     },
     findLastIndex: function(pred) {
-        let idx = this[Sequential.length]() - 1;
+        let idx = this[Sequential.count]() - 1;
 
         while (idx >= 0) {
             const v = this[Sequential.at](idx);
@@ -230,6 +228,6 @@ const Sequential = Protocol.define('Sequential', {
     lastIndexOf: function(value) {
         return this[Sequential.findLastIndex]((other) => value[Eq.equals](other));
     },
-}, Foldable, Monoid, Applicative);
+}, [Foldable, Monoid, Of]);
 
 module.exports = Sequential;

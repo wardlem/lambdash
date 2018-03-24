@@ -16,7 +16,7 @@ const Sum = module.exports;
 Sum.define = function defineSum(name, definition, options = {}) {
     const {
         writable = false,
-        supertype = null,
+        supertype = Object,
     } = options;
 
     const names = Object.keys(definition);

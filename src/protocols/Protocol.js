@@ -10,13 +10,14 @@ Protocol.define = function defineProtocol(name, methods, extend = []) {
     const requiredMethods = new Set();
     const allMethods = new Set();
     const keyMap = new Map();
+    const methodMap = new Map();
 
     extend.forEach((Extended) => {
         const extendedMethods = Extended[Protocol.allmethods];
         const extendedMap = Extended[Protocol.keymap];
 
         // add all the supertype symbols to the new protocol
-        for (let key in extendedMethods) {
+        for (let key of extendedMethods) {
             const keyStr = extendedMap.get(key);
             ThisProtocol[keyStr] = key;
         }
@@ -30,10 +31,13 @@ Protocol.define = function defineProtocol(name, methods, extend = []) {
         } else {
             keySymbol = typeof implementation === 'symbol' ? implementation : Symbol(`${name}.${key}`);
         }
+
         ThisProtocol[key] = keySymbol;
 
         if (typeof implementation !== 'function') {
             requiredMethods.add(keySymbol);
+        } else {
+            methodMap.set(keySymbol, implementation);
         }
 
         allMethods.add(keySymbol);
@@ -52,7 +56,7 @@ Protocol.define = function defineProtocol(name, methods, extend = []) {
                 if (requiredMethods.has(key)) {
                     throw new TypeError(`${Implementor.name} cannot not implement ${name} because it is missing the ${name}.${keyMap.get(key)} method.`);
                 } else {
-                    Implementor.prototype[key] = methods[keyMap.get(key)];
+                    Implementor.prototype[key] = methodMap.get(key);
                 }
             }
         }
@@ -63,7 +67,10 @@ Protocol.define = function defineProtocol(name, methods, extend = []) {
         });
 
         if (!(Implementor[Type.implements] instanceof Set)) {
-            Implementor[Type.implements] = new Set();
+            Object.defineProperty(Implementor, Type.implements, {
+                enumerable: false,
+                value: new Set(),
+            });
         }
 
         Implementor[Type.implements].add(ThisProtocol);
@@ -88,7 +95,7 @@ Protocol.define = function defineProtocol(name, methods, extend = []) {
         }
     };
 
-    ThisProtocol.has = ThisProtocol[Type.has] = function has(obj) {
+    ThisProtocol[Type.has] = function has(obj) {
         if (obj == null) {
             return false;
         }

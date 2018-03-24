@@ -18,4 +18,15 @@ module.exports = {
     curried: Symbol('Function.curried'),
     blank: Symbol('Function.blank'),
     source: Symbol('Function.source'),
+    both: Symbol('Function.both'),
+    either: Symbol('Function.either'),
+    // exclusiveEither: Symbol('Function.exclusiveEither'),
+    // neither: Symbol('Function.neither'),
+    complement: Symbol('Function.complement'),
+
+    // Boolean symbols
+    not: Symbol('Boolean.not'),
+    condition: Symbol('Boolean.condition'),
+    T: Symbol('Boolean.T'),
+    F: Symbol('Boolean.F'),
 };

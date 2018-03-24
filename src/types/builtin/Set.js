@@ -8,9 +8,9 @@ const Foldable = require('../../protocols/Foldable');
 const Show = require('../../protocols/Show');
 const Type = require('../Type');
 const Applicative = require('../../protocols/Applicative');
-const SetKind = require('../protocols/SetKind');
-const Numeric = require('../protocols/Numeric');
-const Clone = require('../protocols/Clone');
+const SetKind = require('../../protocols/SetKind');
+const Numeric = require('../../protocols/Numeric');
+const Clone = require('../../protocols/Clone');
 
 
 const Ordering = require('../Ordering');

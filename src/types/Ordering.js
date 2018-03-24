@@ -8,7 +8,7 @@ const Ord = require('../protocols/Ord');
 const Bounded = require('../protocols/Bounded');
 const Enumerable = require('../protocols/Enumerable');
 
-const merge = require('../../util/mergeDescriptors');
+const merge = require('../util/mergeDescriptors');
 
 const Ordering = Sum.define(function Ordering(value) {
     if (typeof value !== 'number') {
@@ -68,4 +68,4 @@ merge(Ordering.prototype, {
 
 Protocol.implement(Ordering, Ord, Numeric, Bounded);
 
-module.exorts = Ordering;
+module.exports = Ordering;

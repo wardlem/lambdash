@@ -1,8 +1,8 @@
 const Protocol = require('./Protocol');
 const Apply = require('./Apply');
+const Of = require('./Of');
 
 const Applicative = Protocol.define('Applicative', {
-    of: null,
-}, [Apply]);
+}, [Apply, Of]);
 
 module.exports = Applicative;

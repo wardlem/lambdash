@@ -1,15 +1,19 @@
-var _curry = require('./_curry');
-
-module.exports = function() {
-    // https://github.com/ramda/ramda/blob/master/src/cond.js
-    var conditions = arguments;
-    return function() {
-        var condIndex = 0;
-        while (condIndex < conditions.length) {
-            if (conditions[condIndex][0].apply(this, arguments)) {
-                return conditions[condIndex][1].apply(this, arguments);
-            }
-            condIndex += 1;
+module.exports = function(conditions) {
+    const nextCondition = ([head, ...tail], args) => {
+        if (typeof head !== 'function') {
+            throw new RangeError('Condition did not have a match');
         }
-    }
+
+        const [pred, res] = head;
+
+        if (pred(...args)) {
+            return res(...args);
+        }
+
+        return nextCondition(tail, args);
+    };
+
+    return function condition(...args) {
+        return nextCondition(condition, args);
+    };
 };

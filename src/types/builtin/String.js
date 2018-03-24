@@ -11,13 +11,14 @@ const Case = require('../../protocols/Case');
 const Show = require('../../protocols/Show');
 const Logical = require('../../protocols/Logical');
 const Type = require('../Type');
-const _isFunction = require('../internal/_isFunction');
+const Clone = require('../../protocols/Clone');
+const _isFunction = require('../../internal/_isFunction');
 
 const merge = require('../../util/mergeDescriptors');
 
 merge(String.prototype, {
     [Ord.lte](other) {
-        return this <= other;
+        return this.valueOf() <= other.valueOf();
     },
     [Numeric.toNumber]() {
         const codePoint = this.codePointAt(0);
@@ -33,13 +34,13 @@ merge(String.prototype, {
         return String.fromCodePoint(number);
     },
     [Enumerable.prev]() {
-        return this[Numeric.fromNumber](this[Numeric.toNumber()] - 1);
+        return this[Numeric.fromNumber](this[Numeric.toNumber]() - 1);
     },
     [Enumerable.next]() {
-        return this[Numeric.fromNumber](this[Numeric.toNumber()] + 1);
+        return this[Numeric.fromNumber](this[Numeric.toNumber]() + 1);
     },
     [Functor.map](fn) {
-        return Array.from(this[Iterable.iterator]())[Functor.map](fn).join('');
+        return Array.from(this)[Functor.map](fn).join('');
     },
     [Monoid.concat](other) {
         return this + String(other);
@@ -48,11 +49,11 @@ merge(String.prototype, {
         return '';
     },
     [Foldable.foldl](fn, accum) {
-        let iter = this[Iterable.iterator]();
-
-        while (!iter.done) {
-            accum = fn(accum, iter.value);
-            iter = iter.next();
+        const iter = this[Iterable.iterator]();
+        let value = iter.next().value;
+        while (value != null) {
+            accum = fn(accum, value);
+            value = iter.next().value;
         }
 
         return accum;
@@ -61,20 +62,25 @@ merge(String.prototype, {
         return this[Foldable.toArray]()[Foldable.foldr](fn, accum);
     },
     [Foldable.toArray]() {
-        return Array.from(this[Iterable.iterator]());
+        return Array.from(this);
+    },
+    [Sequential.of](value) {
+        // TODO: allow custom stringification
+        return String(value);
     },
     [Sequential.at](index) {
         if (index < 0) {
             throw new RangeError('Sequential.at should not be called with a negative value on a string');
         }
 
-        let iter = this[Iterable.iterator]();
-        while (!iter.done) {
+        const iter = this[Iterable.iterator]();
+        let value = iter.next().value;
+        while (value != null) {
             if (index === 0) {
-                return iter.value;
+                return value;
             }
             index -= 1;
-            iter = iter.next();
+            value = iter.next().value;
         }
 
         throw new RangeError('Sequential.at called on a string with an index that is out of bounds');
@@ -84,18 +90,19 @@ merge(String.prototype, {
     },
     [Sequential.slice](start, end) {
         let idx = 0;
-        let iter = this[Iterable.iterator]();
-        let parts = [];
-        while (!iter.done) {
+        const iter = this[Iterable.iterator]();
+        const parts = [];
+        let value = iter.next().value;
+        while (value != null) {
             if (idx >= end) {
                 return parts.join('');
             }
             if (idx >= start) {
-                parts.push(iter.value);
+                parts.push(value);
             }
 
+            value = iter.next().value;
             idx += 1;
-            iter = iter.next();
         }
 
         if (idx === end) {
@@ -103,6 +110,9 @@ merge(String.prototype, {
         }
 
         throw new RangeError('Sequential.slice called with out of bounds values');
+    },
+    [Logical.toFalse]() {
+        return '';
     },
     [Case.case](cases) {
 
@@ -129,12 +139,15 @@ merge(String.prototype, {
     [Show.show]() {
         return JSON.stringify(this);
     },
+    [Clone.clone]() {
+        return this.valueOf();
+    },
 });
 
 String[Type.has] = function has(value) {
-    return typeof value === 'string';
+    return typeof value === 'string' || value instanceof String;
 };
 
-Protocol.implement(String, Ord, Numeric, Enumerable, Iterable, Monoid, Functor, Sequential, Case, Show, Logical);
+Protocol.implement(String, Ord, Numeric, Enumerable, Iterable, Monoid, Functor, Sequential, Case, Show, Logical, Clone);
 
 module.exports = String;

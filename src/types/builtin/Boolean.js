@@ -8,14 +8,27 @@ const Show = require('../../protocols/Show');
 const Logical = require('../../protocols/Logical');
 const Clone = require('../../protocols/Clone');
 
-const _isFunction = require('../internal/_isFunction');
-const _identity = require('../internal/_identity');
+const Type = require('../Type');
+
+const _isFunction = require('../../internal/_isFunction');
+const _condition = require('../../internal/_condition');
+const _always = require('../../internal/_always');
 
 const merge = require('../../util/mergeDescriptors');
 
+const {
+    not,
+    condition,
+    T,
+    F,
+} = require('../../internal/_symbols');
+
 merge(Boolean.prototype, {
+    [Ord.equals](other) {
+        return this.valueOf() === other.valueOf();
+    },
     [Ord.lte](other) {
-        return this <= other;
+        return this.valueOf() <= other.valueOf();
     },
     [Bounded.minBound]() {
         return false;
@@ -30,14 +43,14 @@ merge(Boolean.prototype, {
         return Boolean(number);
     },
     [Enumerable.prev]() {
-        if (this === true) {
+        if (this.valueOf() === true) {
             return false;
         }
 
         throw new RangeError('Cannot call Enumerable.prev on false');
     },
     [Enumerable.next]() {
-        if (this === false) {
+        if (this.valueOf() === false) {
             return true;
         }
 
@@ -68,10 +81,31 @@ merge(Boolean.prototype, {
     [Show.show]() {
         return String(this);
     },
-    [Logical.toBoolean]: _identity,
-    [Clone.clone]: _identity,
+    [Logical.toBoolean]() {
+        return this.valueOf();
+    },
+    [Logical.toFalse]() {
+        return false;
+    },
+    [Clone.clone]() {
+        return this.valueOf();
+    },
+    [not]() {
+        return !this;
+    },
+
 });
 
-Protocol.implement(Boolean, Ord, Bounded, Numeric, Enumerable, Case, Show, Logical);
+merge(Boolean, {
+    [Type.has](value) {
+        return typeof value === 'boolean' || value instanceof Boolean;
+    },
+    [condition]: _condition,
+    [T]: _always(true),
+    [F]: _always(false),
+});
+
+
+Protocol.implement(Boolean, Ord, Bounded, Numeric, Enumerable, Case, Show, Logical, Clone);
 
 module.exports = Boolean;

@@ -9,8 +9,8 @@ const Sequential = require('../../protocols/Sequential');
 const Show = require('../../protocols/Show');
 const Type = require('../Type');
 const Applicative = require('../../protocols/Applicative');
-const SetKind = require('../protocols/SetKind');
-const Clone = require('../protocols/Clone');
+const SetKind = require('../../protocols/SetKind');
+const Clone = require('../../protocols/Clone');
 
 const Ordering = require('../Ordering');
 
@@ -27,7 +27,7 @@ merge(Array.prototype, {
 
         let ind = 0;
         while (ind < len) {
-            const ordering = Ord.compare(this[ind], other[ind]);
+            const ordering = this[ind][Ord.compare](other[ind]);
             if (!ordering.isEQ()) {
                 return ordering;
             }
@@ -78,11 +78,14 @@ merge(Array.prototype, {
         return this.reduce((res, v) => res.concat(v), []);
     },
     [Sequential.at](idx) {
+        if (idx < 0 || idx >= this.length) {
+            throw new RangeError('Out of bounds index when Sequential.at called on an array');
+        }
         return this[idx];
     },
-    [Sequential.length]() {
-        return this.length;
-    },
+    // [Sequential.length]() {
+    //     return this.length;
+    // },
     [Sequential.slice](start, end) {
         return this.slice(start, end);
     },
@@ -90,13 +93,13 @@ merge(Array.prototype, {
         return this.slice().reverse();
     },
     [SetKind.union](other) {
-        return this.concat(other)[Foldable.unique]();
+        return this.concat(other)[Sequential.unique]();
     },
     [SetKind.difference](other) {
-        return this.filter((v) => !other[Foldable.contains(v)])[Foldable.unique]();
+        return this.filter((v) => !other[Foldable.contains](v))[Sequential.unique]();
     },
     [SetKind.intersection](other) {
-        return this.filter((v) => other[Foldable.contains(v)])[Foldable.unique]();
+        return this.filter((v) => other[Foldable.contains](v))[Sequential.unique]();
     },
     [SetKind.has](key) {
         return this[Foldable.contains](key);
@@ -105,7 +108,7 @@ merge(Array.prototype, {
         return this.filter((v) => key[Ord.notEquals](v));
     },
     [SetKind.size]() {
-        return this[Foldable.unique]().length;
+        return this[Sequential.unique]().length;
     },
     [SetKind.insert](key) {
         if (this[SetKind.has](key)) {
@@ -120,7 +123,7 @@ merge(Array.prototype, {
         }
         seen = seen[SetKind.insert](this);
 
-        return `[${this.map((v) => v[Show.show]()).join(', ')}]`;
+        return `[${this.map((v) => v[Show.show]()).join(',')}]`;
     },
     [Clone.clone]() {
         return this.slice();
